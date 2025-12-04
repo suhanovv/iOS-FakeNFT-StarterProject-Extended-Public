@@ -109,6 +109,7 @@
 		D7AE28322EE09D9000325B47 /* Users */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Users; sourceTree = "<group>"; };
 		D7AE28332EE09D9700325B47 /* Profile */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Profile; sourceTree = "<group>"; };
 		D7AE28422EE0B56B00325B47 /* OrderAndPayment */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = OrderAndPayment; sourceTree = "<group>"; };
+		D7AE29362EE1F92C00325B47 /* Statistics */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Statistics; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +270,7 @@
 		ABC5E1B32C31FC03002B4068 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D7AE29362EE1F92C00325B47 /* Statistics */,
 				ABC5E16D2C31F5AF002B4068 /* ContentView.swift */,
 				ABC5E1B42C31FC57002B4068 /* TabBarView.swift */,
 				ABC5E1B82C31FD51002B4068 /* TestCatalogView.swift */,
@@ -334,6 +336,7 @@
 				D7AE28322EE09D9000325B47 /* Users */,
 				D7AE28332EE09D9700325B47 /* Profile */,
 				D7AE28422EE0B56B00325B47 /* OrderAndPayment */,
+				D7AE29362EE1F92C00325B47 /* Statistics */,
 			);
 			name = "iOS-FakeNFT-Extended";
 			packageProductDependencies = (
