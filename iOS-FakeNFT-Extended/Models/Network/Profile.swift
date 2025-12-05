@@ -1,0 +1,18 @@
+//
+//  Profile.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Ди Di on 05/12/25.
+//
+
+import Foundation
+
+struct Profile: Decodable {
+    let name: String
+    let avatar: URL?
+    let description: String
+    let website: URL
+    let nfts: [String]
+    let likes: [String]
+    let id: String
+}
