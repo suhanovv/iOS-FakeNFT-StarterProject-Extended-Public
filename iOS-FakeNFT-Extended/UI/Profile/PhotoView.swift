@@ -19,7 +19,14 @@ struct PhotoView: View {
                 } placeholder: {
                     ProgressView()
                         .tint(Color.ypWhite)
-                        .scaleEffect(1.5)   
+                        .scaleEffect(1.5)
+                }
+            }
+            else {
+                ZStack {
+                    Circle()
+                        .fill(Color.ypLightGray)
+                    Image(.CommonIcons.emptyProfile)
                 }
             }
         }
