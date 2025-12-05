@@ -16,6 +16,16 @@ struct EditProfileView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
+                ZStack(alignment: .bottomTrailing) {
+                    PhotoView(url: photoURL)
+                        .offset(y: -10)
+                    Image(systemName: "camera.fill")
+                        .font(.system(size: 10))
+                        .padding(6)
+                        .background(Color.ypLightGray)
+                        .clipShape(Circle())
+                }
+                
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Имя")
                         .font(Font(UIFont.headline3))
@@ -51,6 +61,9 @@ struct EditProfileView: View {
                 Spacer(minLength: 40)
             }
         }
+        .onTapGesture {
+            hideKeyboard()
+        }
         .navigationBarBackButtonHidden(false)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -74,7 +87,8 @@ struct AutoGrowingTextEditor: View {
                     GeometryReader { geo in
                         Color.clear.onAppear {
                             height = geo.size.height
-                        }.onChange(of: geo.size.height) { oldValue, newValue in
+                        }
+                        .onChange(of: geo.size.height) { oldValue, newValue in
                             height = newValue
                         }
                     }
@@ -89,6 +103,12 @@ struct AutoGrowingTextEditor: View {
                 .background(Color(.ypLightGray))
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

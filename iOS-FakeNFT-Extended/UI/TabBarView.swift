@@ -6,6 +6,13 @@ struct TabBarView: View {
     }
     var body: some View {
         TabView {
+            NavigationStack {
+                ProfileMock.preview
+            }
+            .tabItem {
+                Label("Профиль", image: .TabBarIcons.profile)
+            }
+            .backgroundStyle(.background)
             TestCatalogView()
                 .tabItem {
                     Label(NSLocalizedString("Tab.catalog", comment: ""), image: .TabBarIcons.cart)
