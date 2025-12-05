@@ -19,9 +19,11 @@ struct PhotoView: View {
                 } placeholder: {
                     ProgressView()
                         .tint(Color.ypWhite)
+                        .scaleEffect(1.5)   
                 }
             }
         }
         .clipShape(Circle())
+        .frame(width: 70, height: 70)
     }
 }
