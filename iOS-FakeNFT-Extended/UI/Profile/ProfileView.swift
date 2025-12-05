@@ -40,6 +40,17 @@ struct ProfileHeaderView: View {
         }
         .padding(.horizontal, 16)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    // add action
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 26))
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
     }
 }
 
