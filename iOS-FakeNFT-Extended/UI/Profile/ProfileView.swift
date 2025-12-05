@@ -19,24 +19,36 @@ struct ProfileHeaderView: View {
                 PhotoView(url: photoURL)
                     .frame(width: 70, height: 70)
                     .clipShape(Circle())
-
+                
                 Text(name)
                     .font(Font(UIFont.headline3))
                     .foregroundColor(.ypBlack)
-
                 Spacer()
             }
-            .padding(.bottom, 20)
-
+            .padding(.vertical, 20)
+            
             Text(description)
                 .font(Font(UIFont.caption2))
                 .foregroundColor(.ypBlack)
                 .padding(.bottom, 8)
-
+            
             Link(website, destination: URL(string: "https://\(website)")!)
                 .font(Font(UIFont.caption1))
                 .foregroundColor(.ypBlueUniversal)
                 .underline()
+            
+            List {
+                ProfileListRow(title: "Мои NFT", count: 21) {
+                    // add action
+                }
+                
+                ProfileListRow(title: "Избранные NFT", count: 21) {
+                    // add action
+                }
+            }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .padding(.top, 40)
         }
         .padding(.horizontal, 16)
         .navigationBarTitleDisplayMode(.inline)
@@ -51,24 +63,6 @@ struct ProfileHeaderView: View {
                 }
             }
         }
-    }
-}
-
-struct PhotoView: View {
-    let url: URL?
-    
-    var body: some View {
-        ZStack {
-            Color.ypGrayUniversal.opacity(0.2)
-            if let url = url {
-                AsyncImage(url: url) { image in
-                    image.resizable().scaledToFill()
-                } placeholder: {
-                    ProgressView()
-                }
-            }
-        }
-        .clipShape(Circle())
     }
 }
 
