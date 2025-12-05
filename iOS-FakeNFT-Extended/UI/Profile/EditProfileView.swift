@@ -11,14 +11,19 @@ struct EditProfileView: View {
     @State var name: String = ""
     @State var description: String = ""
     @State var website: String = ""
-    var photoURL: URL?
+    @State private var isPhotoMenuPresented = false
+    @State var photoURL: URL?
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 ZStack(alignment: .bottomTrailing) {
                     PhotoView(url: photoURL)
-                        .offset(y: -10)
+                        .offset(y: -4)
+                        .onTapGesture {
+                            isPhotoMenuPresented = true
+                        }
                     Image(systemName: "camera.fill")
                         .font(.system(size: 10))
                         .padding(6)
@@ -61,12 +66,29 @@ struct EditProfileView: View {
                 Spacer(minLength: 40)
             }
         }
+        .confirmationDialog("Фото профиля", isPresented: $isPhotoMenuPresented, titleVisibility: .visible) {
+            Button("Изменить фото") {
+                // add action
+            }
+            Button("Удалить фото", role: .destructive) {
+                photoURL = nil
+            }
+            Button("Отмена", role: .cancel) {}
+        }
         .onTapGesture {
             hideKeyboard()
         }
-        .navigationBarBackButtonHidden(false)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(.ypBlack)
+                }
+            }
             ToolbarItem(placement: .principal) {
                 EmptyView()
             }
