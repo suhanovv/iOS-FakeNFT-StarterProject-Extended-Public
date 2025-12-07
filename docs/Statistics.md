@@ -10,7 +10,7 @@
     - получения пользователей
     - добавление/удаление избранного (экран "Users collection")
     - добавление/удаление в корзину (экран "Users collection")
-- Реализовать сплешскрин (Estimate Time: 1h / Fact Time:)
+- Реализовать Launch Screen (Estimate Time: 1h / Fact Time:)
 - Сверстать компонент "Ячейка списка пользователей" на моках для экрана "Statistics" (Estimate Time: 4h / Fact Time:)
 - Сверстать компонент "Карточка NFT" на моках для экрана "Users collection" (Estimate Time: 4h / Fact Time:)
 
