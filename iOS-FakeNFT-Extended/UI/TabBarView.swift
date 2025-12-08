@@ -7,7 +7,7 @@ struct TabBarView: View {
     var body: some View {
         TabView {
             NavigationStack {
-                ProfileMock.preview
+                ProfileViewMock.preview
             }
             .tabItem {
                 Label("Профиль", image: .TabBarIcons.profile)
