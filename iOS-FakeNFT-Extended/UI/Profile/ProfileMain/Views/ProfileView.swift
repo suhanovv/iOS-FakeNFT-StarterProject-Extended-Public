@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ProfileView: View {
-    var photoURL: URL?
+    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
+    
+    var photoURL: URL? { URL(string: savedPhotoURL) }
     var name: String
     var description: String
     var website: String
+    
     @State private var isEditing = false
     
     var body: some View {
@@ -34,8 +37,8 @@ struct ProfileView: View {
                 name: name,
                 description: description,
                 website: website,
-                photoURL: photoURL
             )
+            .toolbar(.hidden, for: .tabBar)
         }
         .toolbar {
             navigationToolbar
@@ -96,7 +99,6 @@ struct ProfileView: View {
 #Preview {
     NavigationStack {
         ProfileView(
-            photoURL: URL(string: "https://picsum.photos/id/237/200/200"),
             name: "Joaquin Phoenix",
             description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
             website: "JoaquinPhoenix.com"
