@@ -4,7 +4,7 @@
 //
 //  Created by Вадим Суханов on 09.12.2025.
 //
-import SwiftUI
+import Observation
 
 extension StatisticsScreenView {
     @Observable
