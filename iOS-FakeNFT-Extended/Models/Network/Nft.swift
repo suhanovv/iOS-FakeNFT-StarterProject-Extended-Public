@@ -6,7 +6,9 @@ struct Nft: Decodable, Identifiable, Sendable {
 struct Nft: Decodable, Identifiable {
 >>>>>>> 360b056 (Statistics/epic branch (#118))
     let id: String
+    let name: String
     let images: [URL]
+<<<<<<< HEAD
     let name: String
     let rating: Int
     let price: Double
@@ -37,4 +39,24 @@ extension Nft {
     )
 =======
 >>>>>>> 360b056 (Statistics/epic branch (#118))
+=======
+    let rating: Int
+    let price: Decimal
+    let author: String
+    let website: URL?
+    let description: String
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case images
+        case rating
+        case price
+        case author
+        case website
+        case description
+        case createdAt
+    }
+>>>>>>> d2b1764 (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
 }

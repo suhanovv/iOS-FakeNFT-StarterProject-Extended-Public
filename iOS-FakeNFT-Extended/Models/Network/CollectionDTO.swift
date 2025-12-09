@@ -7,6 +7,7 @@
 
 import Foundation
 
+<<<<<<< HEAD
 /// DTO-модель коллекции, приходящая из API.
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
 struct CollectionDTO: Identifiable, Codable, Sendable {
@@ -30,6 +31,16 @@ struct CollectionDTO: Identifiable, Codable, Sendable {
     let website: URL?
 
     /// Список идентификаторов NFT, входящих в коллекцию (ключ `nfts` в API).
+=======
+struct CollectionDTO: Identifiable, Codable {
+    let id: String
+    let name: String
+    let cover: URL
+    let description: String
+    let authorId: String
+    let authorName: String?
+    let website: URL?
+>>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
     let nftIds: [String]
 
     enum CodingKeys: String, CodingKey {
@@ -37,11 +48,17 @@ struct CollectionDTO: Identifiable, Codable, Sendable {
         case name
         case cover
         case description
+<<<<<<< HEAD
         case author
+=======
+        case authorId = "author"
+        case authorName
+>>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
         case website
         case nftIds = "nfts"
     }
 }
+<<<<<<< HEAD
 
 extension CollectionDTO {
     var nftCount: Int {
@@ -50,3 +67,5 @@ extension CollectionDTO {
         ).count
     }
 }
+=======
+>>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
