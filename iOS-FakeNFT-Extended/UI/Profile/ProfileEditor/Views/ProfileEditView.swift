@@ -13,6 +13,7 @@ private enum Constants {
     static let nameTitle = "Имя"
     static let descriptionTitle = "Описание"
     static let websiteTitle = "Сайт"
+    static let linkAlertTitle = "Ссылка на фото"
     
     // Dialog
     static let photoDialogTitle = "Фото профиля"
@@ -23,6 +24,9 @@ private enum Constants {
     // Icons
     static let cameraIcon = "camera.fill"
     static let backIcon = "chevron.left"
+    
+    //Placeholder
+    static let placeholder = "Введите ссылку"
 }
 
 // MARK: - ProfileEditView
@@ -33,9 +37,15 @@ struct ProfileEditView: View {
     @State var description: String = ""
     @State var website: String = ""
     @State private var isPhotoMenuPresented = false
-    @State var photoURL: URL?
+    @State private var showLinkPhotoAlert = false
+    @State private var photoURLText = ""
     
+    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
     @Environment(\.dismiss) var dismiss
+    
+    private var photoURL: URL? {
+        URL(string: savedPhotoURL)
+    }
     
     // MARK: - Body
     var body: some View {
@@ -49,24 +59,32 @@ struct ProfileEditView: View {
                 Spacer(minLength: 40)
             }
         }
-        .confirmationDialog(Text(Constants.photoDialogTitle),
-                            isPresented: $isPhotoMenuPresented,
-                            titleVisibility: .visible) {
+        .confirmationDialog(
+            Text(Constants.photoDialogTitle),
+            isPresented: $isPhotoMenuPresented,
+            titleVisibility: .visible
+        ) {
             Button(Constants.changePhoto) {
-                // add action
+                photoURLText = savedPhotoURL
+                showLinkPhotoAlert = true
             }
+            
             Button(Constants.deletePhoto, role: .destructive) {
-                photoURL = nil
+                savedPhotoURL = ""
             }
+            
             Button(Constants.cancel, role: .cancel) {}
         }
-                            .onTapGesture {
-                                hideKeyboard()
-                            }
-                            .navigationBarBackButtonHidden(true)
-                            .toolbar {
-                                navigationToolbar
-                            }
+        .onTapGesture {
+            hideKeyboard()
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            navigationToolbar
+        }
+        .overlay {
+            alertOverlaySection
+        }
     }
     
     // MARK: - Views
@@ -103,7 +121,7 @@ struct ProfileEditView: View {
             Text(Constants.descriptionTitle)
                 .font(Font(UIFont.headline3))
             
-            AutoGrowingTextEditor(text: $description)
+            ProfileAutoGrowingTextEditor(text: $description)
         }
         .padding(.horizontal, 16)
     }
@@ -120,6 +138,20 @@ struct ProfileEditView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(.horizontal, 16)
+    }
+    
+    private var alertOverlaySection: some View {
+        TextFieldAlert(
+            isPresented: $showLinkPhotoAlert,
+            title: Constants.linkAlertTitle,
+            placeholder: Constants.placeholder,
+            text: $photoURLText
+        ) {
+            let trimmed = photoURLText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if URL(string: trimmed) != nil {
+                savedPhotoURL = trimmed
+            }
+        }
     }
     
     // MARK: - Toolbar
@@ -139,9 +171,15 @@ struct ProfileEditView: View {
     NavigationStack {
         ProfileEditView(
             name: "Joaquin Phoenix",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-            website: "JoaquinPhoenix.com",
-            photoURL: URL(string: "https://i.pravatar.cc/150")
+            description: "Дизайнер из Казани и т.д...",
+            website: "https://example.com"
         )
+        .environment(\.colorScheme, .light)
+        .onAppear {
+            UserDefaults.standard.set(
+                "https://i.pravatar.cc/150",
+                forKey: ProfileStorageKeys.photoURL
+            )
+        }
     }
 }
