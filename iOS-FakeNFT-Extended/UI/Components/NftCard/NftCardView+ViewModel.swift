@@ -5,7 +5,8 @@
 //  Created by Вадим Суханов on 05.12.2025.
 //
 
-import SwiftUI
+import Observation
+import Foundation
 
 extension NftCardView {
     @Observable
