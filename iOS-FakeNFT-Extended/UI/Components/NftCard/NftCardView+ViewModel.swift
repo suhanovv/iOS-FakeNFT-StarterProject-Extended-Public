@@ -9,7 +9,7 @@ import SwiftUI
 
 extension NftCardView {
     @Observable
-    class ViewModel {
+    final class ViewModel {
         let nft: Nft
         var image: URL {
             nft.images[0]
