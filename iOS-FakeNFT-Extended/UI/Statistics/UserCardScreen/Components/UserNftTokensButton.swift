@@ -29,7 +29,6 @@ struct UserNftTokensButton: View {
 
 private enum Constants {
     static let nftTokenLinkTitle = NSLocalizedString("UserProfile.nftTokenLink.title", comment: "")
-    
 }
 
 #Preview {
