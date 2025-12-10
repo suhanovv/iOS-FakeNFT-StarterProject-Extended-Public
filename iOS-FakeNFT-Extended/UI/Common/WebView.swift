@@ -105,3 +105,17 @@ struct WebViewScreen: View {
         Text("Invalid preview URLs")
     }
 }
+
+
+// MARK: - Previews
+
+#Preview("WebView Preview") {
+    WebView(url: URL(string: "https://apple.com")!)
+        .frame(height: 300)
+}
+
+#Preview("WebViewScreen Preview") {
+    NavigationStack {
+        WebViewScreen(url: URL(string: "https://apple.com")!)
+    }
+}

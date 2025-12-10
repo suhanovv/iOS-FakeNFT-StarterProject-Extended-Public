@@ -5,10 +5,8 @@
 //  Created by Diana Viter on 09.12.2025.
 //
 
-<<<<<<< HEAD
 
 import SwiftUI
-import Kingfisher
 
 // MARK: - NftCellView
 
@@ -16,12 +14,6 @@ struct NftCellView: View {
     
     // MARK: - Properties
     
-    let name: String
-    let price: Double
-=======
-import SwiftUI
-
-struct NftCellView: View {
     let name: String
     let price: Decimal
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
@@ -31,13 +23,8 @@ struct NftCellView: View {
     @State private var isFavorite: Bool
     @State private var isInCart: Bool
     
-<<<<<<< HEAD
     // MARK: - Init
     
-    init(
-        name: String,
-        price: Double,
-=======
     init(
         name: String,
         price: Decimal,
@@ -82,21 +69,28 @@ struct NftCellView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-
-            ZStack(alignment: .topTrailing) {
-                Image(.nftCell)
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
+            nftImageSection
+            ratingSection
+            infoSection
+        }
+        .frame(alignment: .leading)
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-                Button(action: onFavoriteTap) {
-                    Image("Nft Card Icons/Like")
-                        .renderingMode(.template)
-                        .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
-                }
+    }
+    
+    // MARK: - Views
+
+    private var nftImageSection: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(.nftCell)
+                .resizable()
+                .scaledToFill()
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+            Button(action: onFavoriteTap) {
+                Image("Nft Card Icons/Like")
+                    .renderingMode(.template)
+                    .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
             }
-<<<<<<< HEAD
         }
     }
 
@@ -113,11 +107,10 @@ struct NftCellView: View {
     private var infoSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(name.capitalized)
+                Text(name)
                     .font(.init(UIFont.bodyBold))
-                    .lineLimit(1)
 
-                Text("\(price.formattedPrice()) ETH")
+                Text("\(price) ETH")
                     .font(.caption)
             }
 
@@ -128,35 +121,6 @@ struct NftCellView: View {
                     .foregroundStyle(.ypBlackUniversal)
             }
         }
-=======
-
-            HStack(spacing: 2) {
-                ForEach(0..<5, id: \.self) { index in
-                    Image(systemName: "star.fill")
-                        .font(.caption)
-                        .foregroundColor(index < rating ? .ypYellowUniversal : .gray.opacity(0.1))
-                }
-            }
-
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(name)
-                        .font(.init(UIFont.bodyBold))
-
-                    Text("\(price) ETH")
-                        .font(.caption)
-                }
-
-                Spacer()
-
-                Button(action: onCartTap) {
-                    Image(isInCart ? "Nft Card Icons/CartDelete" : "Nft Card Icons/CartAdd")
-                        .foregroundStyle(.ypBlackUniversal)
-                }
-            }
-        }
-        .frame(alignment: .leading)
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
     }
     
     // MARK: - Actions
@@ -170,11 +134,8 @@ struct NftCellView: View {
     }
 }
 
-<<<<<<< HEAD
 // MARK: - Preview_NftCellView
 
-=======
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
 #Preview {
     NftCellView(
         name: "Archie",

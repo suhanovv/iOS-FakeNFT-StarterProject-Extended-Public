@@ -7,7 +7,14 @@
 
 import Foundation
 
+<<<<<<< HEAD
 enum CollectionsSortOption: String {
     case name
     case nftCount
+=======
+enum CollectionsSortOption {
+    case name
+    case nftCount
+    case rating
+>>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
 }

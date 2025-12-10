@@ -8,6 +8,7 @@
 import Foundation
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /// DTO-модель коллекции, приходящая из API.
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
 struct CollectionDTO: Identifiable, Codable, Sendable {
@@ -32,15 +33,38 @@ struct CollectionDTO: Identifiable, Codable, Sendable {
 
     /// Список идентификаторов NFT, входящих в коллекцию (ключ `nfts` в API).
 =======
+=======
+/// DTO-модель коллекции, приходящая из API.
+/// Используется для сетевого слоя и декодирования данных о коллекциях.
+>>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
 struct CollectionDTO: Identifiable, Codable {
+
+    /// Уникальный идентификатор коллекции (значение приходит из API).
     let id: String
+
+    /// Название коллекции, отображаемое в каталоге.
     let name: String
+
+    /// URL обложки коллекции. Используется для превью на карточке.
     let cover: URL
+
+    /// Описание коллекции, приходящее из API.
     let description: String
+
+    /// Идентификатор автора коллекции (ключ `author` в API).
     let authorId: String
+
+    /// Имя автора коллекции (может отсутствовать в ответе API).
     let authorName: String?
+
+    /// Сайт автора или коллекции (опционально, может быть nil).
     let website: URL?
+<<<<<<< HEAD
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
+=======
+
+    /// Список идентификаторов NFT, входящих в коллекцию (ключ `nfts` в API).
+>>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
     let nftIds: [String]
 
     enum CodingKeys: String, CodingKey {

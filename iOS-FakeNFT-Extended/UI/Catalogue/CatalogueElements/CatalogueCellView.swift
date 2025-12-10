@@ -41,6 +41,7 @@ struct CatalogueCellView: View {
 // MARK: - Preview_CatalogueCellView
 
 #Preview {
+<<<<<<< HEAD
     if let url = URL(string: "https://example.com/peach.png") {
         CatalogueCellView(
             collection: CollectionDTO(
@@ -56,4 +57,18 @@ struct CatalogueCellView: View {
     } else {
         Text("Invalid preview URL")
     }
+=======
+    CatalogueCellView(
+        collection: CollectionDTO(
+            id: "1",
+            name: "Peach",
+            cover: URL(string: "https://example.com/peach.png")!,
+            description: "Sample description",
+            authorId: "author-1",
+            authorName: "Peach Author",
+            website: nil,
+            nftIds: ["1", "2", "3"]
+        )
+    )
+>>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
 }
