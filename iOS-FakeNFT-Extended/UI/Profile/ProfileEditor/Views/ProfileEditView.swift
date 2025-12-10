@@ -32,6 +32,11 @@ private enum Constants {
 // MARK: - ProfileEditView
 struct ProfileEditView: View {
     
+    // MARK: - Incoming data
+    let initialName: String
+    let initialDescription: String
+    let initialWebsite: String
+    
     // MARK: - State
     @State var name: String = ""
     @State var description: String = ""
@@ -39,9 +44,26 @@ struct ProfileEditView: View {
     @State private var isPhotoMenuPresented = false
     @State private var showLinkPhotoAlert = false
     @State private var photoURLText = ""
+    @State private var showExitAlert = false
     
     @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
     @Environment(\.dismiss) var dismiss
+    
+    init(name: String, description: String, website: String) {
+        self.initialName = name
+        self.initialDescription = description
+        self.initialWebsite = website
+        
+        _name = State(initialValue: name)
+        _description = State(initialValue: description)
+        _website = State(initialValue: website)
+    }
+    
+    private var hasChanges: Bool {
+        name != initialName ||
+        description != initialDescription ||
+        website != initialWebsite
+    }
     
     private var photoURL: URL? {
         URL(string: savedPhotoURL)
@@ -84,6 +106,11 @@ struct ProfileEditView: View {
         }
         .overlay {
             alertOverlaySection
+        }
+        .overlay {
+            ExitAlert(isPresented: $showExitAlert) {
+                dismiss()
+            }
         }
     }
     
@@ -157,9 +184,15 @@ struct ProfileEditView: View {
     // MARK: - Toolbar
     private var navigationToolbar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Button { dismiss() } label: {
-                Image(systemName: Constants.backIcon)
-                    .font(.system(size: 20, weight: .medium))
+            Button {
+                if hasChanges {
+                    showExitAlert = true
+                } else {
+                    dismiss()
+                }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(Font(UIFont.headline5))
                     .foregroundColor(.ypBlack)
             }
         }
