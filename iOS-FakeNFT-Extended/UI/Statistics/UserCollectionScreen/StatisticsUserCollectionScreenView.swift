@@ -30,7 +30,7 @@ struct StatisticsUserCollectionScreenView: View {
         }
         .overlay {
             ZStack {
-                Text("У пользователя еще нет NFT")
+                Text(Constants.noNftTitle)
                     .font(.system(size: 17, weight: .bold))
                     .opacity(viewModel.isCollectionEmpty ? 1 : 0)
                 ProgressBarView(isActive: viewModel.state == .loading)
@@ -45,6 +45,9 @@ struct StatisticsUserCollectionScreenView: View {
     }
 }
 
+private enum Constants {
+    static let noNftTitle = NSLocalizedString("UserCollection.noNft.title", comment: "")
+}
 
 #Preview("not empty") {
     StatisticsUserCollectionScreenView(userId: UUID().uuidString)
