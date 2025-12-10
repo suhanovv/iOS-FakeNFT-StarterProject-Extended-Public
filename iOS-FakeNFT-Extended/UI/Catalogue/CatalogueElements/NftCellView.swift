@@ -5,9 +5,15 @@
 //  Created by Diana Viter on 09.12.2025.
 //
 
+
 import SwiftUI
 
+// MARK: - NftCellView
+
 struct NftCellView: View {
+    
+    // MARK: - Properties
+    
     let name: String
     let price: Decimal
     let rating: Int
@@ -15,6 +21,8 @@ struct NftCellView: View {
 
     @State private var isFavorite: Bool
     @State private var isInCart: Bool
+    
+    // MARK: - Init
     
     init(
         name: String,
@@ -31,49 +39,62 @@ struct NftCellView: View {
         _isFavorite = State(initialValue: isFavorite)
         _isInCart = State(initialValue: isInCart)
     }
+    
+    // MARK: - Body
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-
-            ZStack(alignment: .topTrailing) {
-                Image(.nftCell)
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
-                Button(action: onFavoriteTap) {
-                    Image("Nft Card Icons/Like")
-                        .renderingMode(.template)
-                        .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
-                }
-            }
-
-            HStack(spacing: 2) {
-                ForEach(0..<5, id: \.self) { index in
-                    Image(systemName: "star.fill")
-                        .font(.caption)
-                        .foregroundColor(index < rating ? .ypYellowUniversal : .gray.opacity(0.1))
-                }
-            }
-
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(name)
-                        .font(.init(UIFont.bodyBold))
-
-                    Text("\(price) ETH")
-                        .font(.caption)
-                }
-
-                Spacer()
-
-                Button(action: onCartTap) {
-                    Image(isInCart ? "Nft Card Icons/CartDelete" : "Nft Card Icons/CartAdd")
-                        .foregroundStyle(.ypBlackUniversal)
-                }
-            }
+            nftImageSection
+            ratingSection
+            infoSection
         }
         .frame(alignment: .leading)
+    }
+    
+    // MARK: - Views
+
+    private var nftImageSection: some View {
+        ZStack(alignment: .topTrailing) {
+            Image(.nftCell)
+                .resizable()
+                .scaledToFill()
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+            Button(action: onFavoriteTap) {
+                Image("Nft Card Icons/Like")
+                    .renderingMode(.template)
+                    .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+            }
+        }
+    }
+
+    private var ratingSection: some View {
+        HStack(spacing: 2) {
+            ForEach(0..<5, id: \.self) { index in
+                Image(systemName: "star.fill")
+                    .font(.caption)
+                    .foregroundColor(index < rating ? .ypYellowUniversal : .gray.opacity(0.1))
+            }
+        }
+    }
+
+    private var infoSection: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(name)
+                    .font(.init(UIFont.bodyBold))
+
+                Text("\(price) ETH")
+                    .font(.caption)
+            }
+
+            Spacer()
+
+            Button(action: onCartTap) {
+                Image(isInCart ? "Nft Card Icons/CartDelete" : "Nft Card Icons/CartAdd")
+                    .foregroundStyle(.ypBlackUniversal)
+            }
+        }
     }
     
     // MARK: - Actions
@@ -86,6 +107,8 @@ struct NftCellView: View {
         isInCart.toggle()
     }
 }
+
+// MARK: - Preview_NftCellView
 
 #Preview {
     NftCellView(

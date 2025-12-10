@@ -5,10 +5,18 @@
 //  Created by Diana Viter on 09.12.2025.
 //
 
+
 import SwiftUI
 
+// MARK: - CatalogueCellView
+
 struct CatalogueCellView: View {
+    
+    // MARK: - Properties
+    
     let collection: CollectionDTO
+    
+    // MARK: - Body
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -25,6 +33,8 @@ struct CatalogueCellView: View {
     }
 }
 
+// MARK: - Preview_CatalogueCellView
+
 #Preview {
     CatalogueCellView(
         collection: CollectionDTO(
@@ -39,4 +49,3 @@ struct CatalogueCellView: View {
         )
     )
 }
-
