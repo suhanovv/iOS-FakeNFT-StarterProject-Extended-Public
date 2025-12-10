@@ -8,6 +8,7 @@ struct TabBarView: View {
         TabView {
             NavigationStack {
                 ProfileViewMock.preview
+                // Изменить на ProfileView() после подключения запросов
             }
             .tabItem {
                 Label("Профиль", image: .TabBarIcons.profile)
