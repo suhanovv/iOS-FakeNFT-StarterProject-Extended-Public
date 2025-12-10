@@ -13,11 +13,19 @@ struct ProfileViewMock {
             "https://picsum.photos/id/237/200/200",
             forKey: ProfileStorageKeys.photoURL
         )
-
-        return ProfileView(
-            name: "Michael Phoenix",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-            website: "eJoaquinPhoenix.com"
+        UserDefaults.standard.set(
+            "Michael Phoenix",
+            forKey: "profile_name"
         )
+        UserDefaults.standard.set(
+            "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT...",
+            forKey: "profile_description"
+        )
+        UserDefaults.standard.set(
+            "eJoaquinPhoenix.com",
+            forKey: "profile_website"
+        )
+        
+        return ProfileView()
     }()
 }

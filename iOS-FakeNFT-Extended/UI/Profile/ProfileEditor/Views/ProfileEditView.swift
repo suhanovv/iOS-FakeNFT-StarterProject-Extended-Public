@@ -31,42 +31,31 @@ private enum Constants {
 
 // MARK: - ProfileEditView
 struct ProfileEditView: View {
-    
-    // MARK: - Incoming data
-    let initialName: String
-    let initialDescription: String
-    let initialWebsite: String
+    // MARK: - AppStorage
+    @AppStorage("profile_name", store: .standard) private var storedName: String = ""
+    @AppStorage("profile_description", store: .standard) private var storedDescription: String = ""
+    @AppStorage("profile_website", store: .standard) private var storedWebsite: String = ""
+    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
     
     // MARK: - State
-    @State var name: String = ""
-    @State var description: String = ""
-    @State var website: String = ""
+    @State private var name: String = ""
+    @State private var description: String = ""
+    @State private var website: String = ""
     @State private var isPhotoMenuPresented = false
     @State private var showLinkPhotoAlert = false
     @State private var photoURLText = ""
     @State private var showExitAlert = false
     
-    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
     @Environment(\.dismiss) var dismiss
-    
-    init(name: String, description: String, website: String) {
-        self.initialName = name
-        self.initialDescription = description
-        self.initialWebsite = website
-        
-        _name = State(initialValue: name)
-        _description = State(initialValue: description)
-        _website = State(initialValue: website)
-    }
-    
-    private var hasChanges: Bool {
-        name != initialName ||
-        description != initialDescription ||
-        website != initialWebsite
-    }
     
     private var photoURL: URL? {
         URL(string: savedPhotoURL)
+    }
+    
+    private var hasChanges: Bool {
+        name != storedName ||
+        description != storedDescription ||
+        website != storedWebsite
     }
     
     // MARK: - Body
@@ -80,6 +69,11 @@ struct ProfileEditView: View {
                 
                 Spacer(minLength: 40)
             }
+        }
+        .onAppear {
+            name = storedName
+            description = storedDescription
+            website = storedWebsite
         }
         .confirmationDialog(
             Text(Constants.photoDialogTitle),
@@ -110,6 +104,11 @@ struct ProfileEditView: View {
         .overlay {
             ExitAlert(isPresented: $showExitAlert) {
                 dismiss()
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if hasChanges {
+                saveButton
             }
         }
     }
@@ -183,36 +182,55 @@ struct ProfileEditView: View {
     
     // MARK: - Toolbar
     private var navigationToolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button {
-                if hasChanges {
-                    showExitAlert = true
-                } else {
-                    dismiss()
+        Group {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    if hasChanges {
+                        showExitAlert = true
+                    } else {
+                        dismiss()
+                    }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(Font(UIFont.headline5))
+                        .foregroundColor(.ypBlack)
                 }
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(Font(UIFont.headline5))
-                    .foregroundColor(.ypBlack)
             }
         }
+    }
+    
+    private var saveButton: some View {
+        VStack {
+            Spacer()
+            Button {
+                saveProfile()
+                dismiss()
+            } label: {
+                Text("Сохранить")
+                    .font(Font(UIFont.bodyBold))
+                    .foregroundColor(.ypWhite)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.ypBlack)
+                    .cornerRadius(16)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 50)
+            }
+        }
+        .ignoresSafeArea(edges: .bottom)
+    }
+    
+    private func saveProfile() {
+        storedName = name
+        storedDescription = description
+        storedWebsite = website
     }
 }
 
 // MARK: - Preview_ProfileEditView
 #Preview {
     NavigationStack {
-        ProfileEditView(
-            name: "Joaquin Phoenix",
-            description: "Дизайнер из Казани и т.д...",
-            website: "https://example.com"
-        )
-        .environment(\.colorScheme, .light)
-        .onAppear {
-            UserDefaults.standard.set(
-                "https://i.pravatar.cc/150",
-                forKey: ProfileStorageKeys.photoURL
-            )
-        }
+        ProfileEditView()
+            .environment(\.locale, .init(identifier: "ru"))
     }
 }
