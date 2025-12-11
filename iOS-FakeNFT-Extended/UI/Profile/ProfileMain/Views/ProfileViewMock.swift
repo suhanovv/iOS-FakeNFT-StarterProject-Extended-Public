@@ -28,4 +28,19 @@ struct ProfileViewMock {
         
         return ProfileView()
     }()
+    
+    let mockNFT = NftItem(
+        id: "594aaf01-5962-4ab7-a6b5-470ea37beb93",
+        name: "Minnie Sanders",
+        images: [
+            "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png",
+            "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/2.png",
+            "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/3.png"
+        ],
+        rating: 2,
+        price: 40.59,
+        author: "https://wonderful_dubinsky.fakenfts.org/",
+        createdAt: "2023-07-11T00:08:48.728Z[GMT]",
+        description: "mediocritatem interdum eleifend penatibus adipiscing mattis"
+    )
 }
