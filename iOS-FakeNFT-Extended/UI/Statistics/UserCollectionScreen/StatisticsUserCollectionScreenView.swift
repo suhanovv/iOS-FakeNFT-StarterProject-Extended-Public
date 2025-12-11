@@ -15,7 +15,9 @@ struct StatisticsUserCollectionScreenView: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 108))]) {
+            LazyVGrid(
+                columns: [GridItem(.adaptive(minimum: NftCardView.width))]
+            ) {
                 ForEach(viewModel.collection) { nft in
                     NftCardView(
                         viewModel:
@@ -38,7 +40,10 @@ struct StatisticsUserCollectionScreenView: View {
             }
         }
         .padding(.horizontal, 16)
+        .padding(.top, 20)
+        .background(.ypWhite)
         .scrollIndicators(.hidden)
+        .navigationTitle(Constants.screenNftTitle)
         .task {
             await viewModel.loadData()
         }
@@ -47,6 +52,7 @@ struct StatisticsUserCollectionScreenView: View {
 
 private enum Constants {
     static let noNftTitle = NSLocalizedString("UserCollection.noNft.title", comment: "")
+    static let screenNftTitle = NSLocalizedString("UserCollection.screen.title", comment: "")
 }
 
 #Preview("not empty") {
