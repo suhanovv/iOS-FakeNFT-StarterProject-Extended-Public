@@ -48,7 +48,7 @@ extension StatisticsUserCollectionScreenView {
         func loadData() async {
             state = .loading
             defer { state = .loaded }
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
             if isEmpty { return }
             await loadUserCollection()
             await loadLikes()

@@ -23,7 +23,7 @@ extension User {
             avatar: URL(string: avatars.randomElement()!)!,
             description: "With a keen eye for emerging trends and a commitment to authenticity, I offer a diverse collection of digital assets that cater to collectors and investors alike.",
             website: URL(string: "https://practicum.yandex.ru/graphic-designer/")!,
-            nfts: [],
+            nfts: ["123", "456", "789"],
             rating: Int.random(in: 1...50),
             id: UUID().uuidString)
     }
