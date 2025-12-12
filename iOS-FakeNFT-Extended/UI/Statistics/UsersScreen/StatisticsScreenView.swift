@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct StatisticsScreenView: View {
+    #warning("TODO: Реализовать сохранение сортировки")
     @Environment(Coordinator.self) var coordinator
     @State private var viewModel: ViewModel
     @State private var isSortOptionsPresented = false

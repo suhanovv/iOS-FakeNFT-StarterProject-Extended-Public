@@ -91,7 +91,7 @@ final class NftDetailViewController: UIViewController {
 
 // MARK: - NftDetailView
 
-extension NftDetailViewController: NftDetailView {
+extension NftDetailViewController: @MainActor NftDetailView {
     func displayCells(_ cellModels: [NftDetailCellModel]) {
         self.cellModels = cellModels
         collectionView.reloadData()

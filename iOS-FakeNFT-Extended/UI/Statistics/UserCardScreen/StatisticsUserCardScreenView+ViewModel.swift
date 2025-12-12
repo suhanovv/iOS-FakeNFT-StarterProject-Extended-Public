@@ -8,6 +8,7 @@ import Observation
 
 extension StatisticsUserCardScreenView {
     @Observable
+    @MainActor
     final class ViewModel {
         let userId: String
         var nftCount: Int { user?.nfts.count ?? 0 }

@@ -8,6 +8,7 @@ import Observation
 
 extension StatisticsScreenView {
     @Observable
+    @MainActor
     final class ViewModel {
         var users: [User]
         private(set) var sortType: UsersSortBy = .rating
