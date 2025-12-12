@@ -31,6 +31,16 @@ struct MyNFTView: View {
         }
         .listStyle(.plain)
         .padding(.vertical, 20)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    //add action
+                } label: {
+                    Image(.CommonIcons.sort)
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
     }
 }
 
