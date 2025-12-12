@@ -13,10 +13,16 @@ private enum Constants {
     static let title = "Мои NFT"
     
     // Dialog
+    static let nftDialogTitle = "Сортировка"
+    static let byPrice = "По цене"
+    static let byRating = "По рейтингу"
+    static let byName = "По названию"
+    static let close = "Закрыть"
 }
 
 struct MyNFTView: View {
     let nfts: [NftItem]
+    @State private var isNftMenuPresented = false
     
     var body: some View {
         List {
@@ -34,12 +40,31 @@ struct MyNFTView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    //add action
+                    isNftMenuPresented = true
                 } label: {
                     Image(.CommonIcons.sort)
                         .foregroundColor(.ypBlack)
                 }
             }
+        }
+        .confirmationDialog(
+            Text(Constants.nftDialogTitle),
+            isPresented: $isNftMenuPresented,
+            titleVisibility: .visible
+        ) {
+            Button(Constants.byPrice) {
+                //add action
+            }
+            
+            Button(Constants.byRating) {
+                //add action
+            }
+            
+            Button(Constants.byName) {
+                //add action
+            }
+            
+            Button(Constants.close, role: .cancel) {}
         }
     }
 }
