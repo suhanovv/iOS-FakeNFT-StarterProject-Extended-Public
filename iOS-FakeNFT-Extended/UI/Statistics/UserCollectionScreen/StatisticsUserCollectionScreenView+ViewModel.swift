@@ -9,6 +9,7 @@ import Observation
 
 extension StatisticsUserCollectionScreenView {
     @Observable
+    @MainActor
     final class ViewModel {
         let userId: String
         var isEmpty: Bool = false

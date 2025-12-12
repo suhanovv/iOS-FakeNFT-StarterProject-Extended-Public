@@ -8,7 +8,7 @@ enum NetworkClientError: Error {
     case incorrectRequest(String)
 }
 
-protocol NetworkClient {
+protocol NetworkClient: Sendable {
     func send(request: NetworkRequest) async throws -> Data
     func send<T: Decodable>(request: NetworkRequest) async throws -> T
 }
@@ -40,7 +40,7 @@ actor DefaultNetworkClient: NetworkClient {
         return data
     }
 
-    func send<T: Decodable>(request: NetworkRequest) async throws -> T {
+    func send<T: Decodable & Sendable>(request: NetworkRequest) async throws -> T {
         let data = try await send(request: request)
         return try await parse(data: data)
     }
