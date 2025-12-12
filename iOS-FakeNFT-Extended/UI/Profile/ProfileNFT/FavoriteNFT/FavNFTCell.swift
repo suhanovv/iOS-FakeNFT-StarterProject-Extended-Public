@@ -41,7 +41,7 @@ struct FavNFTCell: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Button {
-                FavoritesStorage.toggle(nft.id)
+                FavoritesStorage.remove(nft.id)
             } label: {
                 Image(.NftCardIcons.like)
                     .resizable()
