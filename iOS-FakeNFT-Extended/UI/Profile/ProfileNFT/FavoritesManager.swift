@@ -1,5 +1,5 @@
 //
-//  FavoritesManager.swift.swift
+//  FavoritesManager.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Ди Di on 12/12/25.
