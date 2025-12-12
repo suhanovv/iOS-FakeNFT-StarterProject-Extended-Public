@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum CollectionsSortOption {
+enum CollectionsSortOption: String {
     case name
     case nftCount
-    case rating
 }
+
