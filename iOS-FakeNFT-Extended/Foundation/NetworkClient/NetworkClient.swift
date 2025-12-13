@@ -56,13 +56,42 @@ actor DefaultNetworkClient: NetworkClient {
         urlRequest.httpMethod = request.httpMethod.rawValue
 
         if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
-            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = dtoEncoded
+           let contentType = request.contentType {
+            switch contentType {
+                case .json: urlRequest.httpBody = makeJsonData(dto: dto)
+                case .formUrlEncoded: urlRequest.httpBody = makeFormUrlEncodedData(dto: dto)
+            }
+            urlRequest.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
         return urlRequest
+    }
+    
+    private func makeJsonData(dto: Encodable) -> Data? {
+        return try? encoder.encode(dto)
+    }
+    
+    private func makeFormUrlEncodedData(dto: Encodable) -> Data? {
+        if let encodedData = try? encoder.encode(dto),
+            let dict = try? JSONSerialization.jsonObject(with: encodedData, options: .fragmentsAllowed) as? [String : Any] {
+            let allParams = dict.reduce(into: [String]()) { (data, pair) in
+                let stringValue = switch pair.value.self {
+                    case is NSNull: "null"
+                    case is [String]: (pair.value as? [String])?.joined(separator: ",") ?? "null"
+                    default: pair.value
+                }
+                data.append("\(pair.key)=\(stringValue)")
+            }
+            var allowedCharacters = CharacterSet.urlQueryAllowed
+            allowedCharacters.remove(charactersIn: ",")
+            
+            return allParams
+                .joined(separator: "&")
+                .addingPercentEncoding(withAllowedCharacters: allowedCharacters)?
+                .data(using: .utf8)
+        }
+        return nil
     }
 
     private func parse<T: Decodable>(data: Data) async throws -> T {
