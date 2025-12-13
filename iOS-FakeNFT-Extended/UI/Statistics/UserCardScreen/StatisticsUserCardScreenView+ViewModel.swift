@@ -10,16 +10,17 @@ extension StatisticsUserCardScreenView {
     @Observable
     @MainActor
     final class ViewModel {
-        let userId: String
         var nftCount: Int { user?.nfts.count ?? 0 }
-        
+        private(set) var state: ScreenState = .initial
         private(set) var user: User?
         
-        init(userId: String) {
-            self.userId = userId
-        }
+        init() {}
         
-        func load() async {
+        func loadUser(_ userId: String) async {
+            if state != .initial { return }
+            state = .loading
+            defer { state = .loaded }
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
             user = User.makeFakeUser()
         }
     }

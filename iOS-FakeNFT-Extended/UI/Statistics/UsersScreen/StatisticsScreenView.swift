@@ -8,20 +8,22 @@
 import SwiftUI
 
 struct StatisticsScreenView: View {
-    #warning("TODO: Реализовать сохранение сортировки")
+    @AppStorage(AppStorageKeys.usersSortBy) private var sortOrder: UsersSortType = .rating
     @Environment(Coordinator.self) var coordinator
-    @State private var viewModel: ViewModel
+    @State private var viewModel = ViewModel()
     @State private var isSortOptionsPresented = false
-    
-    init() {
-        _viewModel = State(initialValue: .init(users: (1...10).map { _ in User.makeFakeUser() }))
-    }
     
     // MARK: - Body
     var body: some View {
         VStack {
             topBar
             content
+        }
+        .overlay {
+            ProgressBarView(isActive: viewModel.state == .loading)
+        }
+        .task {
+            await viewModel.loadUsers(orderBy: sortOrder)
         }
         // hack for hiding horizontal tabbar bar 1px separator
         .padding(.vertical, 1)
@@ -33,7 +35,7 @@ struct StatisticsScreenView: View {
     private var topBar: some View {
         HStack {
             Spacer()
-            SortingToolbarButtonView(viewModel: $viewModel)
+            SortingToolbarButtonView(viewModel: $viewModel, sortOrder: $sortOrder)
         }
         .frame(height: 42)
         .background(.ypWhite)

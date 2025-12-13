@@ -9,12 +9,9 @@ import SwiftUI
 import Kingfisher
 
 struct StatisticsUserCardScreenView: View {
+    let userId: String
     @Environment(Coordinator.self) private var coordinator
-    @State private var viewModel: ViewModel
-    
-    init(userId: String) {
-        _viewModel = State(initialValue: StatisticsUserCardScreenView.ViewModel(userId: userId))
-    }
+    @State private var viewModel = ViewModel()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -25,16 +22,19 @@ struct StatisticsUserCardScreenView: View {
                 description: user?.description ?? "")
             UserWebPageButton().padding(.top, 28)
             UserNftTokensLink(nftCount: viewModel.nftCount).padding(.top, 41).onTapGesture {
-                coordinator.push(Screen.userCollection(userId: viewModel.userId))
+                coordinator.push(Screen.userCollection(userId: userId))
             }
             Spacer()
+        }
+        .overlay {
+            ProgressBarView(isActive: viewModel.state == .loading)
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.ypWhite)
         .task {
-            await viewModel.load()
+            await viewModel.loadUser(userId)
         }
     }
 }

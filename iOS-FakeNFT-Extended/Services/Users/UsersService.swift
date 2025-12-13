@@ -1,12 +1,12 @@
 import Foundation
 
-enum UsersSortBy: String {
+enum UsersSortType: String {
     case name
     case rating
 }
 
 protocol UsersServiceProtocol: Sendable {
-    func getUsers(page: Int?, orderBy: UsersSortBy) async throws -> [User]
+    func getUsers(page: Int?, orderBy: UsersSortType) async throws -> [User]
     func getUserById(_ userId: String) async throws -> User
 }
 
@@ -18,7 +18,7 @@ actor UsersService: UsersServiceProtocol {
         self.networkClient = networkClient
     }
     
-    func getUsers(page: Int?, orderBy: UsersSortBy) async throws -> [User] {
+    func getUsers(page: Int?, orderBy: UsersSortType) async throws -> [User] {
         let request = GetUsersRequest(page: page ?? 0, size: perPage, sortBy: orderBy.rawValue)
         return try await networkClient.send(request: request)
     }

@@ -9,4 +9,5 @@ enum ScreenState {
     case loading
     case loaded
     case initial
+    case error
 }

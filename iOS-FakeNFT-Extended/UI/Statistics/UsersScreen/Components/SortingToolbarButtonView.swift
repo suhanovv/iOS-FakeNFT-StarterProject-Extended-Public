@@ -10,6 +10,7 @@ import SwiftUI
 struct SortingToolbarButtonView: View {
     @State private var isSortOptionsPresented: Bool = false
     @Binding var viewModel: StatisticsScreenView.ViewModel
+    @Binding var sortOrder: UsersSortType
     
     var body: some View {
         Button(action: {
@@ -23,12 +24,12 @@ struct SortingToolbarButtonView: View {
             titleVisibility: .visible
         ) {
             Button {
-                viewModel.setSortType(.name)
+                sortOrder = .name
             } label: {
                 Text(Constants.sortingByNameTitle)
             }
             Button {
-                viewModel.setSortType(.rating)
+                sortOrder = .rating
             } label: {
                 Text(Constants.sortingByRatingTitle)
             }
@@ -36,6 +37,11 @@ struct SortingToolbarButtonView: View {
                 isSortOptionsPresented = false
             }
             
+        }
+        .onChange(of: sortOrder) {
+            Task {
+                await viewModel.changeOrderBy(sortOrder)
+            }
         }
     }
 }
