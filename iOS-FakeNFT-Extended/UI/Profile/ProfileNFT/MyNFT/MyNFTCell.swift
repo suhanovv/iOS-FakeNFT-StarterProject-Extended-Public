@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct MyNFTCell: View {
+    // MARK: - AppStorage
+    @AppStorage(Constants.StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
+    
     let nft: NftItem
     let rating: Int
     
-    @AppStorage("favorite_nft_ids") private var favoritesMarker: Data = Data()
-
-    private var isFavorite: Bool {
-        (try? JSONDecoder().decode([String].self, from: favoritesMarker))?.contains(nft.id) ?? false
+    private var isFavourite: Bool {
+        (try? JSONDecoder().decode([String].self, from: favouritesMarker))?.contains(nft.id) ?? false
     }
     
     private var placeholder: some View {
-        Image("EmptyNft")
+        Image(.emptyNft)
             .resizable()
             .scaledToFill()
     }
@@ -38,13 +39,13 @@ struct MyNFTCell: View {
                 .frame(width: 108, height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             Button {
-                FavoritesStorage.toggle(nft.id)
+                FavouritesStorage.toggle(nft.id)
             } label: {
                 Image(.NftCardIcons.like)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)
-                    .foregroundColor(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+                    .foregroundColor(isFavourite ? .ypRedUniversal : .ypWhiteUniversal)
             }
             .buttonStyle(.plain)
         }
@@ -115,7 +116,7 @@ struct MyNFTCell: View {
     
     private var nftPriceSection: some View {
         VStack(alignment: .leading) {
-            Text("Цена")
+            Text( Constants.Titles.price)
                 .font(Font(UIFont.caption2))
                 .foregroundColor(.ypBlack)
             

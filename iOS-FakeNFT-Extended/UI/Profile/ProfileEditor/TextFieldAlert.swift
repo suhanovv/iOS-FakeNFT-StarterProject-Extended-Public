@@ -7,19 +7,13 @@
 
 import SwiftUI
 
-// MARK: - Constants
-private enum Constants {
-    static let cancel = "Отмена"
-    static let save = "Сохранить"
-}
-
 struct TextFieldAlert: View {
     @Binding var isPresented: Bool
     var title: String
     var placeholder: String = ""
     @Binding var text: String
     var onSave: () -> Void
-
+    
     var body: some View {
         if isPresented {
             ZStack {
@@ -35,17 +29,17 @@ struct TextFieldAlert: View {
     
     // MARK: - Views
     private var alertBox: some View {
-           VStack(spacing: 0) {
-               titleSection
-               textFieldSection
-               Divider().padding(.top, 16)
-               buttonsSection
-           }
-           .frame(width: 273)
-           .background(Color(.ypLightGray))
-           .cornerRadius(13)
-           .shadow(radius: 22)
-       }
+        VStack(spacing: 0) {
+            titleSection
+            textFieldSection
+            Divider().padding(.top, 16)
+            buttonsSection
+        }
+        .frame(width: 273)
+        .background(Color(.ypLightGray))
+        .cornerRadius(13)
+        .shadow(radius: 22)
+    }
     
     private var titleSection: some View {
         Text(title)
@@ -71,25 +65,25 @@ struct TextFieldAlert: View {
         }
         .frame(height: 44)
     }
-
+    
     private var cancelButton: some View {
         Button {
             isPresented = false
         } label: {
-            Text(Constants.cancel)
+            Text(Constants.Buttons.cancel)
                 .font(Font(UIFont.bodyRegular))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)
         }
     }
-
+    
     private var saveButton: some View {
         Button {
             isPresented = false
             onSave()
         } label: {
-            Text(Constants.save)
+            Text(Constants.Buttons.save)
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
@@ -107,6 +101,6 @@ struct TextFieldAlert: View {
         text: .constant("http://example.com"),
         onSave: {}
     )
-        .ignoresSafeArea()
-        .background(Color.ypWhite)
+    .ignoresSafeArea()
+    .background(Color.ypWhite)
 }

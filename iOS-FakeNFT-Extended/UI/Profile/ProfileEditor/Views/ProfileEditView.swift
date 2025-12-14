@@ -7,35 +7,12 @@
 
 import SwiftUI
 
-// MARK: - Constants
-private enum Constants {
-    // Titles
-    static let nameTitle = "Имя"
-    static let descriptionTitle = "Описание"
-    static let websiteTitle = "Сайт"
-    static let linkAlertTitle = "Ссылка на фото"
-    
-    // Dialog
-    static let photoDialogTitle = "Фото профиля"
-    static let changePhoto = "Изменить фото"
-    static let deletePhoto = "Удалить фото"
-    static let cancel = "Отмена"
-    
-    // Icons
-    static let cameraIcon = "camera.fill"
-    static let backIcon = "chevron.left"
-    
-    //Placeholder
-    static let placeholder = "Введите ссылку"
-}
-
-// MARK: - ProfileEditView
 struct ProfileEditView: View {
     // MARK: - AppStorage
-    @AppStorage("profile_name", store: .standard) private var storedName: String = ""
-    @AppStorage("profile_description", store: .standard) private var storedDescription: String = ""
-    @AppStorage("profile_website", store: .standard) private var storedWebsite: String = ""
-    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
+    @AppStorage(Constants.StorageKeys.name) private var storedName: String = ""
+    @AppStorage(Constants.StorageKeys.description) private var storedDescription: String = ""
+    @AppStorage(Constants.StorageKeys.website) private var storedWebsite: String = ""
+    @AppStorage(Constants.StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
     // MARK: - State
     @State private var name: String = ""
@@ -76,20 +53,20 @@ struct ProfileEditView: View {
             website = storedWebsite
         }
         .confirmationDialog(
-            Text(Constants.photoDialogTitle),
+            Text(Constants.Titles.photoDialog),
             isPresented: $isPhotoMenuPresented,
             titleVisibility: .visible
         ) {
-            Button(Constants.changePhoto) {
+            Button(Constants.Buttons.changePhoto) {
                 photoURLText = savedPhotoURL
                 showLinkPhotoAlert = true
             }
             
-            Button(Constants.deletePhoto, role: .destructive) {
+            Button(Constants.Buttons.deletePhoto, role: .destructive) {
                 savedPhotoURL = ""
             }
             
-            Button(Constants.cancel, role: .cancel) {}
+            Button(Constants.Buttons.cancel, role: .cancel) {}
         }
         .onTapGesture {
             hideKeyboard()
@@ -120,7 +97,7 @@ struct ProfileEditView: View {
                 .offset(y: -4)
                 .onTapGesture { isPhotoMenuPresented = true }
             
-            Image(systemName: Constants.cameraIcon)
+            Image(systemName: "chevron.left")
                 .font(.system(size: 10))
                 .padding(6)
                 .background(Color.ypLightGray)
@@ -130,7 +107,7 @@ struct ProfileEditView: View {
     
     private var nameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.nameTitle)
+            Text(Constants.StorageKeys.profileName)
                 .font(Font(UIFont.headline3))
             
             TextField("", text: $name)
@@ -144,7 +121,7 @@ struct ProfileEditView: View {
     
     private var descriptionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.descriptionTitle)
+            Text(Constants.StorageKeys.profileDescription)
                 .font(Font(UIFont.headline3))
             
             ProfileAutoGrowingTextEditor(text: $description)
@@ -154,7 +131,7 @@ struct ProfileEditView: View {
     
     private var websiteSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.websiteTitle)
+            Text(Constants.StorageKeys.profileWebsite)
                 .font(Font(UIFont.headline3))
             
             TextField("", text: $website)
@@ -169,8 +146,8 @@ struct ProfileEditView: View {
     private var alertOverlaySection: some View {
         TextFieldAlert(
             isPresented: $showLinkPhotoAlert,
-            title: Constants.linkAlertTitle,
-            placeholder: Constants.placeholder,
+            title: Constants.Titles.photoAlert,
+            placeholder: Constants.StorageKeys.photoAlertPh,
             text: $photoURLText
         ) {
             let trimmed = photoURLText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -206,7 +183,7 @@ struct ProfileEditView: View {
                 saveProfile()
                 dismiss()
             } label: {
-                Text("Сохранить")
+                Text("")
                     .font(Font(UIFont.bodyBold))
                     .foregroundColor(.ypWhite)
                     .frame(maxWidth: .infinity)

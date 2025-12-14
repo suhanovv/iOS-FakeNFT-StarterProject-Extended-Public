@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ProfileView: View {
+    // MARK: - AppStorage
     @AppStorage("profile_name") private var storedName: String = ""
     @AppStorage("profile_description") private var storedDescription: String = ""
     @AppStorage("profile_website") private var storedWebsite: String = ""
-    @AppStorage(ProfileStorageKeys.photoURL) private var savedPhotoURL: String = ""
-    
-    var photoURL: URL? { URL(string: savedPhotoURL) }
+    @AppStorage(Constants.StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
     @State private var isEditing = false
+    
+    var photoURL: URL? { URL(string: savedPhotoURL) }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -64,11 +65,11 @@ struct ProfileView: View {
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: "Мои NFT", count: 21) {
+            ProfileListRow(title: Constants.Titles.myNFT, count: 21) {
                 // add action
             }
             
-            ProfileListRow(title: "Избранные NFT", count: 21) {
+            ProfileListRow(title: Constants.Titles.favouriteNFT, count: 21) {
                 // add action
             }
         }
@@ -99,7 +100,7 @@ struct ProfileView: View {
                 UserDefaults.standard.set("Joaquin Phoenix", forKey: "profile_name")
                 UserDefaults.standard.set("Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", forKey: "profile_description")
                 UserDefaults.standard.set("JoaquinPhoenix.com", forKey: "profile_website")
-                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: ProfileStorageKeys.photoURL)
+                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: Constants.StorageKeys.photoURL)
             }
     }
 }

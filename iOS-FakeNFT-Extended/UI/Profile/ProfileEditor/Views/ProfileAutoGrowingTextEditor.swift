@@ -45,7 +45,7 @@ struct ProfileAutoGrowingTextEditor: View {
     VStack(alignment: .leading, spacing: 16) {
         Text("Текст")
             .font(.headline)
-
+        
         ProfileAutoGrowingTextEditor(text: .constant("Пример текста\nкоторый растёт\nпо мере ввода"))
             .padding()
     }

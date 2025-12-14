@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct FavNFTCell: View {
+    // MARK: - AppStorage
+    @AppStorage(Constants.StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
+    
     let nft: NftItem
     let rating: Int
     
-    @AppStorage("favorite_nft_ids") private var favoritesMarker: Data = Data()
-    
-    private var favoriteIds: [String] {
-        (try? JSONDecoder().decode([String].self, from: favoritesMarker)) ?? []
+    private var favouriteIds: [String] {
+        (try? JSONDecoder().decode([String].self, from: favouritesMarker)) ?? []
     }
     
-    private var isFavorite: Bool {
-        favoriteIds.contains(nft.id)
+    private var isFavourite: Bool {
+        favouriteIds.contains(nft.id)
     }
     
     private var placeholder: some View {
@@ -41,14 +42,14 @@ struct FavNFTCell: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Button {
-                FavoritesStorage.remove(nft.id)
+                FavouritesStorage.remove(nft.id)
             } label: {
                 Image(.NftCardIcons.like)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 42, height: 42)
                     .padding(-5)
-                    .foregroundColor(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+                    .foregroundColor(isFavourite ? .ypRedUniversal : .ypWhiteUniversal)
             }
             .buttonStyle(.plain)
         }
@@ -117,10 +118,10 @@ struct FavNFTCell: View {
             .foregroundColor(.ypBlack)
     }
     
-    private func removeFavorite() {
-        var ids = favoriteIds
+    private func removeFavourite() {
+        var ids = favouriteIds
         ids.removeAll { $0 == nft.id }
-        favoritesMarker = (try? JSONEncoder().encode(ids)) ?? Data()
+        favouritesMarker = (try? JSONEncoder().encode(ids)) ?? Data()
     }
 }
 

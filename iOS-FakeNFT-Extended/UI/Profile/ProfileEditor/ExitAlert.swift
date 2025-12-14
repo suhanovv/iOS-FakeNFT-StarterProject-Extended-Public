@@ -27,33 +27,33 @@ struct ExitAlert: View {
     private var alertBox: some View {
         VStack(spacing: 0) {
             VStack {
-                Text("Уверены,\nчто хотите выйти?")
+                Text(Constants.Titles.exitAlert)
                     .font(Font(UIFont.bodyBold))
                     .multilineTextAlignment(.center)
             }
             .padding(.vertical, 16)
             .frame(height: 76)
-
+            
             Divider()
-
+            
             HStack(spacing: 0) {
                 Button {
                     isPresented = false
                 } label: {
-                    Text("Остаться")
+                    Text(Constants.Buttons.stayConfirmation)
                         .font(Font(UIFont.bodyRegular))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 11)
                 }
-
+                
                 Divider()
-
+                
                 Button {
                     isPresented = false
                     onExit()
                 } label: {
-                    Text("Выйти")
+                    Text(Constants.Buttons.exitConfirmation)
                         .font(Font(UIFont.bodyBold))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)

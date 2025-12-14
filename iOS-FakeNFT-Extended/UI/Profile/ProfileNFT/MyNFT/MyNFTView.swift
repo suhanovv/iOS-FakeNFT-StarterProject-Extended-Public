@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-// MARK: - Constants
-private enum Constants {
-    // Titles
-    static let title = "Мои NFT"
-    
-    // Dialog
-    static let nftDialogTitle = "Сортировка"
-    static let byPrice = "По цене"
-    static let byRating = "По рейтингу"
-    static let byName = "По названию"
-    static let close = "Закрыть"
-}
-
 enum NftSortType {
     case byPrice
     case byRating
@@ -33,17 +20,17 @@ struct MyNFTView: View {
     @State private var sortType: NftSortType = .byName
     
     private var sortedNfts: [NftItem] {
-           switch sortType {
-           case .byPrice:
-               return nfts.sorted { ($0.price ?? 0) < ($1.price ?? 0) }
-
-           case .byRating:
-               return nfts.sorted { ($0.rating ?? 0) > ($1.rating ?? 0) }
-
-           case .byName:
-               return nfts.sorted { ($0.name ?? "") < ($1.name ?? "") }
-           }
-       }
+        switch sortType {
+        case .byPrice:
+            return nfts.sorted { ($0.price ?? 0) < ($1.price ?? 0) }
+            
+        case .byRating:
+            return nfts.sorted { ($0.rating ?? 0) > ($1.rating ?? 0) }
+            
+        case .byName:
+            return nfts.sorted { ($0.name ?? "") < ($1.name ?? "") }
+        }
+    }
     
     var body: some View {
         List {
@@ -69,23 +56,23 @@ struct MyNFTView: View {
             }
         }
         .confirmationDialog(
-            Text(Constants.nftDialogTitle),
+            Text(Constants.Titles.sortNFT),
             isPresented: $isNftMenuPresented,
             titleVisibility: .visible
         ) {
-            Button(Constants.byPrice) {
+            Button(Constants.Buttons.sortByPrice) {
                 sortType = .byPrice
             }
             
-            Button(Constants.byRating) {
+            Button(Constants.Buttons.sortByRating) {
                 sortType = .byRating
             }
             
-            Button(Constants.byName) {
+            Button(Constants.Buttons.sortByName) {
                 sortType = .byName
             }
             
-            Button(Constants.close, role: .cancel) {}
+            Button(Constants.Buttons.close, role: .cancel) {}
         }
     }
 }

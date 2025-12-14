@@ -1,5 +1,5 @@
 //
-//  FavoritesManager.swift
+//  FavouritesManager.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Ди Di on 12/12/25.
@@ -7,21 +7,22 @@
 
 import SwiftUI
 
-struct FavoritesStorage {
-    private static let key = "favorite_nft_ids"
-
-    @AppStorage(key) private static var rawFavoriteIds: Data = Data()
-
-    static var favoriteIds: [String] {
-        (try? JSONDecoder().decode([String].self, from: rawFavoriteIds)) ?? []
+struct FavouritesStorage {
+    // MARK: - AppStorage
+    @AppStorage(Constants.StorageKeys.favouriteNFTIds)
+    
+    private static var rawFavouriteIds: Data = Data()
+    
+    static var favouriteIds: [String] {
+        (try? JSONDecoder().decode([String].self, from: rawFavouriteIds)) ?? []
     }
-
-    static func isFavorite(_ id: String) -> Bool {
-        favoriteIds.contains(id)
+    
+    static func isFavourite(_ id: String) -> Bool {
+        favouriteIds.contains(id)
     }
-
+    
     static func toggle(_ id: String) {
-        var ids = favoriteIds
+        var ids = favouriteIds
         if ids.contains(id) {
             ids.removeAll { $0 == id }
         } else {
@@ -29,14 +30,14 @@ struct FavoritesStorage {
         }
         save(ids)
     }
-
+    
     static func remove(_ id: String) {
-        var ids = favoriteIds
+        var ids = favouriteIds
         ids.removeAll { $0 == id }
         save(ids)
     }
-
+    
     private static func save(_ ids: [String]) {
-        rawFavoriteIds = (try? JSONEncoder().encode(ids)) ?? Data()
+        rawFavouriteIds = (try? JSONEncoder().encode(ids)) ?? Data()
     }
 }
