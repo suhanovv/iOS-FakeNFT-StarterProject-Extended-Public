@@ -24,4 +24,3 @@ enum CollectionsSortOption: String {
     case nftCount
 >>>>>>> b26ab0f (feat: add ViewModels for Catalogue and Collection, add sorting logic for Catalogue and saving sorting results)
 }
-

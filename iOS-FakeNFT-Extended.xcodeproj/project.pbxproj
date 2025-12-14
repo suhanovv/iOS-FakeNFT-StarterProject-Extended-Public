@@ -253,9 +253,10 @@
 		1237F65A2EE82AC30094FC9D /* Catalogue */ = {
 			isa = PBXGroup;
 			children = (
+				1223C8E62EED7A9E00EE781B /* ScreenState.swift */,
+				1223C8E52EED7A6900EE781B /* CollectionScreen */,
+				1223C8E42EED7A5800EE781B /* CatalogueScreen */,
 				1237F65F2EE82B010094FC9D /* CatalogueElements */,
-				1237F65D2EE82AEB0094FC9D /* CatalogueView.swift */,
-				1237F65B2EE82AD40094FC9D /* CollectionView.swift */,
 			);
 			path = Catalogue;
 			sourceTree = "<group>";
@@ -299,7 +300,6 @@
 				ABC5E19A2C31F687002B4068 /* Foundation */,
 				ABC5E19E2C31F6C1002B4068 /* Models */,
 				ABC5E1A92C31FABA002B4068 /* Services */,
-				1223C8912EE99F4400EE781B /* ViewModels */,
 				ABC5E1B32C31FC03002B4068 /* UI */,
 				ABC5E16F2C31F5AF002B4068 /* Assets.xcassets */,
 				ABC5E1712C31F5AF002B4068 /* Preview Content */,
@@ -392,9 +392,9 @@
 				D7AE28332EE09D9700325B47 /* Profile */,
 				D7AE28322EE09D9000325B47 /* Users */,
 				D7AE28302EE09D5A00325B47 /* Nft */,
+				1223C8E82EEEB85300EE781B /* Untitled.swift */,
 				1237F6552EE82A7B0094FC9D /* CollectionsSortOption.swift */,
 				ABC5E1AC2C31FB6C002B4068 /* Requests */,
-				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				1223C89B2EED6B1100EE781B /* CollectionsService.swift */,

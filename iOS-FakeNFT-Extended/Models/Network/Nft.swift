@@ -2,6 +2,7 @@ import Foundation
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 struct Nft: Decodable, Identifiable, Sendable {
 =======
 struct Nft: Decodable, Identifiable {
@@ -15,6 +16,9 @@ struct Nft: Decodable, Identifiable {
 
     /// Уникальный идентификатор NFT (значение приходит из API).
 >>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
+=======
+struct Nft: Decodable, Identifiable {
+>>>>>>> c473469 (Refactor Catalogue/Collection view models based on team feedback)
     let id: String
     let images: [URL]
 <<<<<<< HEAD
