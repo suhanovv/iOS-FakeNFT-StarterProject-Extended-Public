@@ -12,8 +12,8 @@ extension NftCardView {
     @Observable
     final class ViewModel {
         let nft: Nft
-        var image: URL {
-            nft.images[0]
+        var image: URL? {
+            nft.images.first
         }
         private(set) var isLiked: Bool
         private(set) var isInCart: Bool

@@ -23,7 +23,7 @@ struct NftCardView: View {
                 }
                 .resizable()
                 .scaledToFit()
-                .frame(width: 108, height: 108)
+                .frame(height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading) {
                 RatingView(rating: viewModel.nft.rating)
