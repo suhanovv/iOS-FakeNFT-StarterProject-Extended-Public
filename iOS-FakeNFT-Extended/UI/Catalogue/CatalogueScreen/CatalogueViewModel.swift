@@ -7,11 +7,12 @@
 
 import SwiftUI
 
+@MainActor
 final class CatalogueViewModel: ObservableObject {
 
     // MARK: - External dependencies
     
-    private let services: ServicesAssembly?
+    private let collectionsService: CollectionsServiceProtocol
 
     // MARK: - Source
     
@@ -20,28 +21,29 @@ final class CatalogueViewModel: ObservableObject {
     // MARK: - State model
 
     @Published var collections: [CollectionDTO] = []
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
-    @Published private(set) var sortOption: CollectionsSortOption = .name
+    @Published var state: ScreenState = .initial
+    @Published private(set) var sortOption: CollectionsSortOption = .nftCount
 
     // MARK: - Init
 
-    init(services: ServicesAssembly? = nil) {
-        self.services = services
+    init(collectionsService: CollectionsServiceProtocol = CollectionsService()) {
+        self.collectionsService = collectionsService
     }
 
     // MARK: - Public methods
 
-    func load() {
-        isLoading = true
-        errorMessage = nil
-
-        allCollections = MockData.collections
-
-        applySort()
-        isLoading = false
+    func load() async {
+        state = .loading
+        do {
+            let collections = try await collectionsService.fetchCollections()
+            allCollections = collections
+            applySort()
+            state = .loaded
+        } catch {
+            state = .error(error.localizedDescription)
+        }
     }
-
+    
     func setSortOption(_ option: CollectionsSortOption) {
         sortOption = option
         applySort()

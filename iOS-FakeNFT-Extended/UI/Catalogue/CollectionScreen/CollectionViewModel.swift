@@ -7,11 +7,12 @@
 
 import SwiftUI
 
+@MainActor
 final class CollectionViewModel: ObservableObject {
 
     // MARK: - External dependencies
     
-    private let nftService: NftService?
+    private let nftService: NftService
 
     // MARK: - Input
     
@@ -20,14 +21,13 @@ final class CollectionViewModel: ObservableObject {
     // MARK: - State
     
     @Published var nfts: [Nft] = []
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
+    @Published var state: ScreenState = .initial
 
     // MARK: - Init
     
     init(
         collection: CollectionDTO,
-        nftService: NftService? = nil
+        nftService: NftService = MockNftService()
     ) {
         self.collection = collection
         self.nftService = nftService
@@ -35,12 +35,11 @@ final class CollectionViewModel: ObservableObject {
 
     // MARK: - Public methods
     
-    func load() {
-        isLoading = true
-        errorMessage = nil
+    func load() async {
+        state = .loading
 
         nfts = MockData.nfts.filter { collection.nftIds.contains($0.id) }
 
-        isLoading = false
+        state = .loaded
     }
 }

@@ -11,4 +11,3 @@ enum CollectionsSortOption: String {
     case name
     case nftCount
 }
-

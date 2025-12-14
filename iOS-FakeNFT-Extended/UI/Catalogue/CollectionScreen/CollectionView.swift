@@ -26,8 +26,8 @@ struct CollectionView: View {
             backButton
         }
         .toolbar(.hidden, for: .tabBar)
-        .onAppear {
-            viewModel.load()
+        .task {
+            await viewModel.load()
         }
     }
 
@@ -45,7 +45,7 @@ struct CollectionView: View {
         Image(.collectionRow)
             .resizable()
             .scaledToFit()
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.bottom)
     }
 
@@ -53,8 +53,18 @@ struct CollectionView: View {
         VStack(alignment: .leading) {
             collectionTextBlock
 
-            ScrollView {
-                nftGrid
+            switch viewModel.state {
+            case .initial, .loading:
+                ProgressView()
+                    .frame(maxWidth: .infinity, minHeight: 120)
+
+            case .loaded:
+                ScrollView { nftGrid }
+
+            case .error(let message):
+                Text(message)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, minHeight: 120)
             }
         }
         .padding(.horizontal)
@@ -101,7 +111,7 @@ struct CollectionView: View {
 
     private var nftGrid: some View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
-            ForEach(viewModel.nfts, id: \.id) { nft in
+            ForEach(viewModel.nfts) { nft in
                 NavigationLink {
                     NftDetailBridgeView()
                 } label: {
@@ -135,7 +145,8 @@ struct CollectionView: View {
     NavigationStack {
         CollectionView(
             viewModel: CollectionViewModel(
-                collection: MockData.peachCollection
+                collection: MockData.peachCollection,
+                nftService: MockNftService()
             )
         )
     }

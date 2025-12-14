@@ -8,30 +8,27 @@
 import SwiftUI
 
 struct CatalogueView: View {
-
+    
     // MARK: - Properties
-
+    
+    @Environment(ServicesAssembly.self) private var services
     @StateObject private var viewModel = CatalogueViewModel()
-
+    
     @AppStorage("catalogueSortOption")
-    private var storedSortOptionRaw: String = CollectionsSortOption.name.rawValue
-
+    private var storedSortOption: CollectionsSortOption = .nftCount
+    
     @State private var isSortDialogPresented = false
-
-    private var currentSortOption: CollectionsSortOption {
-        CollectionsSortOption(rawValue: storedSortOptionRaw) ?? .name
-    }
-
+    
     // MARK: - Body
-
+    
     var body: some View {
         VStack(spacing: .zero) {
             headerBar
             collectionsScrollView
         }
-        .onAppear {
-            viewModel.setSortOption(currentSortOption)
-            viewModel.load()
+        .task {
+            viewModel.setSortOption(storedSortOption)
+            await viewModel.load()
         }
         .confirmationDialog(
             "Сортировка",
@@ -41,25 +38,24 @@ struct CatalogueView: View {
             sortOptionsDialog
         }
     }
-
+    
     // MARK: - Views
-
+    
     private var headerBar: some View {
         HStack {
             Spacer()
-
+            
             Button {
                 isSortDialogPresented = true
             } label: {
-                Image("Common Icons/Sort")
-                    .renderingMode(.template)
+                Image(.CommonIcons.sort)
                     .foregroundStyle(.ypBlackUniversal)
             }
             .padding(.trailing, 16)
             .padding(.top, 16)
         }
     }
-
+    
     private var collectionsScrollView: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -80,20 +76,20 @@ struct CatalogueView: View {
             .padding(.bottom, 16)
         }
     }
-
+    
     private var sortOptionsDialog: some View {
         Group {
             Button("По названию") {
-                storedSortOptionRaw = CollectionsSortOption.name.rawValue
+                storedSortOption = .name
                 viewModel.setSortOption(.name)
             }
-
+            
             Button("По количеству NFT") {
-                storedSortOptionRaw = CollectionsSortOption.nftCount.rawValue
+                storedSortOption = .nftCount
                 viewModel.setSortOption(.nftCount)
             }
-
-            Button("Закрыть", role: .cancel) { }
+            
+            Button("Закрыть", role: .cancel) {}
         }
     }
 }
