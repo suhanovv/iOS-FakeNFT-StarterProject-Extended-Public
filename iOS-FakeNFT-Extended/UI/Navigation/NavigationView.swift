@@ -9,25 +9,37 @@ import SwiftUI
 
 struct NavigationView: View {
     @State private var coordinator = Coordinator()
+    
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            coordinator.build(screen: .main)
-                .navigationDestination(for: Screen.self) { screen in
-                    coordinator.build(screen: screen)
-                        .navigationBarBackButtonHidden(true)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarLeading) {
-                                Image(systemName: "chevron.backward")
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.ypBlack)
-                                    .onTapGesture {
-                                        coordinator.pop()
-                                    }
-                            }
-                        }
-                }
+            root
+                .navigationDestination(for: Screen.self, destination: destination)
         }
         .environment(coordinator)
+    }
+    
+    private var root: some View {
+        coordinator.build(screen: .main)
+    }
+    
+    @ViewBuilder
+    private func destination(_ screen: Screen) -> some View {
+        coordinator.build(screen: screen)
+            .navigationBarBackButtonHidden(true)
+            .toolbar { backToolbar }
+    }
+    
+    private var backToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            backButton
+        }
+    }
+    
+    private var backButton: some View {
+        Image(systemName: "chevron.backward")
+            .fontWeight(.bold)
+            .foregroundStyle(.ypBlack)
+            .onTapGesture { coordinator.pop() }
     }
 }
 
