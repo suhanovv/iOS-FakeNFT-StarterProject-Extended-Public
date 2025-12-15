@@ -5,14 +5,15 @@
 //  Created by Вадим Суханов on 05.12.2025.
 //
 
-import SwiftUI
+import Observation
+import Foundation
 
 extension NftCardView {
     @Observable
-    class ViewModel {
+    final class ViewModel {
         let nft: Nft
-        var image: URL {
-            nft.images[0]
+        var image: URL? {
+            nft.images.first
         }
         private(set) var isLiked: Bool
         private(set) var isInCart: Bool

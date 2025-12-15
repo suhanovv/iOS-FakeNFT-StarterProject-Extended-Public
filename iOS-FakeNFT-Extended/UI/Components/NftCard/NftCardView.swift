@@ -10,6 +10,7 @@ import Kingfisher
 
 struct NftCardView: View {
     @State var viewModel: ViewModel
+    static let width: CGFloat = 108
     var body: some View {
         VStack(alignment: .leading ,spacing: 8) {
             KFImage(viewModel.image)
@@ -22,7 +23,7 @@ struct NftCardView: View {
                 }
                 .resizable()
                 .scaledToFit()
-                .frame(width: 108, height: 108)
+                .frame(height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading) {
                 RatingView(rating: viewModel.nft.rating)
@@ -30,7 +31,6 @@ struct NftCardView: View {
                     VStack {
                         Text(viewModel.nft.name)
                             .font(.system(size: 17, weight: .bold))
-                            .lineLimit(1)
                         Text(viewModel.nft.price, format: .currency(code: "ETH"))
                             .font(.system(size: 10, weight: .medium))
                     }
@@ -50,7 +50,7 @@ struct NftCardView: View {
                     viewModel.likeTapped()
                 }
         }
-        .frame(width: 108, height: 192)
+        .frame(width: NftCardView.width, height: 192)
     }
 }
 
