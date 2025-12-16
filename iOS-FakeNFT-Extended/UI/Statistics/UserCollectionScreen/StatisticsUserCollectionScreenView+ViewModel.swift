@@ -16,45 +16,102 @@ extension StatisticsUserCollectionScreenView {
         var isCollectionEmpty: Bool {
             collection.isEmpty && state == .loaded
         }
-        private(set) var state: ScreenState = .initial
+        private(set) var state: ScreenState = .loaded
         private(set) var collection: [Nft] = []
-        private(set) var profileLikes: Set<String> = []
+        private(set) var likes: Set<String> = []
         private(set) var cart: Set<String> = []
+        private let profileService: ProfileServiceProtocol
+        private let orderService: OrderServiceProtocol
+        private let usersService: UsersServiceProtocol
+        private let nftService: NftService
         
-        init(userId: String, isEmpty:Bool = false) {
+        init(
+            userId: String,
+            profileService: ProfileServiceProtocol,
+            orderService: OrderServiceProtocol,
+            usersService: UsersServiceProtocol,
+            nftService: NftService
+        ) {
             self.userId = userId
-            self.isEmpty = isEmpty
+            self.profileService = profileService
+            self.orderService = orderService
+            self.usersService = usersService
+            self.nftService = nftService
         }
         
         func isLiked(nftId: String) -> Bool {
-            profileLikes.contains(nftId)
+            likes.contains(nftId)
         }
         
         func isInCart(nftId: String) -> Bool {
             cart.contains(nftId)
         }
         
-        func loadUserCollection() async {
-            collection = (1...30).map { _ in Nft.makeRandom() }
+        func toggleLike(nftId: String) async {
+            do {
+                state = .loading
+                if isLiked(nftId: nftId) {
+                    likes = Set(try await profileService.removeLikeFromNft(nftId))
+                } else {
+                    likes = Set(try await profileService.addLikeForNft(nftId))
+                }
+                state = .loaded
+            } catch {
+                state = .error
+            }
         }
         
-        func loadLikes() async {
-            profileLikes = Set((1...5).map { _ in collection.randomElement()!.id })
-        }
-        
-        func loadCart() async {
-            cart = Set((1...3).map { _ in collection.randomElement()!.id })
+        func toggleInCart(nftId: String) async {
+            do {
+                state = .loading
+                if isInCart(nftId: nftId) {
+                    cart = Set(try await orderService.removeFromCartNft(nftId).nfts)
+                } else {
+                    cart = Set(try await orderService.addToCartNft(nftId).nfts)
+                }
+                state = .loaded
+            } catch {
+                state = .error
+            }
         }
         
         func loadData() async {
-            if state != .initial { return }
+            if !collection.isEmpty { return }
             state = .loading
-            defer { state = .loaded }
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
-            if isEmpty { return }
-            await loadUserCollection()
-            await loadLikes()
-            await loadCart()
+            do {
+                likes = Set(try await loadLikes())
+                cart = Set(try await loadCart())
+                
+                collection = try await loadUserCollection()
+                state = .loaded
+            } catch {
+                state = .error
+            }
+        }
+        
+        private func loadUserCollection() async throws -> [Nft] {
+            try await withThrowingTaskGroup(of: Nft.self, returning: [Nft].self) { group in
+                let collectionIds = try await usersService.getUserById(userId).nfts
+                
+                for nftId in collectionIds {
+                    group.addTask { try await self.nftService.loadNft(id: nftId) }
+                }
+                
+                var nfts: [Nft] = []
+                for try await nft in group {
+                    nfts.append(nft)
+                }
+                return nfts
+            }
+        }
+        
+        private func loadLikes() async throws -> [String] {
+            try await profileService.getProfileLikes()
+        }
+        
+        private func loadCart() async throws -> [String] {
+            let order = try await orderService.getOrder()
+            return order.nfts
         }
     }
 }

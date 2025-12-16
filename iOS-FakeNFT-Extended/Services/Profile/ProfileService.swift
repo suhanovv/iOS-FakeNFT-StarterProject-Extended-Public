@@ -1,8 +1,8 @@
 import Foundation
 
-protocol ProfileServiceProtocol {
-    func addLikeForNft(_ nftId: String) async throws
-    func removeLikeFromNft(_ nftId: String) async throws
+protocol ProfileServiceProtocol: Sendable {
+    func addLikeForNft(_ nftId: String) async throws -> [String]
+    func removeLikeFromNft(_ nftId: String) async throws -> [String]
     func getProfileLikes() async throws -> [String]
 }
 
@@ -14,22 +14,23 @@ actor ProfileService: ProfileServiceProtocol {
         self.networkClient = networkClient
     }
     
-    func addLikeForNft(_ nftId: String) async throws {
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
         let currentLikes: [String] = try await getProfileLikes()
         let newLikes: [String] = currentLikes.contains(nftId) ? currentLikes : currentLikes + [nftId]
-        try await makeUpdateRequestAndSend(with: newLikes)
+        return try await makeUpdateRequestAndSend(with: newLikes)
     }
 
-    func removeLikeFromNft(_ nftId: String) async throws {
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
         let currentLikes: [String] = try await getProfileLikes()
         let newLikes: [String] = currentLikes.filter { $0 != nftId }
-        try await makeUpdateRequestAndSend(with: newLikes)
+        return try await makeUpdateRequestAndSend(with: newLikes)
     }
     
-    private func makeUpdateRequestAndSend(with likes: [String]) async throws {
+    private func makeUpdateRequestAndSend(with likes: [String]) async throws -> [String] {
         let updateLikesDto = UpdateLikesDto(likes: likes)
         let updateRequest = UpdateLikesRequest(dto: updateLikesDto)
-        let _ = try await networkClient.send(request: updateRequest)
+        let profile: Profile = try await networkClient.send(request: updateRequest)
+        return profile.likes
     }
 
     func getProfileLikes() async throws -> [String] {

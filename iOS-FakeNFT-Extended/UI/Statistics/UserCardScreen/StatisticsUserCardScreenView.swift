@@ -9,9 +9,14 @@ import SwiftUI
 import Kingfisher
 
 struct StatisticsUserCardScreenView: View {
-    let userId: String
+    enum ScreenState {
+        case loading
+        case loaded
+        case error
+    }
+    
     @Environment(Coordinator.self) private var coordinator
-    @State private var viewModel = ViewModel()
+    @Bindable var viewModel: StatisticsUserCardScreenView.ViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -22,7 +27,7 @@ struct StatisticsUserCardScreenView: View {
                 description: user?.description ?? "")
             UserWebPageButton().padding(.top, 28)
             UserNftTokensLink(nftCount: viewModel.nftCount).padding(.top, 41).onTapGesture {
-                coordinator.push(Screen.userCollection(userId: userId))
+                coordinator.push(Screen.userCollection(userId: viewModel.userId))
             }
             Spacer()
         }
@@ -34,13 +39,7 @@ struct StatisticsUserCardScreenView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.ypWhite)
         .task {
-            await viewModel.loadUser(userId)
+            await viewModel.loadUserCard()
         }
     }
-}
-
-#Preview {
-    StatisticsUserCardScreenView(
-        userId: "f62b7dcb-ff81-49e7-954e-358bf6166737"
-    ).environment(Coordinator())
 }

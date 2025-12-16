@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SortingToolbarButtonView: View {
     @State private var isSortOptionsPresented: Bool = false
-    @Binding var viewModel: StatisticsScreenView.ViewModel
+    @Bindable var viewModel: StatisticsScreenView.ViewModel
     @Binding var sortOrder: UsersSortType
     
     var body: some View {

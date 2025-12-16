@@ -9,11 +9,15 @@ import SwiftUI
 import Kingfisher
 
 struct NftCardView: View {
-    @State var viewModel: ViewModel
     static let width: CGFloat = 108
+    let nft: Nft
+    let isLiked: Bool
+    let isInCart: Bool
+    var likeTapAction: () -> Void
+    var buyTapAction: () -> Void
     var body: some View {
         VStack(alignment: .leading ,spacing: 8) {
-            KFImage(viewModel.image)
+            KFImage(nft.images.first)
                 .placeholder {
                     Rectangle()
                         .foregroundStyle(.ypLightGray)
@@ -26,35 +30,31 @@ struct NftCardView: View {
                 .frame(height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading) {
-                RatingView(rating: viewModel.nft.rating)
+                RatingView(rating: nft.rating)
                 HStack {
                     VStack {
-                        Text(viewModel.nft.name)
+                        Text(nft.name)
                             .font(.system(size: 17, weight: .bold))
-                        Text(viewModel.nft.price, format: .currency(code: "ETH"))
+                        Text(nft.price, format: .currency(code: "ETH"))
                             .font(.system(size: 10, weight: .medium))
                     }
-                    Image(viewModel.isInCart ? .NftCardIcons.cartDelete : .NftCardIcons.cartAdd)
+                    
+                    Image(isInCart ? .NftCardIcons.cartDelete : .NftCardIcons.cartAdd)
                         .frame(width: 40, height: 40)
                         .onTapGesture {
-                            viewModel.cartTapped()
+                            buyTapAction()
                         }
                 }
             }
         }
         .overlay(alignment: .topTrailing) {
             Image(.NftCardIcons.like)
-                .foregroundStyle(viewModel.isLiked ? .ypRedUniversal : .ypWhiteUniversal)
+                .foregroundStyle(isLiked ? .ypRedUniversal : .ypWhiteUniversal)
                 .frame(width: 40, height: 40)
                 .onTapGesture {
-                    viewModel.likeTapped()
+                    likeTapAction()
                 }
         }
         .frame(width: NftCardView.width, height: 192)
     }
-}
-
-#Preview {
-    NftCardView(viewModel: NftCardView.ViewModel(nft: Nft.sampleCarmine, isLiked: false, isInCart: false))
-    NftCardView(viewModel: NftCardView.ViewModel(nft: Nft.sampleDominique, isLiked: true, isInCart: true))
 }
