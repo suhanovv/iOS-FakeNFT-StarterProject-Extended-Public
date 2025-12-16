@@ -34,6 +34,7 @@
 		ABC5E1E42C32055B002B4068 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E32C32055B002B4068 /* ErrorView.swift */; };
 		ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E52C320585002B4068 /* LinePageControl.swift */; };
 		ABC5E1E82C320610002B4068 /* NftDetailBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */; };
+		D7A3BEEC2EF1E3F900946D66 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A3BEEB2EF1E3F900946D66 /* WebKit.framework */; };
 		D7AE28272EDF568300325B47 /* IconsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE28262EDF568300325B47 /* IconsView.swift */; };
 		D7AE28392EE0B00B00325B47 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE28382EE0B00B00325B47 /* Profile.swift */; };
 		D7AE283D2EE0B46F00325B47 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AE283C2EE0B46F00325B47 /* User.swift */; };
@@ -88,6 +89,7 @@
 		ABC5E1E32C32055B002B4068 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		ABC5E1E52C320585002B4068 /* LinePageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinePageControl.swift; sourceTree = "<group>"; };
 		ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftDetailBridgeView.swift; sourceTree = "<group>"; };
+		D7A3BEEB2EF1E3F900946D66 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		D7AE28262EDF568300325B47 /* IconsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconsView.swift; sourceTree = "<group>"; };
 		D7AE28382EE0B00B00325B47 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		D7AE283C2EE0B46F00325B47 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D73EF16E2EEC8CD700840749 /* PropertyWrappers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = PropertyWrappers; sourceTree = "<group>"; };
+		D7A3BEE52EF1E3D600946D66 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
 		D7AE28302EE09D5A00325B47 /* Nft */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Nft; sourceTree = "<group>"; };
 		D7AE28322EE09D9000325B47 /* Users */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Users; sourceTree = "<group>"; };
 		D7AE28332EE09D9700325B47 /* Profile */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Profile; sourceTree = "<group>"; };
@@ -114,6 +117,7 @@
 			files = (
 				ABC5E1D82C3204A9002B4068 /* Kingfisher in Frameworks */,
 				ABC5E1E22C320535002B4068 /* ProgressHUD in Frameworks */,
+				D7A3BEEC2EF1E3F900946D66 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +144,7 @@
 				ABC5E16A2C31F5AF002B4068 /* iOS-FakeNFT-Extended */,
 				ABC5E17B2C31F5B0002B4068 /* iOS-FakeNFT-ExtendedTests */,
 				ABC5E1852C31F5B0002B4068 /* iOS-FakeNFT-ExtendedUITests */,
+				D7A3BEEA2EF1E3F800946D66 /* Frameworks */,
 				ABC5E1692C31F5AF002B4068 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -255,6 +260,7 @@
 		ABC5E1B32C31FC03002B4068 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D7A3BEE52EF1E3D600946D66 /* Common */,
 				D7AE296D2EE31B6800325B47 /* Components */,
 				D7AE29362EE1F92C00325B47 /* Statistics */,
 				D7EA16DF2EEB27FE00A2DDBB /* Navigation */,
@@ -302,6 +308,14 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		D7A3BEEA2EF1E3F800946D66 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D7A3BEEB2EF1E3F900946D66 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -319,6 +333,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D73EF16E2EEC8CD700840749 /* PropertyWrappers */,
+				D7A3BEE52EF1E3D600946D66 /* Common */,
 				D7AE28302EE09D5A00325B47 /* Nft */,
 				D7AE28322EE09D9000325B47 /* Users */,
 				D7AE28332EE09D9700325B47 /* Profile */,

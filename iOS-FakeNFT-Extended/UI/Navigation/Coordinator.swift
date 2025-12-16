@@ -38,6 +38,7 @@ final class Coordinator {
                         usersService: services.userService,
                         nftService: services.nftService)
                 )
+            case .webView(url: let url): WebView(url: url)
         }
     }
     
