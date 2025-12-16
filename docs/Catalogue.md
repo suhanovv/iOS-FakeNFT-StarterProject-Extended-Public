@@ -28,33 +28,33 @@
   (Estimate Time: 2h / Fact Time: 2h)
 
 
-## Milestone 2/3 (Estimate Time: 23h / Fact Time:)
+## Milestone 2/3 (Estimate Time: 23h / Fact Time: 19h)
 
 - Описать модели для коллекций и NFT, с которыми будет работать UI  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 3h)
 
 - Настроить ViewModel для экрана "Каталог":  
   - список коллекций  
   - выбранный тип сортировки  
   - связь View ↔ ViewModel
-  (Estimate Time: 5h / Fact Time: )
+  (Estimate Time: 5h / Fact Time: 3h)
 
 - Настроить ViewModel для экрана "Коллекция":  
   - данные коллекции  
   - список NFT  
   - связь View ↔ ViewModel  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 3h)
 
 - Сверстать и подключить UI выбора сортировки на экране каталога  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 4h)
 
 - Реализовать логику сортировки коллекций на экране "Каталог":  
   - по названию  
   - по количеству NFT (значение по умолчанию)  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 4h)
 
 - Реализовать сохранение выбранного типа сортировки только для каталога через `@AppStorage` / `UserDefaults` и восстановление после перезапуска  
-  (Estimate Time: 2h / Fact Time: )
+  (Estimate Time: 2h / Fact Time: 2h)
 
 
 ## Milestone 3/3 (Estimate Time: 24h / Fact Time:)
