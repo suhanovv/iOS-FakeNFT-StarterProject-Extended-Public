@@ -9,19 +9,19 @@ import SwiftUI
 
 @MainActor
 final class CollectionViewModel: ObservableObject {
-
-    // MARK: - External dependencies
     
-    private let nftService: NftService
-
-    // MARK: - Input
-    
-    let collection: CollectionDTO
-
     // MARK: - State
     
     @Published var nfts: [Nft] = []
     @Published var state: ScreenState = .initial
+    
+    // MARK: - Input
+    
+    let collection: CollectionDTO
+
+    // MARK: - External dependencies
+    
+    private let nftService: NftService
 
     // MARK: - Init
     

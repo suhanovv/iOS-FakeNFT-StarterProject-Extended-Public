@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+extension CatalogueView {
+    enum Constants {
+        static let sortDialogTitle = "Сортировка"
+        static let sortByNameTitle = "По названию"
+        static let sortByNftCountTitle = "По количеству NFT"
+        static let closeTitle = "Закрыть"
+        static let sortOptionStorageKey = "catalogueSortOption"
+    }
+}
+
 struct CatalogueView: View {
     
     // MARK: - Properties
@@ -14,7 +24,7 @@ struct CatalogueView: View {
     @Environment(ServicesAssembly.self) private var services
     @StateObject private var viewModel = CatalogueViewModel()
     
-    @AppStorage("catalogueSortOption")
+    @AppStorage(Constants.sortOptionStorageKey)
     private var storedSortOption: CollectionsSortOption = .nftCount
     
     @State private var isSortDialogPresented = false
@@ -31,7 +41,7 @@ struct CatalogueView: View {
             await viewModel.load()
         }
         .confirmationDialog(
-            "Сортировка",
+            Constants.sortDialogTitle,
             isPresented: $isSortDialogPresented,
             titleVisibility: .visible
         ) {
@@ -79,17 +89,17 @@ struct CatalogueView: View {
     
     private var sortOptionsDialog: some View {
         Group {
-            Button("По названию") {
+            Button(Constants.sortByNameTitle) {
                 storedSortOption = .name
                 viewModel.setSortOption(.name)
             }
-            
-            Button("По количеству NFT") {
+
+            Button(Constants.sortByNftCountTitle) {
                 storedSortOption = .nftCount
                 viewModel.setSortOption(.nftCount)
             }
-            
-            Button("Закрыть", role: .cancel) {}
+
+            Button(Constants.closeTitle, role: .cancel) {}
         }
     }
 }
