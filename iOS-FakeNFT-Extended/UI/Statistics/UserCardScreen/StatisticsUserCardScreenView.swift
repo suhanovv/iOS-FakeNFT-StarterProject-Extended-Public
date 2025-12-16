@@ -17,7 +17,7 @@ struct StatisticsUserCardScreenView: View {
     
     @Environment(Coordinator.self) private var coordinator
     @Bindable var viewModel: StatisticsUserCardScreenView.ViewModel
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             let user = viewModel.user
@@ -25,7 +25,11 @@ struct StatisticsUserCardScreenView: View {
                 avatar: user?.avatar,
                 name: user?.name ?? "",
                 description: user?.description ?? "")
-            UserWebPageButton().padding(.top, 28)
+            if let url = viewModel.user?.website {
+                UserWebPageButton(url: url) {
+                    coordinator.push(.webView(url:url))
+                }.padding(.top, 28)
+            }
             UserNftTokensLink(nftCount: viewModel.nftCount).padding(.top, 41).onTapGesture {
                 coordinator.push(Screen.userCollection(userId: viewModel.userId))
             }
