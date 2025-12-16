@@ -7,10 +7,17 @@
 import SwiftUI
 
 struct StatisticsUserCollectionScreenView: View {
+    enum ScreenState {
+        case loading
+        case loaded
+        case initial
+        case error
+    }
+    
     @State private var viewModel: ViewModel
     
-    init(userId: String, isEmpty: Bool = false) {
-        self.viewModel = ViewModel(userId: userId, isEmpty: isEmpty)
+    init(viewModel: StatisticsUserCollectionScreenView.ViewModel) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -20,12 +27,15 @@ struct StatisticsUserCollectionScreenView: View {
             ) {
                 ForEach(viewModel.collection) { nft in
                     NftCardView(
-                        viewModel:
-                            .init(
-                                nft: nft,
-                                isLiked: viewModel.isLiked(nftId: nft.id),
-                                isInCart: viewModel.isInCart(nftId: nft.id)
-                            )
+                        nft: nft,
+                        isLiked: viewModel.isLiked(nftId: nft.id),
+                        isInCart: viewModel.isInCart(nftId: nft.id),
+                        likeTapAction: {
+                            Task { await viewModel.toggleLike(nftId: nft.id) }
+                        },
+                        buyTapAction: {
+                            Task { await viewModel.toggleInCart(nftId: nft.id) }
+                        }
                     )
                 }
             }
@@ -53,12 +63,4 @@ struct StatisticsUserCollectionScreenView: View {
 private enum Constants {
     static let noNftTitle = NSLocalizedString("UserCollection.noNft.title", comment: "")
     static let screenNftTitle = NSLocalizedString("UserCollection.screen.title", comment: "")
-}
-
-#Preview("not empty") {
-    StatisticsUserCollectionScreenView(userId: UUID().uuidString)
-}
-
-#Preview("is empty") {
-    StatisticsUserCollectionScreenView(userId: UUID().uuidString, isEmpty: true)
 }

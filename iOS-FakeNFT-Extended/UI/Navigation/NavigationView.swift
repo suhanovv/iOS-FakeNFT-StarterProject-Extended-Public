@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct NavigationView: View {
-    @State private var coordinator = Coordinator()
+    @State private var coordinator = Coordinator(
+        services: ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl()
+        )
+    )
     
     var body: some View {
         NavigationStack(path: $coordinator.path) {
