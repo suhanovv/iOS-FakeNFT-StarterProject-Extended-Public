@@ -9,12 +9,6 @@ import SwiftUI
 import Kingfisher
 
 struct StatisticsUserCardScreenView: View {
-    enum ScreenState {
-        case loading
-        case loaded
-        case error
-    }
-    
     @Environment(Coordinator.self) private var coordinator
     @Bindable var viewModel: StatisticsUserCardScreenView.ViewModel
     
@@ -35,8 +29,22 @@ struct StatisticsUserCardScreenView: View {
             }
             Spacer()
         }
+        .opacity(viewModel.state == nil ? 0 : 1)
         .overlay {
             ProgressBarView(isActive: viewModel.state == .loading)
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state == .error),
+        ) {
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    await viewModel.loadUserCard()
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)

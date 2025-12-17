@@ -12,7 +12,7 @@ extension StatisticsUserCardScreenView {
     final class ViewModel {
         let userId: String
         var nftCount: Int { user?.nfts.count ?? 0 }
-        private(set) var state: ScreenState = .loaded
+        private(set) var state: ScreenState?
         private(set) var user: User?
         private let userService: UsersServiceProtocol
         
@@ -30,6 +30,10 @@ extension StatisticsUserCardScreenView {
             } catch {
                 state = .error
             }
+        }
+        
+        func setState(_ state: ScreenState) {
+            self.state = state
         }
     }
 }
