@@ -11,7 +11,7 @@ extension StatisticsScreenView {
     @Observable
     @MainActor
     final class ViewModel {
-        private(set) var state: ScreenState = .loaded
+        private(set) var state: ScreenState?
         private(set) var users: [User] = []
         private let usersService: UsersServiceProtocol
         private var currentPage = 0
@@ -21,32 +21,54 @@ extension StatisticsScreenView {
         }
         
         func changeOrderBy(_ orderBy: UsersSortType) async {
-            let page = 0
-            users = await loadPage(page, orderBy: orderBy)
-            currentPage = page
+            do {
+                let page = 0
+                users = try await loadPage(page, orderBy: orderBy)
+                currentPage = page
+            } catch {
+                state = .error(operation: .changeSortOrder(orderBy))
+            }
         }
         
         func loadFirstPage(orderBy: UsersSortType) async {
             if !users.isEmpty { return }
-            users = await loadPage(currentPage, orderBy: orderBy)
+            do {
+                users = try await loadPage(currentPage, orderBy: orderBy)
+            } catch {
+                state = .error(operation: .loadFirstPage(orderBy))
+            }
         }
         
         func loadNextPage(orderBy: UsersSortType) async {
-            let page = currentPage + 1
-            users.append(contentsOf: await loadPage(page, orderBy: orderBy))
-            currentPage = page
+            do {
+                let page = currentPage + 1
+                users.append(contentsOf: try await loadPage(page, orderBy: orderBy))
+                currentPage = page
+            } catch {
+                state = .error(operation: .loadNextPage(orderBy))
+            }
         }
         
-        private func loadPage(_ page: Int, orderBy: UsersSortType) async -> [User] {
-            do {
-                state = .loading
-                let users = try await usersService.getUsers(page: page, orderBy: orderBy)
-                state = .loaded
-                return users
-            } catch {
-                state = .error
-                return []
+        func setState(_ state: ScreenState) {
+            self.state = state
+        }
+        
+        func retryOperation(_ operation: OperationType) async {
+            switch operation {
+                case .changeSortOrder(let orderBy):
+                    await changeOrderBy(orderBy)
+                case .loadFirstPage(let orderBy):
+                    await loadFirstPage(orderBy: orderBy)
+                case .loadNextPage(let orderBy):
+                    await loadNextPage(orderBy: orderBy)
             }
+        }
+        
+        private func loadPage(_ page: Int, orderBy: UsersSortType) async throws -> [User] {
+            state = .loading
+            let users = try await usersService.getUsers(page: page, orderBy: orderBy)
+            state = .loaded
+            return users
         }
     }
 }

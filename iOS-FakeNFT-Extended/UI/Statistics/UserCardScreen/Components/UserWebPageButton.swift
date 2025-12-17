@@ -24,9 +24,8 @@ struct UserWebPageButton: View {
             .stroke(.ypBlack, lineWidth: 1)
         )
     }
-}
-
-private enum Constants {
-    static let webpageLinkTitle = NSLocalizedString("UserProfile.webpageLink.title", comment: "")
     
+    enum Constants {
+        static let webpageLinkTitle = NSLocalizedString("UserProfile.webpageLink.title", comment: "")
+    }
 }

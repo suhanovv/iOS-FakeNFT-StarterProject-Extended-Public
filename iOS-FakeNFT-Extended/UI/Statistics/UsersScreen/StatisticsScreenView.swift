@@ -8,12 +8,6 @@
 import SwiftUI
 
 struct StatisticsScreenView: View {
-    enum ScreenState {
-        case loading
-        case loaded
-        case error
-    }
-    
     @AppStorage(AppStorageKeys.usersSortBy) private var sortOrder: UsersSortType = .rating
     @Environment(Coordinator.self) var coordinator
     @Bindable var viewModel: StatisticsScreenView.ViewModel
@@ -23,13 +17,34 @@ struct StatisticsScreenView: View {
     var body: some View {
         VStack {
             topBar
-            content
+            content.opacity(viewModel.state == nil ? 0 : 1)
         }
         .overlay {
             ProgressBarView(isActive: viewModel.state == .loading)
         }
         .task {
             await viewModel.loadFirstPage(orderBy: sortOrder)
+        }
+        .onChange(of: sortOrder) {
+            Task {
+                await viewModel.changeOrderBy(sortOrder)
+            }
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state?.isError ?? false),
+            presenting: viewModel.state
+        ) { state in
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    if case .error(let operation) = viewModel.state {
+                        await viewModel.retryOperation(operation)
+                    }
+                }
+            }
         }
         // hack for hiding horizontal tabbar bar 1px separator
         .padding(.vertical, 1)

@@ -36,19 +36,6 @@ struct SortingToolbarButtonView: View {
             Button(Constants.sortingCloseTitle, role: .cancel) {
                 isSortOptionsPresented = false
             }
-            
-        }
-        .onChange(of: sortOrder) {
-            Task {
-                await viewModel.changeOrderBy(sortOrder)
-            }
         }
     }
-}
-
-private enum Constants {
-    static let sortingConfirmationTitle = NSLocalizedString("Catalog.sortingConfirmation.title", comment: "")
-    static let sortingByNameTitle = NSLocalizedString("Catalog.sortingByName.title", comment: "")
-    static let sortingByRatingTitle = NSLocalizedString("Catalog.sortingByRating.title", comment: "")
-    static let sortingCloseTitle = NSLocalizedString("Catalog.sortingClose.title", comment: "")
 }

@@ -16,7 +16,7 @@ extension StatisticsUserCollectionScreenView {
         var isCollectionEmpty: Bool {
             collection.isEmpty && state == .loaded
         }
-        private(set) var state: ScreenState = .loaded
+        private(set) var state: ScreenState?
         private(set) var collection: [Nft] = []
         private(set) var likes: Set<String> = []
         private(set) var cart: Set<String> = []
@@ -57,7 +57,7 @@ extension StatisticsUserCollectionScreenView {
                 }
                 state = .loaded
             } catch {
-                state = .error
+                state = .error(operation: .toggleLike(nftId))
             }
         }
         
@@ -71,21 +71,35 @@ extension StatisticsUserCollectionScreenView {
                 }
                 state = .loaded
             } catch {
-                state = .error
+                state = .error(operation: .toggleCart(nftId))
             }
         }
         
         func loadData() async {
-            if !collection.isEmpty { return }
             state = .loading
             do {
-                likes = Set(try await loadLikes())
-                cart = Set(try await loadCart())
+                likes = Set(try await profileService.getProfileLikes())
+                cart = Set(try await orderService.getOrder().nfts)
                 
                 collection = try await loadUserCollection()
                 state = .loaded
             } catch {
-                state = .error
+                state = .error(operation: .loadData)
+            }
+        }
+        
+        func setState(_ state: ScreenState) {
+            self.state = state
+        }
+        
+        func retryOperation(_ operation: OperationType) async {
+            switch operation {
+                case .loadData:
+                    await loadData()
+                case .toggleLike(let nftId):
+                    await toggleLike(nftId: nftId)
+                case .toggleCart(let nftId):
+                    await toggleInCart(nftId: nftId)
             }
         }
         
@@ -103,15 +117,6 @@ extension StatisticsUserCollectionScreenView {
                 }
                 return nfts
             }
-        }
-        
-        private func loadLikes() async throws -> [String] {
-            try await profileService.getProfileLikes()
-        }
-        
-        private func loadCart() async throws -> [String] {
-            let order = try await orderService.getOrder()
-            return order.nfts
         }
     }
 }

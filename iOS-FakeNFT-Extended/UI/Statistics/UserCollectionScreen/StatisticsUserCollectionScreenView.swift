@@ -7,13 +7,6 @@
 import SwiftUI
 
 struct StatisticsUserCollectionScreenView: View {
-    enum ScreenState {
-        case loading
-        case loaded
-        case initial
-        case error
-    }
-    
     @State private var viewModel: ViewModel
     
     init(viewModel: StatisticsUserCollectionScreenView.ViewModel) {
@@ -40,13 +33,29 @@ struct StatisticsUserCollectionScreenView: View {
                 }
             }
         }
+        .opacity(viewModel.state == nil ? 0 : 1)
         .overlay {
             ZStack {
                 Text(Constants.noNftTitle)
                     .font(.system(size: 17, weight: .bold))
                     .opacity(viewModel.isCollectionEmpty ? 1 : 0)
                 ProgressBarView(isActive: viewModel.state == .loading)
-                
+            }
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state?.isError ?? false),
+            presenting: viewModel.state
+        ) { state in
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    if case .error(let operation) = viewModel.state {
+                        await viewModel.retryOperation(operation)
+                    }
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -58,9 +67,4 @@ struct StatisticsUserCollectionScreenView: View {
             await viewModel.loadData()
         }
     }
-}
-
-private enum Constants {
-    static let noNftTitle = NSLocalizedString("UserCollection.noNft.title", comment: "")
-    static let screenNftTitle = NSLocalizedString("UserCollection.screen.title", comment: "")
 }
