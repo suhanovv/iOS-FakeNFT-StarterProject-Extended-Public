@@ -23,7 +23,7 @@ struct ProfilePhotoView: View {
     // MARK: - Views
     private var avatarContent: some View {
         Group {
-            if let url {
+            if url != nil {
                 remoteImage
             } else {
                 placeholder

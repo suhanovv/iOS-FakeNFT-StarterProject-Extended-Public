@@ -9,16 +9,18 @@ import SwiftUI
 
 struct ProfileViewMock {
     static let preview: some View = {
+        let photoURL = "profile_photo_url"
+        
         UserDefaults.standard.set(
             "https://picsum.photos/id/237/200/200",
-            forKey: Constants.StorageKeys.photoURL
+            forKey: photoURL
         )
         UserDefaults.standard.set(
             "Michael Phoenix",
             forKey: "profile_name"
         )
         UserDefaults.standard.set(
-            "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT...",
+            "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
             forKey: "profile_description"
         )
         UserDefaults.standard.set(

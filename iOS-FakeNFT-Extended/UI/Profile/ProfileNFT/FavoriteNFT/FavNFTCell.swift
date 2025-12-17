@@ -6,27 +6,13 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct FavNFTCell: View {
-    // MARK: - AppStorage
-    @AppStorage(Constants.StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
-    
     let nft: NftItem
     let rating: Int
-    
-    private var favouriteIds: [String] {
-        (try? JSONDecoder().decode([String].self, from: favouritesMarker)) ?? []
-    }
-    
-    private var isFavourite: Bool {
-        favouriteIds.contains(nft.id)
-    }
-    
-    private var placeholder: some View {
-        Image("EmptyNft")
-            .resizable()
-            .scaledToFill()
-    }
+    let isFavourite: Bool
+    let onLikeTap: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
@@ -40,9 +26,8 @@ struct FavNFTCell: View {
             nftAsyncImage
                 .frame(width: 80, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-            
             Button {
-                FavouritesStorage.remove(nft.id)
+                onLikeTap()
             } label: {
                 Image(.NftCardIcons.like)
                     .resizable()
@@ -56,37 +41,18 @@ struct FavNFTCell: View {
     }
     
     private var nftAsyncImage: some View {
-        return Group {
-            if let urlString = nft.images?.first,
-               let url = URL(string: urlString) {
-                
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ZStack {
-                            placeholder.opacity(0.3)
-                            ProgressView()
-                                .tint(.ypBlack)
-                                .scaleEffect(1.5)
-                        }
-                        
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                        
-                    case .failure:
-                        placeholder
-                        
-                    @unknown default:
-                        placeholder
-                    }
-                }
-            } else {
-                placeholder
-            }
-        }
+        NFTImageView(
+            imageURL: nft.images?.first,
+            placeholder: Image("EmptyNft")
+        )
+        .frame(width: 80, height: 80)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private var placeholder: some View {
+        Image("EmptyNft")
+            .resizable()
+            .scaledToFill()
     }
     
     private var nftDescriptionSection: some View {
@@ -100,51 +66,37 @@ struct FavNFTCell: View {
     }
     
     private var ratingStars: some View {
-        HStack(spacing: 2) {
-            ForEach(0..<5) { index in
-                Image(systemName: "star.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(index < rating ? .ypYellowUniversal : .ypLightGray)
-                    .frame(width: 12, height: 12)
-                    .padding(.bottom, 4)
-            }
-        }
+        NFTRatingView(rating: rating)
+            .padding(.bottom, 4)
     }
     
     private var nftPrice: some View {
-        Text(String(format: "%.2f ETH", nft.price ?? 0))
+        Text(nft.price ?? 0, format: .currency(code: "ETH"))
             .font(Font(UIFont.caption1))
             .foregroundColor(.ypBlack)
     }
-    
-    private func removeFavourite() {
-        var ids = favouriteIds
-        ids.removeAll { $0 == nft.id }
-        favouritesMarker = (try? JSONEncoder().encode(ids)) ?? Data()
-    }
 }
+
 
 // MARK: - Preview_FavNFTCell
 #Preview {
-    NavigationStack {
-        FavNFTCell(
-            nft: NftItem(
-                id: "1",
-                name: "Test NFT",
-                images: [
-                    "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png",
-                    "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/2.png",
-                    "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/3.png"
-                ],
-                rating: 2,
-                price: 40.59,
-                author: "John Doe",
-                createdAt: nil,
-                description: "Test description",
-                website: nil
-            ),
-            rating: 2
-        )
-    }
+    FavNFTCell(
+        nft: NftItem(
+            id: "1",
+            name: "Test NFT",
+            images: [
+                "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png"
+            ],
+            rating: 2,
+            price: 40.59,
+            author: "John Doe",
+            createdAt: nil,
+            description: "Test description",
+            website: nil
+        ),
+        rating: 2,
+        isFavourite: true,
+        onLikeTap: {}
+    )
+    .padding()
 }

@@ -70,7 +70,7 @@ struct TextFieldAlert: View {
         Button {
             isPresented = false
         } label: {
-            Text(Constants.Buttons.cancel)
+            Text(Constants.cancel)
                 .font(Font(UIFont.bodyRegular))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
@@ -83,13 +83,18 @@ struct TextFieldAlert: View {
             isPresented = false
             onSave()
         } label: {
-            Text(Constants.Buttons.save)
+            Text(Constants.save)
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)
         }
     }
+}
+
+private enum Constants {
+    static let cancel = NSLocalizedString("Profile.cancelButton", comment: "")
+    static let save = NSLocalizedString("Profile.saveButton", comment: "")
 }
 
 // MARK: - Preview_TextFieldAlert

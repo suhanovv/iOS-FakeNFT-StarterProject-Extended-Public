@@ -8,26 +8,39 @@
 import SwiftUI
 
 struct FavNFTView: View {
-    // MARK: - AppStorage
-    @AppStorage(Constants.StorageKeys.favouriteNFTIds) private var favs: Data = Data()
+    @AppStorage(StorageKeys.favouriteNFTIds) private var favs: Data = Data()
+    @State private var viewModel = FavNFTViewModel()
     
     let allNFTs: [NftItem]
     
     private var favouriteIds: [String] {
-        (try? JSONDecoder().decode([String].self, from: favs)) ?? []
+        viewModel.favouriteIds(from: favs)
     }
     
     private var favouriteNFTs: [NftItem] {
-        allNFTs.filter { favouriteIds.contains($0.id) }
+        viewModel.favouriteNFTs(
+            allNFTs: allNFTs,
+            favouriteIds: favouriteIds
+        )
     }
     
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(favouriteNFTs) { nft in
-                    FavNFTCell(nft: nft, rating: nft.rating ?? 0)
+                    FavNFTCell(
+                        nft: nft,
+                        rating: nft.rating ?? 0,
+                        isFavourite: true,
+                        onLikeTap: {
+                            favs = viewModel.removeFavourite(nft.id, from: favs)
+                        }
+                    )
                 }
             }
             .padding(.vertical, 20)
@@ -41,9 +54,8 @@ struct FavNFTView: View {
         FavouritesPreview()
     }
 }
-
 struct FavouritesPreview: View {
-    @AppStorage(Constants.StorageKeys.favouriteNFTIds) private var favs: Data = Data()
+    @AppStorage(StorageKeys.favouriteNFTIds) private var favs: Data = Data()
     
     init() {
         let ids = ["1", "2", "3"]

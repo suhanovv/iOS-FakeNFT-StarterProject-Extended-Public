@@ -27,7 +27,7 @@ struct ExitAlert: View {
     private var alertBox: some View {
         VStack(spacing: 0) {
             VStack {
-                Text(Constants.Titles.exitAlert)
+                Text(Constants.exitAlert)
                     .font(Font(UIFont.bodyBold))
                     .multilineTextAlignment(.center)
             }
@@ -40,7 +40,7 @@ struct ExitAlert: View {
                 Button {
                     isPresented = false
                 } label: {
-                    Text(Constants.Buttons.stayConfirmation)
+                    Text(Constants.stayConfirmation)
                         .font(Font(UIFont.bodyRegular))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)
@@ -53,7 +53,7 @@ struct ExitAlert: View {
                     isPresented = false
                     onExit()
                 } label: {
-                    Text(Constants.Buttons.exitConfirmation)
+                    Text(Constants.exitConfirmation)
                         .font(Font(UIFont.bodyBold))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)
@@ -67,6 +67,12 @@ struct ExitAlert: View {
         .cornerRadius(14)
         .shadow(radius: 22)
     }
+}
+
+private enum Constants {
+    static let exitAlert = NSLocalizedString("Profile.exitAlert.title", comment: "")
+    static let exitConfirmation = NSLocalizedString("Profile.exitAlert.exitButton", comment: "")
+    static let stayConfirmation = NSLocalizedString("Profile.exitAlert.stayButton", comment: "")
 }
 
 #Preview {

@@ -11,10 +11,10 @@ struct TabBarView: View {
                 // Изменить на ProfileView() после подключения запросов
             }
             .tabItem {
-                Label(Constants.Titles.profile, image: .TabBarIcons.profile)
+                Label(Constants.profile, image: .TabBarIcons.profile)
             }
             .backgroundStyle(.background)
-
+            
             IconsView()
                 .tabItem {
                     Label(NSLocalizedString("Tab.statistics", comment: ""), image: .TabBarIcons.statistics)
@@ -22,4 +22,8 @@ struct TabBarView: View {
                 .backgroundStyle(.background)
         }
     }
+}
+
+private enum Constants {
+    static let profile = NSLocalizedString("Tab.profile", comment: "")
 }

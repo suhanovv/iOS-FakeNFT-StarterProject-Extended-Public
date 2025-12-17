@@ -9,31 +9,14 @@ import SwiftUI
 
 struct ProfileEditView: View {
     // MARK: - AppStorage
-    @AppStorage(Constants.StorageKeys.name) private var storedName: String = ""
-    @AppStorage(Constants.StorageKeys.description) private var storedDescription: String = ""
-    @AppStorage(Constants.StorageKeys.website) private var storedWebsite: String = ""
-    @AppStorage(Constants.StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    @AppStorage(StorageKeys.name) private var storedName: String = ""
+    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
+    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
+    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
-    // MARK: - State
-    @State private var name: String = ""
-    @State private var description: String = ""
-    @State private var website: String = ""
-    @State private var isPhotoMenuPresented = false
-    @State private var showLinkPhotoAlert = false
-    @State private var photoURLText = ""
-    @State private var showExitAlert = false
-    
+    @State private var viewModel = ProfileEditViewModel()
+    @Binding var isEditing: Bool
     @Environment(\.dismiss) var dismiss
-    
-    private var photoURL: URL? {
-        URL(string: savedPhotoURL)
-    }
-    
-    private var hasChanges: Bool {
-        name != storedName ||
-        description != storedDescription ||
-        website != storedWebsite
-    }
     
     // MARK: - Body
     var body: some View {
@@ -48,25 +31,27 @@ struct ProfileEditView: View {
             }
         }
         .onAppear {
-            name = storedName
-            description = storedDescription
-            website = storedWebsite
+            viewModel.onAppear(
+                storedName: storedName,
+                storedDescription: storedDescription,
+                storedWebsite: storedWebsite
+            )
         }
         .confirmationDialog(
-            Text(Constants.Titles.photoDialog),
-            isPresented: $isPhotoMenuPresented,
+            Text(Constants.photoDialog),
+            isPresented: $viewModel.isPhotoMenuPresented,
             titleVisibility: .visible
         ) {
-            Button(Constants.Buttons.changePhoto) {
-                photoURLText = savedPhotoURL
-                showLinkPhotoAlert = true
+            Button(Constants.changePhoto) {
+                viewModel.photoURLText = savedPhotoURL
+                viewModel.showLinkPhotoAlert = true
             }
             
-            Button(Constants.Buttons.deletePhoto, role: .destructive) {
+            Button(Constants.deletePhoto, role: .destructive) {
                 savedPhotoURL = ""
             }
             
-            Button(Constants.Buttons.cancel, role: .cancel) {}
+            Button(Constants.cancel, role: .cancel) {}
         }
         .onTapGesture {
             hideKeyboard()
@@ -79,12 +64,16 @@ struct ProfileEditView: View {
             alertOverlaySection
         }
         .overlay {
-            ExitAlert(isPresented: $showExitAlert) {
+            ExitAlert(isPresented: $viewModel.showExitAlert) {
                 dismiss()
             }
         }
         .overlay(alignment: .bottom) {
-            if hasChanges {
+            if viewModel.hasChanges(
+                storedName: storedName,
+                storedDescription: storedDescription,
+                storedWebsite: storedWebsite
+            ) {
                 saveButton
             }
         }
@@ -93,11 +82,15 @@ struct ProfileEditView: View {
     // MARK: - Views
     private var photoSection: some View {
         ZStack(alignment: .bottomTrailing) {
-            ProfilePhotoView(url: photoURL)
-                .offset(y: -4)
-                .onTapGesture { isPhotoMenuPresented = true }
+            ProfilePhotoView(
+                url: viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+            )
+            .offset(y: -4)
+            .onTapGesture {
+                viewModel.isPhotoMenuPresented = true
+            }
             
-            Image(systemName: "chevron.left")
+            Image(systemName: "camera.fill")
                 .font(.system(size: 10))
                 .padding(6)
                 .background(Color.ypLightGray)
@@ -107,10 +100,10 @@ struct ProfileEditView: View {
     
     private var nameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.StorageKeys.profileName)
+            Text(Constants.profileName)
                 .font(Font(UIFont.headline3))
             
-            TextField("", text: $name)
+            TextField("", text: $viewModel.name)
                 .font(Font(UIFont.bodyRegular))
                 .padding()
                 .background(Color(.ypLightGray))
@@ -121,20 +114,20 @@ struct ProfileEditView: View {
     
     private var descriptionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.StorageKeys.profileDescription)
+            Text(Constants.profileDescription)
                 .font(Font(UIFont.headline3))
             
-            ProfileAutoGrowingTextEditor(text: $description)
+            ProfileAutoGrowingTextEditor(text: $viewModel.description)
         }
         .padding(.horizontal, 16)
     }
     
     private var websiteSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Constants.StorageKeys.profileWebsite)
+            Text(Constants.profileWebsite)
                 .font(Font(UIFont.headline3))
             
-            TextField("", text: $website)
+            TextField("", text: $viewModel.website)
                 .font(Font(UIFont.bodyRegular))
                 .padding()
                 .background(Color(.ypLightGray))
@@ -145,25 +138,25 @@ struct ProfileEditView: View {
     
     private var alertOverlaySection: some View {
         TextFieldAlert(
-            isPresented: $showLinkPhotoAlert,
-            title: Constants.Titles.photoAlert,
-            placeholder: Constants.StorageKeys.photoAlertPh,
-            text: $photoURLText
+            isPresented: $viewModel.showLinkPhotoAlert,
+            title: Constants.photoAlert,
+            placeholder: Constants.photoAlertPh,
+            text: $viewModel.photoURLText
         ) {
-            let trimmed = photoURLText.trimmingCharacters(in: .whitespacesAndNewlines)
-            if URL(string: trimmed) != nil {
-                savedPhotoURL = trimmed
-            }
+            viewModel.applyPhotoURL(savedPhotoURL: &savedPhotoURL)
         }
     }
     
-    // MARK: - Toolbar
     private var navigationToolbar: some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    if hasChanges {
-                        showExitAlert = true
+                    if viewModel.hasChanges(
+                        storedName: storedName,
+                        storedDescription: storedDescription,
+                        storedWebsite: storedWebsite
+                    ) {
+                        viewModel.showExitAlert = true
                     } else {
                         dismiss()
                     }
@@ -180,10 +173,15 @@ struct ProfileEditView: View {
         VStack {
             Spacer()
             Button {
-                saveProfile()
+                viewModel.saveProfile(
+                    storedName: &storedName,
+                    storedDescription: &storedDescription,
+                    storedWebsite: &storedWebsite
+                )
+                isEditing = false
                 dismiss()
             } label: {
-                Text("")
+                Text(Constants.save)
                     .font(Font(UIFont.bodyBold))
                     .foregroundColor(.ypWhite)
                     .frame(maxWidth: .infinity)
@@ -196,18 +194,24 @@ struct ProfileEditView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-    
-    private func saveProfile() {
-        storedName = name
-        storedDescription = description
-        storedWebsite = website
-    }
 }
 
-// MARK: - Preview_ProfileEditView
+private enum Constants {
+    static let photoDialog = NSLocalizedString("Profile.photoDialog.title", comment: "")
+    static let changePhoto = NSLocalizedString("Profile.photoDialog.changePhoto", comment: "")
+    static let deletePhoto = NSLocalizedString("Profile.photoDialog.deletePhoto", comment: "")
+    static let cancel = NSLocalizedString("Profile.cancelButton", comment: "")
+    static let profileName = NSLocalizedString("Profile.name", comment: "")
+    static let profileDescription = NSLocalizedString("Profile.description", comment: "")
+    static let profileWebsite = NSLocalizedString("Profile.website", comment: "")
+    static let photoAlert = NSLocalizedString("Profile.photoAlert.title", comment: "")
+    static let photoAlertPh = NSLocalizedString("Profile.photoAlert.placeholder", comment: "")
+    static let save = NSLocalizedString("Profile.saveButton", comment: "")
+}
+
 #Preview {
     NavigationStack {
-        ProfileEditView()
+        ProfileEditView(isEditing: .constant(true))
             .environment(\.locale, .init(identifier: "ru"))
     }
 }

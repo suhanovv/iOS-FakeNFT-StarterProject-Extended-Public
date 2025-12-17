@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct FavouritesStorage {
-    // MARK: - AppStorage
-    @AppStorage(Constants.StorageKeys.favouriteNFTIds)
+    @AppStorage(StorageKeys.favouriteNFTIds)
     
     private static var rawFavouriteIds: Data = Data()
     

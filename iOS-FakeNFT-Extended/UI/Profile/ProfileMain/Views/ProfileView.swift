@@ -9,15 +9,18 @@ import SwiftUI
 
 struct ProfileView: View {
     // MARK: - AppStorage
-    @AppStorage("profile_name") private var storedName: String = ""
-    @AppStorage("profile_description") private var storedDescription: String = ""
-    @AppStorage("profile_website") private var storedWebsite: String = ""
-    @AppStorage(Constants.StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    @AppStorage(StorageKeys.name) private var storedName: String = ""
+    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
+    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
+    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
-    @State private var isEditing = false
+    @State private var viewModel = ProfileViewModel()
     
-    var photoURL: URL? { URL(string: savedPhotoURL) }
+    private var photoURL: URL? {
+        viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+    }
     
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 16) {
@@ -33,8 +36,8 @@ struct ProfileView: View {
         }
         .padding(.horizontal, 16)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $isEditing) {
-            ProfileEditView()
+        .navigationDestination(isPresented: $viewModel.isEditing) {
+            ProfileEditView(isEditing: $viewModel.isEditing)
                 .toolbar(.hidden, for: .tabBar)
         }
         .toolbar {
@@ -56,21 +59,23 @@ struct ProfileView: View {
             .padding(.bottom, 8)
     }
     
+    @ViewBuilder
     private var webRow: some View {
-        Link(storedWebsite, destination: URL(string: "https://\(storedWebsite)")!)
-            .font(Font(UIFont.caption1))
-            .foregroundColor(.ypBlueUniversal)
-            .underline()
+        if let url = URL(string: storedWebsite) {
+            Link(url.host ?? storedWebsite, destination: url)
+                .font(Font(UIFont.caption1))
+                .foregroundColor(.ypBlueUniversal)
+                .underline()
+        }
     }
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: Constants.Titles.myNFT, count: 21) {
-                // add action
+            ProfileListRow(title: Constants.myNFT, count: 21) {
+                // action
             }
-            
-            ProfileListRow(title: Constants.Titles.favouriteNFT, count: 21) {
-                // add action
+            ProfileListRow(title: Constants.favouriteNFT, count: 21) {
+                // action
             }
         }
         .listStyle(.plain)
@@ -78,18 +83,22 @@ struct ProfileView: View {
         .padding(.top, 40)
     }
     
-    // MARK: - Toolbar
     private var navigationToolbar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
-                isEditing = true
+                viewModel.isEditing = true
             } label: {
                 Image(systemName: "square.and.pencil")
-                    .font(.system(size: 26))
+                    .font(.system(size: 24, weight: .semibold))
                     .foregroundColor(.ypBlack)
             }
         }
     }
+}
+
+private enum Constants {
+    static let myNFT = NSLocalizedString("Profile.myNFT", comment: "")
+    static let favouriteNFT = NSLocalizedString("Profile.favouriteNFT", comment: "")
 }
 
 // MARK: - Preview_ProfileView
@@ -100,7 +109,7 @@ struct ProfileView: View {
                 UserDefaults.standard.set("Joaquin Phoenix", forKey: "profile_name")
                 UserDefaults.standard.set("Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", forKey: "profile_description")
                 UserDefaults.standard.set("JoaquinPhoenix.com", forKey: "profile_website")
-                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: Constants.StorageKeys.photoURL)
+                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: StorageKeys.photoURL)
             }
     }
 }
