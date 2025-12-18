@@ -26,29 +26,32 @@ struct MyNFTView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(sortedNfts) { nft in
-                MyNFTCell(
-                    nft: nft,
-                    rating: nft.rating ?? 0,
-                    isFavourite: favouriteIds.contains(nft.id),
-                    onLikeTap: {
-                        FavouritesStorage.toggle(nft.id)
+        Group {
+            if sortedNfts.isEmpty {
+                MyNFTEmptyView()
+            } else {
+                List {
+                    ForEach(sortedNfts) { nft in
+                        MyNFTCell(
+                            nft: nft,
+                            rating: nft.rating ?? 0,
+                            isFavourite: favouriteIds.contains(nft.id),
+                            onLikeTap: {
+                                FavouritesStorage.toggle(nft.id)
+                            }
+                        )
+                        .padding(.leading, 16)
+                        .padding(.trailing, 39)
+                        .padding(.vertical, 16)
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
                     }
-                )
-                .padding(.leading, 16)
-                .padding(.trailing, 39)
-                .padding(.vertical, 16)
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+                .padding(.vertical, 20)
             }
         }
-        .listStyle(.plain)
-        .padding(.vertical, 20)
         .navigationBarBackButtonHidden(true)
-        .navigationTitle(Constants.myNFT)
-        .navigationBarTitleDisplayMode(.inline)
-        .font(Font(UIFont.bodyBold))
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -60,12 +63,20 @@ struct MyNFTView: View {
                         .foregroundColor(.ypBlack)
                 }
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    isNftMenuPresented = true
-                } label: {
-                    Image(.CommonIcons.sort)
-                        .foregroundColor(.ypBlack)
+            
+            if !sortedNfts.isEmpty {
+                ToolbarItem(placement: .principal) {
+                    Text(Constants.myNFT)
+                        .font(Font(UIFont.bodyBold))
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isNftMenuPresented = true
+                    } label: {
+                        Image(.CommonIcons.sort)
+                            .foregroundColor(.ypBlack)
+                    }
                 }
             }
         }
