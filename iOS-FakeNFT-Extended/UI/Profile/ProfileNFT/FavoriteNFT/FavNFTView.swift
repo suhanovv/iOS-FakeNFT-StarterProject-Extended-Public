@@ -31,26 +31,29 @@ struct FavNFTView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(favouriteNFTs) { nft in
-                    FavNFTCell(
-                        nft: nft,
-                        rating: nft.rating ?? 0,
-                        isFavourite: true,
-                        onLikeTap: {
-                            favs = viewModel.removeFavourite(nft.id, from: favs)
+        Group {
+            if favouriteNFTs.isEmpty {
+                FavNFTEmptyView()
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(favouriteNFTs) { nft in
+                            FavNFTCell(
+                                nft: nft,
+                                rating: nft.rating ?? 0,
+                                isFavourite: true,
+                                onLikeTap: {
+                                    favs = viewModel.removeFavourite(nft.id, from: favs)
+                                }
+                            )
                         }
-                    )
+                    }
+                    .padding(.vertical, 20)
                 }
             }
-            .padding(.vertical, 20)
         }
-        .listStyle(.plain)
         .navigationBarBackButtonHidden(true)
-        .navigationTitle(Constants.favouriteNFT)
         .navigationBarTitleDisplayMode(.inline)
-        .font(Font(UIFont.bodyBold))
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -60,6 +63,13 @@ struct FavNFTView: View {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.ypBlack)
+                }
+            }
+            
+            if !favouriteNFTs.isEmpty {
+                ToolbarItem(placement: .principal) {
+                    Text(Constants.favouriteNFT)
+                        .font(Font(UIFont.bodyBold))
                 }
             }
         }

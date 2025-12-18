@@ -28,7 +28,10 @@ struct ProfileView: View {
     }
     
     private var favNFTCount: Int {
-        (try? JSONDecoder().decode([String].self, from: favouritesMarker))?.count ?? 0
+        let favouriteIds = (try? JSONDecoder().decode([String].self, from: favouritesMarker)) ?? []
+        return ProfileViewMock.mockNFTs.filter {
+            favouriteIds.contains($0.id)
+        }.count
     }
     
     // MARK: - Body
