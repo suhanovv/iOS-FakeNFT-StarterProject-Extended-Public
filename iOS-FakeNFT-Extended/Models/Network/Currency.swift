@@ -1,5 +1,5 @@
 //
-//  Nft.swift
+//  Currency.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Pavel Komarov on 18.12.2025.
@@ -7,10 +7,9 @@
 
 import Foundation
 
-struct Nft: Decodable, Identifiable {
+struct Currency: Decodable {
     let id: String
-    let images: [URL]
+    let title: String
     let name: String
-    let rating: Int
-    let price: Double
+    let image: URL
 }
