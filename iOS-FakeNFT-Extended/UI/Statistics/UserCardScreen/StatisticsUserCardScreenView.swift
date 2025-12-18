@@ -44,7 +44,7 @@ struct StatisticsUserCardScreenView: View {
                 Task {
                     await viewModel.loadUserCard()
                 }
-            }
+            }.keyboardShortcut(.defaultAction)
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
