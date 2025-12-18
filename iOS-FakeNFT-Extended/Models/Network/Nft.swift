@@ -1,11 +1,16 @@
 import Foundation
 
+<<<<<<< HEAD
 struct Nft: Decodable, Identifiable, Sendable {
+=======
+struct Nft: Decodable, Identifiable {
+>>>>>>> 360b056 (Statistics/epic branch (#118))
     let id: String
     let images: [URL]
     let name: String
     let rating: Int
     let price: Double
+<<<<<<< HEAD
 }
 
 extension Nft {
@@ -30,4 +35,6 @@ extension Nft {
         rating: 4,
         price: 32.89
     )
+=======
+>>>>>>> 360b056 (Statistics/epic branch (#118))
 }
