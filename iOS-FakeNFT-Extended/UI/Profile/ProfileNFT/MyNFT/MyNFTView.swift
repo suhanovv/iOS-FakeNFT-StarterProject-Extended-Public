@@ -15,6 +15,7 @@ struct MyNFTView: View {
     
     @State private var isNftMenuPresented = false
     @State private var viewModel = MyNFTViewModel()
+    @Environment(\.dismiss) private var dismiss
     
     private var sortedNfts: [NftItem] {
         viewModel.sortedNFTs(from: nfts, sortType: sortType)
@@ -44,7 +45,21 @@ struct MyNFTView: View {
         }
         .listStyle(.plain)
         .padding(.vertical, 20)
+        .navigationBarBackButtonHidden(true)
+        .navigationTitle(Constants.myNFT)
+        .navigationBarTitleDisplayMode(.inline)
+        .font(Font(UIFont.bodyBold))
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.ypBlack)
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     isNftMenuPresented = true
@@ -77,6 +92,7 @@ struct MyNFTView: View {
 }
 
 private enum Constants {
+    static let myNFT = NSLocalizedString("Profile.myNFT", comment: "")
     static let sortNFT = NSLocalizedString("Profile.sorting.title", comment: "")
     static let sortByPrice = NSLocalizedString("Profile.sorting.byPriceButton", comment: "")
     static let sortByRating = NSLocalizedString("Profile.sorting.byRatingButton", comment: "")
