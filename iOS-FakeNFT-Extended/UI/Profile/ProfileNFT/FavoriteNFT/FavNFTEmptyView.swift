@@ -12,13 +12,17 @@ struct FavNFTEmptyView: View {
         VStack {
             Spacer()
             
-            Text("У Вас ещё нет избранных NFT")
+            Text(Constants.emptyFavNFT)
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlack)
             
             Spacer()
         }
     }
+}
+
+private enum Constants {
+    static let emptyFavNFT = NSLocalizedString("Profile.emptyFavNft", comment: "")
 }
 
 #Preview {

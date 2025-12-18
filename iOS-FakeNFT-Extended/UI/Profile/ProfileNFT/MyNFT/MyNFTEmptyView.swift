@@ -12,13 +12,17 @@ struct MyNFTEmptyView: View {
         VStack {
             Spacer()
             
-            Text("У Вас ещё нет NFT")
+            Text(Constants.emptyMyNFT)
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlack)
             
             Spacer()
         }
     }
+}
+
+private enum Constants {
+    static let emptyMyNFT = NSLocalizedString("Profile.emptyMyNft", comment: "")
 }
 
 #Preview {
