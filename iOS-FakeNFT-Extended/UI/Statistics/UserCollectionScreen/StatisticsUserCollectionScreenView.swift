@@ -7,11 +7,7 @@
 import SwiftUI
 
 struct StatisticsUserCollectionScreenView: View {
-    @State private var viewModel: ViewModel
-    
-    init(viewModel: StatisticsUserCollectionScreenView.ViewModel) {
-        self.viewModel = viewModel
-    }
+    @Bindable var viewModel: ViewModel
     
     var body: some View {
         ScrollView(.vertical) {

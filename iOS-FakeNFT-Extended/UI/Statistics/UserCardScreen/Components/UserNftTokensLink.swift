@@ -24,6 +24,6 @@ struct UserNftTokensLink: View {
         .foregroundStyle(.ypBlack)        
     }
     enum Constants {
-        static let nftTokenLinkTitle = NSLocalizedString("UserProfile.nftTokenLink.title", comment: "")
+        static let nftTokenLinkTitle = NSLocalizedString("UserNftTokensLink.title", comment: "")
     }
 }

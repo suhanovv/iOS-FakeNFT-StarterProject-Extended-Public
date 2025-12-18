@@ -12,7 +12,7 @@ struct StatisticsScreenView: View {
     @Environment(Coordinator.self) var coordinator
     @Bindable var viewModel: StatisticsScreenView.ViewModel
     @State private var isSortOptionsPresented = false
-
+    
     // MARK: - Body
     var body: some View {
         VStack {

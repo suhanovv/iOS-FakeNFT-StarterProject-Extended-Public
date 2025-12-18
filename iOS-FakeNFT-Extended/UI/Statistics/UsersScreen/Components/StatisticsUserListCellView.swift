@@ -27,7 +27,7 @@ struct StatisticsUserListCellView: View {
                     .frame(width: 28, height: 28)
                     .clipShape(.circle)
                     .padding(.leading, 16)
-
+                
                 Text(userName)
                     .lineLimit(1)
                     .font(.system(size: 22, weight: .bold))

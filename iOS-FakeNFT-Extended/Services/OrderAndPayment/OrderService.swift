@@ -17,7 +17,7 @@ actor OrderService: OrderServiceProtocol {
         let request: GetOrderRequest = .init()
         return try await networkClient.send(request: request)
     }
-
+    
     func addToCartNft(_ nftId: String) async throws -> Order {
         let currentOrder = try await getOrder()
         if !currentOrder.nfts.contains(nftId) {
@@ -26,7 +26,7 @@ actor OrderService: OrderServiceProtocol {
         }
         return currentOrder
     }
-
+    
     func removeFromCartNft(_ nftId: String) async throws -> Order {
         let currentOrder = try await getOrder()
         let newNfts: [String] = currentOrder.nfts.filter { $0 != nftId }

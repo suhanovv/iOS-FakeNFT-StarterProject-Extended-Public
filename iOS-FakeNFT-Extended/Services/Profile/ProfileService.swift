@@ -19,7 +19,7 @@ actor ProfileService: ProfileServiceProtocol {
         let newLikes: [String] = currentLikes.contains(nftId) ? currentLikes : currentLikes + [nftId]
         return try await makeUpdateRequestAndSend(with: newLikes)
     }
-
+    
     func removeLikeFromNft(_ nftId: String) async throws -> [String] {
         let currentLikes: [String] = try await getProfileLikes()
         let newLikes: [String] = currentLikes.filter { $0 != nftId }
@@ -32,7 +32,7 @@ actor ProfileService: ProfileServiceProtocol {
         let profile: Profile = try await networkClient.send(request: updateRequest)
         return profile.likes
     }
-
+    
     func getProfileLikes() async throws -> [String] {
         let request = GetProfileRequest()
         let profile: Profile = try await networkClient.send(request: request)
