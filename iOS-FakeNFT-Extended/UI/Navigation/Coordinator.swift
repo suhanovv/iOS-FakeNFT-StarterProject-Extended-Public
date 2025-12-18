@@ -12,16 +12,33 @@ import SwiftUI
 @MainActor
 final class Coordinator {
     var path = NavigationPath()
+    let services: ServicesAssembly
     
-    init() {}
-
+    init(services: ServicesAssembly) {
+        self.services = services
+    }
+    
     @ViewBuilder
     func build(screen: Screen) -> some View {
         switch screen {
             case .main: ContentView()
-            case .usersList: StatisticsScreenView()
-            case .userCard(let userId): StatisticsUserCardScreenView(userId: userId)
-            case .userCollection(userId: let userId): StatisticsUserCollectionScreenView(userId: userId)
+                
+            case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
+                
+            case .userCard(let userId):
+                StatisticsUserCardScreenView(
+                    viewModel: .init(userId: userId, usersService: services.userService))
+                
+            case .userCollection(userId: let userId):
+                StatisticsUserCollectionScreenView(
+                    viewModel: .init(
+                        userId: userId,
+                        profileService: services.profileService,
+                        orderService: services.orderService,
+                        usersService: services.userService,
+                        nftService: services.nftService)
+                )
+            case .webView(url: let url): WebView(url: url)
         }
     }
     

@@ -6,14 +6,12 @@ struct ContentView: View {
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-
         
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor(resource: .ypBlack)]
         appearance.stackedLayoutAppearance.selected.iconColor = .ypBlueUniversal
         
         UITabBar.appearance().standardAppearance = appearance
-        
     }
     
     var body: some View {
@@ -22,6 +20,7 @@ struct ContentView: View {
                 .tabItem {
                     Label(Constants.tabCatalogTitle, image: .TabBarIcons.cart)
                 }
+                .environment(coordinator.services)
                 .backgroundStyle(.ypWhite)
             coordinator.build(screen: .usersList)
                 .tabItem {

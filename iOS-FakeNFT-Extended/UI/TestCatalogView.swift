@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct TestCatalogView: View {
-    @Environment(ServicesAssembly.self) var servicesAssembly
     @State private var presentingNft = false
 
     var body: some View {

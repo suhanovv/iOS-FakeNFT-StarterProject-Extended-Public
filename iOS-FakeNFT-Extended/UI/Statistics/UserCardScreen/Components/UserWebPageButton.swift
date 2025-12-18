@@ -7,8 +7,10 @@
 import SwiftUI
 
 struct UserWebPageButton: View {
+    let url: URL
+    let action: () -> Void
     var body: some View {
-        Button(action: {}){
+        Button(action: action){
             Text(Constants.webpageLinkTitle)
                 .font(Font.system(size: 15, weight: .regular))
                 .foregroundColor(.ypBlack)
@@ -22,13 +24,8 @@ struct UserWebPageButton: View {
             .stroke(.ypBlack, lineWidth: 1)
         )
     }
-}
-
-private enum Constants {
-    static let webpageLinkTitle = NSLocalizedString("UserProfile.webpageLink.title", comment: "")
     
-}
-
-#Preview {
-    UserWebPageButton()
+    enum Constants {
+        static let webpageLinkTitle = NSLocalizedString("UserWebPageButton.webpageLink.title", comment: "")
+    }
 }

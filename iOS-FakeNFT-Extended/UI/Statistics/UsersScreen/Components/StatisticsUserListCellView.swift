@@ -27,7 +27,7 @@ struct StatisticsUserListCellView: View {
                     .frame(width: 28, height: 28)
                     .clipShape(.circle)
                     .padding(.leading, 16)
-
+                
                 Text(userName)
                     .lineLimit(1)
                     .font(.system(size: 22, weight: .bold))
@@ -45,10 +45,4 @@ struct StatisticsUserListCellView: View {
         .listRowBackground(Color.ypWhite)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
     }
-}
-
-#Preview {
-    StatisticsUserListCellView(rowNumber: 1, userName: "Mads", rating: 6, avatarUrl: URL(string: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Brendan_Fraser_October_2022.jpg/1200px-Brendan_Fraser_October_2022.jpg"))
-    StatisticsUserListCellView(rowNumber: 200, userName: "Bad avatar", rating: 1, avatarUrl: URL(string: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/740.jpg"))
-    StatisticsUserListCellView(rowNumber: 999, userName: "No avatar", rating: 1, avatarUrl: nil)
 }

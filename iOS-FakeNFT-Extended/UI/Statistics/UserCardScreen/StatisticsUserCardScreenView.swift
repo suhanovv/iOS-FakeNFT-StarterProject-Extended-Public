@@ -9,10 +9,9 @@ import SwiftUI
 import Kingfisher
 
 struct StatisticsUserCardScreenView: View {
-    let userId: String
     @Environment(Coordinator.self) private var coordinator
-    @State private var viewModel = ViewModel()
-
+    @Bindable var viewModel: StatisticsUserCardScreenView.ViewModel
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             let user = viewModel.user
@@ -20,27 +19,39 @@ struct StatisticsUserCardScreenView: View {
                 avatar: user?.avatar,
                 name: user?.name ?? "",
                 description: user?.description ?? "")
-            UserWebPageButton().padding(.top, 28)
+            if let url = viewModel.user?.website {
+                UserWebPageButton(url: url) {
+                    coordinator.push(.webView(url:url))
+                }.padding(.top, 28)
+            }
             UserNftTokensLink(nftCount: viewModel.nftCount).padding(.top, 41).onTapGesture {
-                coordinator.push(Screen.userCollection(userId: userId))
+                coordinator.push(Screen.userCollection(userId: viewModel.userId))
             }
             Spacer()
         }
+        .opacity(viewModel.state == nil ? 0 : 1)
         .overlay {
             ProgressBarView(isActive: viewModel.state == .loading)
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state == .error),
+        ) {
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    await viewModel.loadUserCard()
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.ypWhite)
         .task {
-            await viewModel.loadUser(userId)
+            await viewModel.loadUserCard()
         }
     }
-}
-
-#Preview {
-    StatisticsUserCardScreenView(
-        userId: "f62b7dcb-ff81-49e7-954e-358bf6166737"
-    ).environment(Coordinator())
 }

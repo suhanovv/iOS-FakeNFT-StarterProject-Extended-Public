@@ -7,11 +7,7 @@
 import SwiftUI
 
 struct StatisticsUserCollectionScreenView: View {
-    @State private var viewModel: ViewModel
-    
-    init(userId: String, isEmpty: Bool = false) {
-        self.viewModel = ViewModel(userId: userId, isEmpty: isEmpty)
-    }
+    @Bindable var viewModel: ViewModel
     
     var body: some View {
         ScrollView(.vertical) {
@@ -20,23 +16,42 @@ struct StatisticsUserCollectionScreenView: View {
             ) {
                 ForEach(viewModel.collection) { nft in
                     NftCardView(
-                        viewModel:
-                            .init(
-                                nft: nft,
-                                isLiked: viewModel.isLiked(nftId: nft.id),
-                                isInCart: viewModel.isInCart(nftId: nft.id)
-                            )
+                        nft: nft,
+                        isLiked: viewModel.isLiked(nftId: nft.id),
+                        isInCart: viewModel.isInCart(nftId: nft.id),
+                        likeTapAction: {
+                            Task { await viewModel.toggleLike(nftId: nft.id) }
+                        },
+                        buyTapAction: {
+                            Task { await viewModel.toggleInCart(nftId: nft.id) }
+                        }
                     )
                 }
             }
         }
+        .opacity(viewModel.state == nil ? 0 : 1)
         .overlay {
             ZStack {
                 Text(Constants.noNftTitle)
                     .font(.system(size: 17, weight: .bold))
                     .opacity(viewModel.isCollectionEmpty ? 1 : 0)
                 ProgressBarView(isActive: viewModel.state == .loading)
-                
+            }
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state?.isError ?? false),
+            presenting: viewModel.state
+        ) { state in
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    if case .error(let operation) = viewModel.state {
+                        await viewModel.retryOperation(operation)
+                    }
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -48,17 +63,4 @@ struct StatisticsUserCollectionScreenView: View {
             await viewModel.loadData()
         }
     }
-}
-
-private enum Constants {
-    static let noNftTitle = NSLocalizedString("UserCollection.noNft.title", comment: "")
-    static let screenNftTitle = NSLocalizedString("UserCollection.screen.title", comment: "")
-}
-
-#Preview("not empty") {
-    StatisticsUserCollectionScreenView(userId: UUID().uuidString)
-}
-
-#Preview("is empty") {
-    StatisticsUserCollectionScreenView(userId: UUID().uuidString, isEmpty: true)
 }

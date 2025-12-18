@@ -22,7 +22,7 @@ actor UsersService: UsersServiceProtocol {
         let request = GetUsersRequest(page: page ?? 0, size: perPage, sortBy: orderBy.rawValue)
         return try await networkClient.send(request: request)
     }
-
+    
     func getUserById(_ userId: String) async throws -> User {
         let request = GetUserByIdRequest(userId: userId)
         return try await networkClient.send(request: request)

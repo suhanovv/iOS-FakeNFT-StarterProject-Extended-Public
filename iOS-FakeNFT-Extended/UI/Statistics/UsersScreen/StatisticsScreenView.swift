@@ -10,20 +10,41 @@ import SwiftUI
 struct StatisticsScreenView: View {
     @AppStorage(AppStorageKeys.usersSortBy) private var sortOrder: UsersSortType = .rating
     @Environment(Coordinator.self) var coordinator
-    @State private var viewModel = ViewModel()
+    @Bindable var viewModel: StatisticsScreenView.ViewModel
     @State private var isSortOptionsPresented = false
     
     // MARK: - Body
     var body: some View {
         VStack {
             topBar
-            content
+            content.opacity(viewModel.state == nil ? 0 : 1)
         }
         .overlay {
             ProgressBarView(isActive: viewModel.state == .loading)
         }
         .task {
-            await viewModel.loadUsers(orderBy: sortOrder)
+            await viewModel.loadFirstPage(orderBy: sortOrder)
+        }
+        .onChange(of: sortOrder) {
+            Task {
+                await viewModel.changeOrderBy(sortOrder)
+            }
+        }
+        .alert(
+            Constants.errorTitle,
+            isPresented: .constant(viewModel.state?.isError ?? false),
+            presenting: viewModel.state
+        ) { state in
+            Button(Constants.errorButtonCancelTitle, role: .cancel) {
+                viewModel.setState(.loaded)
+            }
+            Button(Constants.errorButtonRetryTitle) {
+                Task {
+                    if case .error(let operation) = viewModel.state {
+                        await viewModel.retryOperation(operation)
+                    }
+                }
+            }
         }
         // hack for hiding horizontal tabbar bar 1px separator
         .padding(.vertical, 1)
@@ -35,7 +56,7 @@ struct StatisticsScreenView: View {
     private var topBar: some View {
         HStack {
             Spacer()
-            SortingToolbarButtonView(viewModel: $viewModel, sortOrder: $sortOrder)
+            SortingToolbarButtonView(viewModel: viewModel, sortOrder: $sortOrder)
         }
         .frame(height: 42)
         .background(.ypWhite)
@@ -50,6 +71,12 @@ struct StatisticsScreenView: View {
                     userName: user.name,
                     rating: user.rating,
                     avatarUrl: user.avatar)
+                .task {
+                    if idx != viewModel.users.count - 3 {
+                        return
+                    }
+                    await viewModel.loadNextPage(orderBy: sortOrder)
+                }
                 .onTapGesture {_ in
                     coordinator.push(.userCard(userId: user.id))
                 }
@@ -60,8 +87,4 @@ struct StatisticsScreenView: View {
         .scrollIndicators(.hidden)
         .scrollContentBackground(.hidden)
     }
-}
-
-#Preview {
-    StatisticsScreenView().environment(Coordinator())
 }

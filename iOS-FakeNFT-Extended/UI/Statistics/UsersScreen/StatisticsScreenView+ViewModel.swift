@@ -11,35 +11,64 @@ extension StatisticsScreenView {
     @Observable
     @MainActor
     final class ViewModel {
-        private(set) var state: ScreenState = .initial
+        private(set) var state: ScreenState?
         private(set) var users: [User] = []
+        private let usersService: UsersServiceProtocol
+        private var currentPage = 0
         
-        init() {}
+        init(usersService: UsersServiceProtocol) {
+            self.usersService = usersService
+        }
         
         func changeOrderBy(_ orderBy: UsersSortType) async {
-            await loadData(orderBy: orderBy)
+            do {
+                let page = 0
+                users = try await loadPage(page, orderBy: orderBy)
+                currentPage = page
+            } catch {
+                state = .error(operation: .changeSortOrder(orderBy))
+            }
         }
         
-        func loadUsers(orderBy: UsersSortType) async {
-            if state != .initial { return }
-            await loadData(orderBy: orderBy)
+        func loadFirstPage(orderBy: UsersSortType) async {
+            if !users.isEmpty { return }
+            do {
+                users = try await loadPage(currentPage, orderBy: orderBy)
+            } catch {
+                state = .error(operation: .loadFirstPage(orderBy))
+            }
         }
         
-        private func loadData(orderBy: UsersSortType) async {
-            print(orderBy)
+        func loadNextPage(orderBy: UsersSortType) async {
+            do {
+                let page = currentPage + 1
+                users.append(contentsOf: try await loadPage(page, orderBy: orderBy))
+                currentPage = page
+            } catch {
+                state = .error(operation: .loadNextPage(orderBy))
+            }
+        }
+        
+        func setState(_ state: ScreenState) {
+            self.state = state
+        }
+        
+        func retryOperation(_ operation: OperationType) async {
+            switch operation {
+                case .changeSortOrder(let orderBy):
+                    await changeOrderBy(orderBy)
+                case .loadFirstPage(let orderBy):
+                    await loadFirstPage(orderBy: orderBy)
+                case .loadNextPage(let orderBy):
+                    await loadNextPage(orderBy: orderBy)
+            }
+        }
+        
+        private func loadPage(_ page: Int, orderBy: UsersSortType) async throws -> [User] {
             state = .loading
-            defer { state = .loaded }
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
-            users = (1...10)
-                .map { _ in User.makeFakeUser() }
-                .sorted(by: {(lhs: User, rhs: User) -> Bool in
-                    switch orderBy {
-                        case .rating:
-                            return lhs.rating > rhs.rating
-                        case .name:
-                            return lhs.name < rhs.name
-                    }
-                })
+            let users = try await usersService.getUsers(page: page, orderBy: orderBy)
+            state = .loaded
+            return users
         }
     }
 }

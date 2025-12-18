@@ -23,14 +23,7 @@ struct UserNftTokensLink: View {
         .font(Font.system(size: 17, weight: .bold))
         .foregroundStyle(.ypBlack)        
     }
+    enum Constants {
+        static let nftTokenLinkTitle = NSLocalizedString("UserNftTokensLink.title", comment: "")
+    }
 }
-
-private enum Constants {
-    static let nftTokenLinkTitle = NSLocalizedString("UserProfile.nftTokenLink.title", comment: "")
-}
-
-#Preview {
-    UserNftTokensLink(nftCount: 10)
-}
-
-
