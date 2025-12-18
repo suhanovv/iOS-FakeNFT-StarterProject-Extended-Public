@@ -1,5 +1,5 @@
 //
-//  MyNFTEmptyView.swift
+//  FavNFTEmptyView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Ди Di on 18/12/25.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct MyNFTEmptyView: View {
+struct FavNFTEmptyView: View {
     var body: some View {
         VStack {
             Spacer()
             
-            Text(Constants.emptyMyNFT)
+            Text(Constants.emptyFavNFT)
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlack)
             
@@ -22,11 +22,11 @@ struct MyNFTEmptyView: View {
 }
 
 private enum Constants {
-    static let emptyMyNFT = NSLocalizedString("Profile.emptyMyNft", comment: "")
+    static let emptyFavNFT = NSLocalizedString("Profile.emptyFavNft", comment: "")
 }
 
 #Preview {
     NavigationStack {
-        MyNFTEmptyView()
+        FavNFTEmptyView()
     }
 }

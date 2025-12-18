@@ -113,6 +113,38 @@
         }
       }
     },
+    "Profile.emptyFavNft" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have any favourite NFTs yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У Вас ещё нет избранных NFT"
+          }
+        }
+      }
+    },
+    "Profile.emptyMyNft" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have an NFT yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У Вас ещё нет NFT"
+          }
+        }
+      }
+    },
     "Profile.exitAlert.exitButton" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -491,9 +523,6 @@
       }
     },
     "от %@" : {
-
-    },
-    "У Вас ещё нет NFT" : {
 
     }
   },
