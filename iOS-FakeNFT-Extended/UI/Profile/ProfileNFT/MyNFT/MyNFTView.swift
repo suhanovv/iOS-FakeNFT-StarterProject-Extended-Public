@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-enum NftSortType: String {
-    case byPrice
-    case byRating
-    case byName
-}
-
-// MARK: - MyNFTView
 struct MyNFTView: View {
     let nfts: [NftItem]
     

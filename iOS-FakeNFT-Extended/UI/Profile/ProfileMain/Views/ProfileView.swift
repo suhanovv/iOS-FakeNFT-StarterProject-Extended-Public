@@ -52,11 +52,14 @@ struct ProfileView: View {
             .foregroundColor(.ypBlack)
     }
     
+    @ViewBuilder
     private var descriptionRow: some View {
-        Text(storedDescription)
-            .font(Font(UIFont.caption2))
-            .foregroundColor(.ypBlack)
-            .padding(.bottom, 8)
+        if !storedDescription.isEmpty {
+            Text(storedDescription)
+                .font(Font(UIFont.caption2))
+                .foregroundColor(.ypBlack)
+                .padding(.bottom, 8)
+        }
     }
     
     @ViewBuilder

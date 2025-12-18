@@ -43,7 +43,7 @@ struct FavNFTCell: View {
     private var nftAsyncImage: some View {
         NFTImageView(
             imageURL: nft.images?.first,
-            placeholder: Image("EmptyNft")
+            placeholder: Image(.emptyNft)
         )
         .frame(width: 80, height: 80)
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -71,12 +71,15 @@ struct FavNFTCell: View {
     }
     
     private var nftPrice: some View {
-        Text(nft.price ?? 0, format: .currency(code: "ETH"))
-            .font(Font(UIFont.caption1))
-            .foregroundColor(.ypBlack)
+        Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
+        .font(Font(UIFont.caption1))
+        .foregroundColor(.ypBlack)
     }
 }
 
+private enum Constants {
+    static let currencyCode = "ETH"
+}
 
 // MARK: - Preview_FavNFTCell
 #Preview {

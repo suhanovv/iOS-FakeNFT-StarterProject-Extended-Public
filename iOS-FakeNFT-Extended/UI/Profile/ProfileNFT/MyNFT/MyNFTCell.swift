@@ -81,7 +81,7 @@ struct MyNFTCell: View {
             Text(Constants.price)
                 .font(Font(UIFont.caption2))
                 .foregroundColor(.ypBlack)
-            Text(nft.price ?? 0, format: .currency(code: "ETH"))
+            Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlack)
         }
@@ -90,6 +90,7 @@ struct MyNFTCell: View {
 
 private enum Constants {
     static let price = NSLocalizedString("Profile.price", comment: "")
+    static let currencyCode = "ETH"
 }
 
 #Preview("Favourite") {
