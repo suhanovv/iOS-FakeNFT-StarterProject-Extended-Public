@@ -44,7 +44,7 @@ struct StatisticsScreenView: View {
                         await viewModel.retryOperation(operation)
                     }
                 }
-            }
+            }.keyboardShortcut(.defaultAction)
         }
         // hack for hiding horizontal tabbar bar 1px separator
         .padding(.vertical, 1)

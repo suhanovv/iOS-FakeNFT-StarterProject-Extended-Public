@@ -52,7 +52,7 @@ struct StatisticsUserCollectionScreenView: View {
                         await viewModel.retryOperation(operation)
                     }
                 }
-            }
+            }.keyboardShortcut(.defaultAction)
         }
         .padding(.horizontal, 16)
         .padding(.top, 20)
