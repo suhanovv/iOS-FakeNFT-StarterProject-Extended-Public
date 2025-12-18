@@ -26,7 +26,7 @@ final class NftDetailViewController: UIViewController {
 
     private lazy var closeButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .closeButton
+        button.tintColor = .ypBlack
         button.setImage(UIImage(resource: .CommonIcons.close), for: .normal)
         button.addTarget(self, action: #selector(close), for: .touchUpInside)
         return button
@@ -91,7 +91,7 @@ final class NftDetailViewController: UIViewController {
 
 // MARK: - NftDetailView
 
-extension NftDetailViewController: NftDetailView {
+extension NftDetailViewController: @MainActor NftDetailView {
     func displayCells(_ cellModels: [NftDetailCellModel]) {
         self.cellModels = cellModels
         collectionView.reloadData()
