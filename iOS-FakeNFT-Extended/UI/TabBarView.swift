@@ -8,16 +8,13 @@ struct TabBarView: View {
         TabView {
             NavigationStack {
                 ProfileViewMock.preview
+                // Изменить на ProfileView() после подключения запросов
             }
             .tabItem {
-                Label("Профиль", image: .TabBarIcons.profile)
+                Label(Constants.profile, image: .TabBarIcons.profile)
             }
             .backgroundStyle(.background)
-            TestCatalogView()
-                .tabItem {
-                    Label(NSLocalizedString("Tab.catalog", comment: ""), image: .TabBarIcons.cart)
-                }
-                .backgroundStyle(.background)
+            
             IconsView()
                 .tabItem {
                     Label(NSLocalizedString("Tab.statistics", comment: ""), image: .TabBarIcons.statistics)
@@ -25,4 +22,8 @@ struct TabBarView: View {
                 .backgroundStyle(.background)
         }
     }
+}
+
+private enum Constants {
+    static let profile = NSLocalizedString("Tab.profile", comment: "")
 }

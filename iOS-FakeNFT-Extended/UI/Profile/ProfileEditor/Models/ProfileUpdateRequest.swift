@@ -22,28 +22,28 @@ extension ProfileUpdateRequest {
         func encode(_ value: String) -> String {
             value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? value
         }
-
+        
         if let name = name {
             components.append("name=\(encode(name))")
         }
-
+        
         if let avatar = avatar {
             components.append("avatar=\(encode(avatar.absoluteString))")
         }
-
+        
         if let description = description {
             components.append("description=\(encode(description))")
         }
-
+        
         if let website = website {
             components.append("website=\(encode(website.absoluteString))")
         }
-
+        
         if let likes = likes {
             let joined = likes.joined(separator: ",")
             components.append("likes=\(encode(joined))")
         }
-
+        
         let bodyString = components.joined(separator: "&")
         return bodyString.data(using: String.Encoding.utf8)
     }

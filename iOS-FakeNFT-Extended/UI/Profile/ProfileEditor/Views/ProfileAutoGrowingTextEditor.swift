@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AutoGrowingTextEditor: View {
+struct ProfileAutoGrowingTextEditor: View {
     @Binding var text: String
     @State private var height: CGFloat = 100
     
@@ -45,8 +45,8 @@ struct AutoGrowingTextEditor: View {
     VStack(alignment: .leading, spacing: 16) {
         Text("Текст")
             .font(.headline)
-
-        AutoGrowingTextEditor(text: .constant("Пример текста\nкоторый растёт\nпо мере ввода"))
+        
+        ProfileAutoGrowingTextEditor(text: .constant("Пример текста\nкоторый растёт\nпо мере ввода"))
             .padding()
     }
     .padding()

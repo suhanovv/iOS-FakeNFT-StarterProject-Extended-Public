@@ -50,12 +50,6 @@ struct ProfileListRow: View {
             count: 3,
             action: {}
         )
-
-        ProfileListRow(
-            title: "Пустой список",
-            count: 0,
-            action: {}
-        )
     }
     .padding()
     .background(Color(.systemGroupedBackground))

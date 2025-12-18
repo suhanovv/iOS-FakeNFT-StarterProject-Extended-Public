@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct ProfileView: View {
-    var photoURL: URL?
-    var name: String
-    var description: String
-    var website: String
-    @State private var isEditing = false
+    // MARK: - AppStorage
+    @AppStorage(StorageKeys.name) private var storedName: String = ""
+    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
+    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
+    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
+    @State private var viewModel = ProfileViewModel()
+    
+    private var photoURL: URL? {
+        viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+    }
+    
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 16) {
@@ -29,13 +36,9 @@ struct ProfileView: View {
         }
         .padding(.horizontal, 16)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $isEditing) {
-            ProfileEditView(
-                name: name,
-                description: description,
-                website: website,
-                photoURL: photoURL
-            )
+        .navigationDestination(isPresented: $viewModel.isEditing) {
+            ProfileEditView(isEditing: $viewModel.isEditing)
+                .toolbar(.hidden, for: .tabBar)
         }
         .toolbar {
             navigationToolbar
@@ -44,33 +47,38 @@ struct ProfileView: View {
     
     // MARK: - Views
     private var nameRow: some View {
-        Text(name)
+        Text(storedName)
             .font(Font(UIFont.headline3))
             .foregroundColor(.ypBlack)
     }
     
+    @ViewBuilder
     private var descriptionRow: some View {
-        Text(description)
-            .font(Font(UIFont.caption2))
-            .foregroundColor(.ypBlack)
-            .padding(.bottom, 8)
+        if !storedDescription.isEmpty {
+            Text(storedDescription)
+                .font(Font(UIFont.caption2))
+                .foregroundColor(.ypBlack)
+                .padding(.bottom, 8)
+        }
     }
     
+    @ViewBuilder
     private var webRow: some View {
-        Link(website, destination: URL(string: "https://\(website)")!)
-            .font(Font(UIFont.caption1))
-            .foregroundColor(.ypBlueUniversal)
-            .underline()
+        if let url = URL(string: storedWebsite) {
+            Link(url.host ?? storedWebsite, destination: url)
+                .font(Font(UIFont.caption1))
+                .foregroundColor(.ypBlueUniversal)
+                .underline()
+        }
     }
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: "Мои NFT", count: 21) {
-                // add action
+            ProfileListRow(title: Constants.myNFT, count: 21) {
+                // action
             }
-            
-            ProfileListRow(title: "Избранные NFT", count: 21) {
-                // add action
+            ProfileListRow(title: Constants.favouriteNFT, count: 21) {
+                // action
             }
         }
         .listStyle(.plain)
@@ -78,28 +86,33 @@ struct ProfileView: View {
         .padding(.top, 40)
     }
     
-    // MARK: - Toolbar
     private var navigationToolbar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
-                isEditing = true
+                viewModel.isEditing = true
             } label: {
                 Image(systemName: "square.and.pencil")
-                    .font(.system(size: 26))
+                    .font(.system(size: 24, weight: .semibold))
                     .foregroundColor(.ypBlack)
             }
         }
     }
 }
 
+private enum Constants {
+    static let myNFT = NSLocalizedString("Profile.myNFT", comment: "")
+    static let favouriteNFT = NSLocalizedString("Profile.favouriteNFT", comment: "")
+}
+
 // MARK: - Preview_ProfileView
 #Preview {
     NavigationStack {
-        ProfileView(
-            photoURL: URL(string: "https://picsum.photos/id/237/200/200"),
-            name: "Joaquin Phoenix",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-            website: "JoaquinPhoenix.com"
-        )
+        ProfileView()
+            .onAppear {
+                UserDefaults.standard.set("Joaquin Phoenix", forKey: "profile_name")
+                UserDefaults.standard.set("Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", forKey: "profile_description")
+                UserDefaults.standard.set("JoaquinPhoenix.com", forKey: "profile_website")
+                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: StorageKeys.photoURL)
+            }
     }
 }
