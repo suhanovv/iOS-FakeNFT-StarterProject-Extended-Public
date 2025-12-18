@@ -10,6 +10,7 @@ import SwiftUI
 struct FavNFTView: View {
     @AppStorage(StorageKeys.favouriteNFTIds) private var favs: Data = Data()
     @State private var viewModel = FavNFTViewModel()
+    @Environment(\.dismiss) private var dismiss
     
     let allNFTs: [NftItem]
     
@@ -45,7 +46,28 @@ struct FavNFTView: View {
             }
             .padding(.vertical, 20)
         }
+        .listStyle(.plain)
+        .navigationBarBackButtonHidden(true)
+        .navigationTitle(Constants.favouriteNFT)
+        .navigationBarTitleDisplayMode(.inline)
+        .font(Font(UIFont.bodyBold))
+        .toolbar(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
     }
+}
+
+private enum Constants {
+    static let favouriteNFT = NSLocalizedString("Profile.favouriteNFT", comment: "")
 }
 
 // MARK: - Preview_FavNFTView

@@ -13,9 +13,11 @@ struct ProfileView: View {
     @AppStorage(StorageKeys.description) private var storedDescription: String = ""
     @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
     @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    @AppStorage(StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
     
     @State private var viewModel = ProfileViewModel()
     @State private var isMyNFTPresented = false
+    @State private var isFavNFTPresented = false
     
     private var photoURL: URL? {
         viewModel.photoURL(savedPhotoURL: savedPhotoURL)
@@ -23,6 +25,10 @@ struct ProfileView: View {
     
     private var myNFTCount: Int {
         ProfileViewMock.mockNFTs.count
+    }
+    
+    private var favNFTCount: Int {
+        (try? JSONDecoder().decode([String].self, from: favouritesMarker))?.count ?? 0
     }
     
     // MARK: - Body
@@ -47,6 +53,9 @@ struct ProfileView: View {
         }
         .navigationDestination(isPresented: $isMyNFTPresented) {
             MyNFTView(nfts: ProfileViewMock.mockNFTs)
+        }
+        .navigationDestination(isPresented: $isFavNFTPresented) {
+            FavNFTView(allNFTs: ProfileViewMock.mockNFTs)
         }
         .toolbar {
             navigationToolbar
@@ -85,8 +94,8 @@ struct ProfileView: View {
             ProfileListRow(title: Constants.myNFT, count: myNFTCount) {
                 isMyNFTPresented = true
             }
-            ProfileListRow(title: Constants.favouriteNFT, count: 21) {
-                // action
+            ProfileListRow(title: Constants.favouriteNFT, count: favNFTCount) {
+                isFavNFTPresented = true
             }
         }
         .listStyle(.plain)
