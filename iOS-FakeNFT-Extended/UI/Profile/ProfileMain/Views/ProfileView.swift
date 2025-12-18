@@ -15,9 +15,14 @@ struct ProfileView: View {
     @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
     @State private var viewModel = ProfileViewModel()
+    @State private var isMyNFTPresented = false
     
     private var photoURL: URL? {
         viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+    }
+    
+    private var myNFTCount: Int {
+        ProfileViewMock.mockNFTs.count
     }
     
     // MARK: - Body
@@ -39,6 +44,9 @@ struct ProfileView: View {
         .navigationDestination(isPresented: $viewModel.isEditing) {
             ProfileEditView(isEditing: $viewModel.isEditing)
                 .toolbar(.hidden, for: .tabBar)
+        }
+        .navigationDestination(isPresented: $isMyNFTPresented) {
+            MyNFTView(nfts: ProfileViewMock.mockNFTs)
         }
         .toolbar {
             navigationToolbar
@@ -74,8 +82,8 @@ struct ProfileView: View {
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: Constants.myNFT, count: 21) {
-                // action
+            ProfileListRow(title: Constants.myNFT, count: myNFTCount) {
+                isMyNFTPresented = true
             }
             ProfileListRow(title: Constants.favouriteNFT, count: 21) {
                 // action
