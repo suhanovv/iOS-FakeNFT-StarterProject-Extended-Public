@@ -21,25 +21,27 @@ final class CollectionViewModel: ObservableObject {
 
     // MARK: - External dependencies
     
-    private let nftService: NftService
+    private let collectionService: CollectionServiceProtocol
 
     // MARK: - Init
-    
+
     init(
         collection: CollectionDTO,
-        nftService: NftService = MockNftService()
+        collectionService: CollectionServiceProtocol
     ) {
         self.collection = collection
-        self.nftService = nftService
+        self.collectionService = collectionService
     }
 
     // MARK: - Public methods
     
     func load() async {
         state = .loading
-
-        nfts = MockData.nfts.filter { collection.nftIds.contains($0.id) }
-
-        state = .loaded
+        do {
+            nfts = try await collectionService.loadNfts(ids: collection.nftIds)
+            state = .loaded
+        } catch {
+            state = .error(error.localizedDescription)
+        }
     }
 }

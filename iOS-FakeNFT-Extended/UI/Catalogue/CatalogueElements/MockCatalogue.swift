@@ -26,8 +26,7 @@ enum MockData {
         name: "Peach",
         cover: makeURL("https://example.com/cover.png"),
         description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
-        authorId: "author-1",
-        authorName: "John Doe",
+        author: "John Doe",
         website: makeURL("https://practicum.yandex.ru/ios-developer/"),
         nftIds: ["1", "2", "3", "4", "5", "6"]
     )
@@ -37,8 +36,7 @@ enum MockData {
         name: "Blue",
         cover: makeURL("https://example.com/cover.png"),
         description: "Персиковый — как облака над закатным солнцем в океане.",
-        authorId: "author-1",
-        authorName: "John Doe",
+        author: "John Doe",
         website: makeURL("https://practicum.yandex.ru/ios-developer/"),
         nftIds: ["1", "2"]
     )
@@ -48,8 +46,7 @@ enum MockData {
         name: "Red",
         cover: makeURL("https://example.com/cover.png"),
         description: "Персиковый — как облака над закатным солнцем в океане.",
-        authorId: "author-1",
-        authorName: "John Doe",
+        author: "John Doe",
         website: makeURL("https://practicum.yandex.ru/ios-developer/"),
         nftIds: ["1", "2", "3"]
     )

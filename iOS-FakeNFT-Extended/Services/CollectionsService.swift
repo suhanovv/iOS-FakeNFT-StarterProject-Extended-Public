@@ -7,13 +7,18 @@
 
 import Foundation
 
-protocol CollectionsServiceProtocol {
+protocol CollectionsServiceProtocol: Sendable {
     func fetchCollections() async throws -> [CollectionDTO]
 }
 
-final class CollectionsService: CollectionsServiceProtocol {
+actor CollectionsServiceActor: CollectionsServiceProtocol {
+    private let networkClient: NetworkClient
+
+    init(networkClient: NetworkClient) {
+        self.networkClient = networkClient
+    }
 
     func fetchCollections() async throws -> [CollectionDTO] {
-        return MockData.collections
+        try await networkClient.send(request: CollectionsRequest())
     }
 }

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TabBarView: View {
+    
+    @Environment(ServicesAssembly.self) private var services
 
     init() {
         UITabBar.appearance().unselectedItemTintColor = .ypBlack
@@ -9,7 +11,7 @@ struct TabBarView: View {
     var body: some View {
         TabView {
             NavigationStack {
-                CatalogueView()
+                CatalogueView(collectionsService: services.collectionsService)
             }
             .tabItem {
                 Label(NSLocalizedString("Tab.catalog", comment: ""),

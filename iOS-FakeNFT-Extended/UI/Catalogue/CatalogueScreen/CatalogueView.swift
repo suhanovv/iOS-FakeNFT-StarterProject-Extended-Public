@@ -22,12 +22,18 @@ struct CatalogueView: View {
     // MARK: - Properties
     
     @Environment(ServicesAssembly.self) private var services
-    @StateObject private var viewModel = CatalogueViewModel()
+    @StateObject private var viewModel: CatalogueViewModel
     
     @AppStorage(Constants.sortOptionStorageKey)
     private var storedSortOption: CollectionsSortOption = .nftCount
     
     @State private var isSortDialogPresented = false
+    
+    // MARK: - Init
+    
+    init(collectionsService: CollectionsServiceProtocol) {
+        _viewModel = StateObject(wrappedValue: CatalogueViewModel(collectionsService: collectionsService))
+    }
     
     // MARK: - Body
     
@@ -66,24 +72,40 @@ struct CatalogueView: View {
         }
     }
     
+    @ViewBuilder
     private var collectionsScrollView: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                ForEach(viewModel.collections) { collection in
-                    NavigationLink {
-                        CollectionView(
-                            viewModel: CollectionViewModel(collection: collection)
-                        )
-                        .navigationBarBackButtonHidden(true)
-                    } label: {
-                        CatalogueCellView(collection: collection)
-                            .contentShape(Rectangle())
-                            .foregroundColor(.primary)
+        switch viewModel.state {
+        case .initial, .loading:
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+        case .loaded:
+            ScrollView {
+                VStack(spacing: 24) {
+                    ForEach(viewModel.collections) { collection in
+                        NavigationLink {
+                            CollectionView(
+                                collection: collection,
+                                collectionService: services.collectionService
+                            )
+                            .navigationBarBackButtonHidden(true)
+                        } label: {
+                            CatalogueCellView(collection: collection)
+                                .contentShape(Rectangle())
+                                .foregroundColor(.primary)
+                        }
                     }
                 }
+                .padding(.top, 16)
+                .padding(.bottom, 16)
             }
-            .padding(.top, 16)
-            .padding(.bottom, 16)
+            
+        case .error(let message):
+            Text(message)
+                .font(.caption)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .multilineTextAlignment(.center)
+                .padding()
         }
     }
     
@@ -93,12 +115,12 @@ struct CatalogueView: View {
                 storedSortOption = .name
                 viewModel.setSortOption(.name)
             }
-
+            
             Button(Constants.sortByNftCountTitle) {
                 storedSortOption = .nftCount
                 viewModel.setSortOption(.nftCount)
             }
-
+            
             Button(Constants.closeTitle, role: .cancel) {}
         }
     }
@@ -107,7 +129,13 @@ struct CatalogueView: View {
 // MARK: - Preview
 
 #Preview {
-    NavigationStack {
-        CatalogueView()
+    let services = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl()
+    )
+    
+    return NavigationStack {
+        CatalogueView(collectionsService: services.collectionsService)
+            .environment(services)
     }
 }

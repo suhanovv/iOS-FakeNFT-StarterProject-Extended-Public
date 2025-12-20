@@ -9,7 +9,7 @@ import Foundation
 
 /// DTO-модель коллекции, приходящая из API.
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
-struct CollectionDTO: Identifiable, Codable {
+struct CollectionDTO: Identifiable, Codable, Sendable {
 
     /// Уникальный идентификатор коллекции (значение приходит из API).
     let id: String
@@ -23,11 +23,8 @@ struct CollectionDTO: Identifiable, Codable {
     /// Описание коллекции, приходящее из API.
     let description: String
 
-    /// Идентификатор автора коллекции (ключ `author` в API).
-    let authorId: String
-
     /// Имя автора коллекции (может отсутствовать в ответе API).
-    let authorName: String?
+    let author: String
 
     /// Сайт автора или коллекции (опционально, может быть nil).
     let website: URL?
@@ -40,9 +37,16 @@ struct CollectionDTO: Identifiable, Codable {
         case name
         case cover
         case description
-        case authorId = "author"
-        case authorName
+        case author
         case website
         case nftIds = "nfts"
+    }
+}
+
+extension CollectionDTO {
+    var nftCount: Int {
+        Set(nftIds.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        ).count
     }
 }

@@ -20,32 +20,40 @@ struct CatalogueCellView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(.collectionRow)
-                .resizable()
-                .scaledToFill()
-                .frame(height: 140, alignment: .top)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            AsyncImage(url: collection.cover) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                Color.gray.opacity(0.1)
+            }
+            .frame(height: 140, alignment: .top)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             
-            Text("\(collection.name) (\(collection.nftIds.count))")
+            Text("\(collection.name.capitalized) (\(collection.nftCount))")
                 .font(.init(UIFont.bodyBold))
         }
         .padding(.horizontal)
+        
     }
 }
 
 // MARK: - Preview_CatalogueCellView
 
 #Preview {
-    CatalogueCellView(
-        collection: CollectionDTO(
-            id: "1",
-            name: "Peach",
-            cover: URL(string: "https://example.com/peach.png")!,
-            description: "Sample description",
-            authorId: "author-1",
-            authorName: "Peach Author",
-            website: nil,
-            nftIds: ["1", "2", "3"]
+    if let url = URL(string: "https://example.com/peach.png") {
+        CatalogueCellView(
+            collection: CollectionDTO(
+                id: "1",
+                name: "Peach",
+                cover: url,
+                description: "Sample description",
+                author: "Peach Author",
+                website: nil,
+                nftIds: ["1", "2", "3"]
+            )
         )
-    )
+    } else {
+        Text("Invalid preview URL")
+    }
 }
