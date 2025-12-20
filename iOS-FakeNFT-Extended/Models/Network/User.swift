@@ -1,12 +1,14 @@
 import Foundation
 
-struct User: Decodable, Identifiable {
+struct User: Decodable, Identifiable, Hashable {
     let name: String
-    let avatar: URL
+    let avatar: URL?
     let description: String?
     let website: URL
     let nfts: [String]
+    let likes: [String]
     //    @StringToInt
-    var rating: Int
+    let rating: Int?
     let id: String
+    
 }

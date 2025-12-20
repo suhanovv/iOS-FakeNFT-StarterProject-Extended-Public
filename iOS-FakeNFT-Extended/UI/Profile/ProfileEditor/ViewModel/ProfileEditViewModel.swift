@@ -13,50 +13,40 @@ final class ProfileEditViewModel {
     var name: String = ""
     var description: String = ""
     var website: String = ""
+    var photoURLText = ""
+    
+    var isSaving = false
     var isPhotoMenuPresented = false
     var showLinkPhotoAlert = false
-    var photoURLText = ""
     var showExitAlert = false
     
-    func photoURL(savedPhotoURL: String) -> URL? {
-        URL(string: savedPhotoURL)
+    var avatarURL: URL? {
+        if let url = URL(string: photoURLText), !photoURLText.isEmpty {
+            return url
+        }
+        return nil
     }
     
-    func hasChanges(
-        storedName: String,
-        storedDescription: String,
-        storedWebsite: String
-    ) -> Bool {
-        name != storedName ||
-        description != storedDescription ||
-        website != storedWebsite
+    func hasChanges(comparedTo profile: User) -> Bool {
+        name != profile.name ||
+        description != (profile.description ?? "") ||
+        website != profile.website.absoluteString ||
+        photoURLText != profile.avatar?.absoluteString
     }
     
     // MARK: - Actions
-    func onAppear(
-        storedName: String,
-        storedDescription: String,
-        storedWebsite: String
-    ) {
-        name = storedName
-        description = storedDescription
-        website = storedWebsite
+    func onAppear(profile: User) {
+        name = profile.name
+        description = profile.description ?? ""
+        website = profile.website.absoluteString
+        photoURLText = profile.avatar?.absoluteString ?? ""
     }
     
-    func applyPhotoURL(savedPhotoURL: inout String) {
-        let trimmed = photoURLText.trimmingCharacters(in: .whitespacesAndNewlines)
-        if URL(string: trimmed) != nil {
-            savedPhotoURL = trimmed
-        }
-    }
-    
-    func saveProfile(
-        storedName: inout String,
-        storedDescription: inout String,
-        storedWebsite: inout String
-    ) {
-        storedName = name
-        storedDescription = description
-        storedWebsite = website
+    func saveProfile() async throws {
+        isSaving = true
+        defer { isSaving = false }
+        
+        // TODO: здесь будет PUT /profile
+        try await Task.sleep(nanoseconds: 500_000_000)
     }
 }

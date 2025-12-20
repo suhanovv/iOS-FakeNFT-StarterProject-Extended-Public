@@ -25,6 +25,7 @@ private enum Constants {
     static let emptyFavNFT = NSLocalizedString("Profile.emptyFavNft", comment: "")
 }
 
+// MARK: - Preview_
 #Preview {
     NavigationStack {
         FavNFTEmptyView()

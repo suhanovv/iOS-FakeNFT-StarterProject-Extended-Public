@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct MyNFTCell: View {
-    let nft: NftItem
+    let nft: Nft
     let rating: Int
     let isFavourite: Bool
     let onLikeTap: () -> Void
@@ -25,25 +25,23 @@ struct MyNFTCell: View {
     
     private var nftImageSection: some View {
         ZStack(alignment: .topTrailing) {
-            nftAsyncImage
-                .frame(width: 108, height: 108)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            Button {
-                onLikeTap()
-            } label: {
-                Image(.NftCardIcons.like)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(isFavourite ? .ypRedUniversal : .ypWhiteUniversal)
-            }
-            .buttonStyle(.plain)
+            NFTImageView(
+                imageURL: nft.images.first?.absoluteString,
+                placeholder: Image(.emptyNft)
+            )
+            .frame(width: 108, height: 108)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            Image(.NftCardIcons.like)
+                .foregroundStyle(isFavourite ? .ypRedUniversal : .ypWhiteUniversal)
+                .frame(width: 40, height: 40)
+                .onTapGesture { onLikeTap() }
         }
     }
     
     private var nftAsyncImage: some View {
         NFTImageView(
-            imageURL: nft.images?.first,
+            imageURL: nft.images.first?.absoluteString,
             placeholder: Image(.emptyNft)
         )
         .frame(width: 108, height: 108)
@@ -93,20 +91,20 @@ private enum Constants {
     static let currencyCode = "ETH"
 }
 
+// MARK: - Preview_MyNFTCell
 #Preview("Favourite") {
     MyNFTCell(
-        nft: NftItem(
+        nft: Nft(
             id: "1",
-            name: "Favourite NFT",
             images: [
-                "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png"
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png")!
             ],
             rating: 5,
             price: 40.59,
+            name: "Favourite NFT",
             author: "John Doe",
             createdAt: nil,
-            description: nil,
-            website: nil
+            description: nil
         ),
         rating: 5,
         isFavourite: true,
@@ -117,18 +115,17 @@ private enum Constants {
 
 #Preview("Not Favourite") {
     MyNFTCell(
-        nft: NftItem(
+        nft: Nft(
             id: "2",
-            name: "Not Favourite NFT",
             images: [
-                "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/2.png"
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/2.png")!
             ],
             rating: 3,
-            price: 25.00,
+            price: 25.0,
+            name: "Not Favourite NFT",
             author: "Jane Doe",
             createdAt: nil,
-            description: nil,
-            website: nil
+            description: nil
         ),
         rating: 3,
         isFavourite: false,
