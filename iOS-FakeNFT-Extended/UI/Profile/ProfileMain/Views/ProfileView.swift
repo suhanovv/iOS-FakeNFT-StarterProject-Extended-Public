@@ -8,37 +8,40 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // MARK: - AppStorage
-    @AppStorage(StorageKeys.name) private var storedName: String = ""
-    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
-    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
-    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
-    @AppStorage(StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
-    
     @Environment(Coordinator.self) private var coordinator
     
-    @State private var viewModel = ProfileViewModel(profileService: ProfileServiceMock())
+    @State private var viewModel: ProfileViewModel
     
-    private var photoURL: URL? {
-        viewModel.photoURL(savedPhotoURL: savedPhotoURL)
-    }
-    
-    private var myNFTCount: Int {
-        ProfileViewMock.mockNFTs.count
-    }
-    
-    private var favNFTCount: Int {
-        let favouriteIds = (try? JSONDecoder().decode([String].self, from: favouritesMarker)) ?? []
-        return ProfileViewMock.mockNFTs.filter {
-            favouriteIds.contains($0.id)
-        }.count
+    init(profileService: ProfileServiceProtocol) {
+        _viewModel = State(
+            initialValue: ProfileViewModel(profileService: profileService)
+        )
     }
     
     // MARK: - Body
     var body: some View {
+        ZStack {
+            if viewModel.isLoading {
+                ProgressBarView(isActive: true)
+            } else {
+                content
+            }
+        }
+        .onAppear {
+            coordinator.isProfileLoading = true
+        }
+        .task {
+            defer { coordinator.isProfileLoading = false }
+            await viewModel.loadProfile()
+            coordinator.currentProfile = viewModel.profile
+        }
+    }
+    
+    // MARK: - Views
+    private var content: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 16) {
-                ProfilePhotoView(url: photoURL)
+                ProfilePhotoView(url: viewModel.avatarURL)
                 nameRow
                 Spacer()
             }
@@ -51,17 +54,16 @@ struct ProfileView: View {
         .padding(.horizontal, 16)
     }
     
-    // MARK: - Views
     private var nameRow: some View {
-        Text(storedName)
+        Text(viewModel.name)
             .font(Font(UIFont.headline3))
             .foregroundColor(.ypBlack)
     }
     
     @ViewBuilder
     private var descriptionRow: some View {
-        if !storedDescription.isEmpty {
-            Text(storedDescription)
+        if !viewModel.description.isEmpty {
+            Text(viewModel.description)
                 .font(Font(UIFont.caption2))
                 .foregroundColor(.ypBlack)
                 .padding(.bottom, 8)
@@ -70,11 +72,11 @@ struct ProfileView: View {
     
     @ViewBuilder
     private var webRow: some View {
-        if let url = URL(string: storedWebsite) {
+        if let url = viewModel.websiteURL {
             Button {
                 coordinator.push(.webView(url: url))
             } label: {
-                Text(url.host ?? storedWebsite)
+                Text(url.host ?? url.absoluteString)
                     .font(Font(UIFont.caption1))
                     .foregroundColor(.ypBlueUniversal)
                     .underline()
@@ -85,11 +87,20 @@ struct ProfileView: View {
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: Constants.myNFT, count: myNFTCount) {
-                coordinator.push(.myNft)
+            ProfileListRow(
+                title: Constants.myNFT,
+                count: viewModel.myNFTCount
+            ) {
+                guard let profile = viewModel.profile else { return }
+                coordinator.push(.myNft(ids: profile.nfts))
             }
-            ProfileListRow(title: Constants.favouriteNFT, count: favNFTCount) {
-                coordinator.push(.favouriteNft)
+            
+            ProfileListRow(
+                title: Constants.favouriteNFT,
+                count: viewModel.favouriteNFTCount
+            ) {
+                guard let profile = viewModel.profile else { return }
+                coordinator.push(.favouriteNft(ids: profile.likes))
             }
         }
         .listStyle(.plain)
@@ -104,19 +115,47 @@ private enum Constants {
 }
 
 // MARK: - Preview_ProfileView
-#Preview("Profile – filled") {
-    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
+#if DEBUG
+struct PreviewProfileService: ProfileServiceProtocol {
+
+    func getProfile() async throws -> User {
+        User(
+            name: "Preview User",
+            avatar: URL(string: "https://picsum.photos/200")!,
+            description: "Preview description",
+            website: URL(string: "https://example.com")!,
+            nfts: ["1", "2", "3"],
+            likes: ["2"],
+            rating: 5,
+            id: "preview"
+        )
+    }
+
+    func getProfileLikes() async throws -> [String] {
+        ["2"]
+    }
+
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        ["2", nftId]
+    }
+
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        []
+    }
+}
+#endif
+#Preview {
     NavigationStack {
-        ProfileView()
-            .environment(Coordinator(services: services))
-            .onAppear {
-                UserDefaults.standard.set("Joaquin Phoenix", forKey: StorageKeys.name)
-                UserDefaults.standard.set(
-                    "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-                    forKey: StorageKeys.description
+        ProfileView(
+            profileService: PreviewProfileService()
+        )
+        .environment(
+            Coordinator(
+                services: ServicesAssembly(
+                    networkClient: DefaultNetworkClient(),
+                    nftStorage: NftStorageImpl()
                 )
-                UserDefaults.standard.set("https://joaquinphoenix.com", forKey: StorageKeys.website)
-                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: StorageKeys.photoURL)
-            }
+            )
+        )
     }
 }

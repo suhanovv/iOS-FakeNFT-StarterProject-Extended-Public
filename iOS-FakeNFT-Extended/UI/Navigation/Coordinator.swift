@@ -6,6 +6,9 @@ final class Coordinator {
     var path = NavigationPath()
     let services: ServicesAssembly
     
+    var isProfileLoading: Bool = false
+    var currentProfile: User? = nil
+    
     init(services: ServicesAssembly) {
         self.services = services
     }
@@ -13,6 +16,7 @@ final class Coordinator {
     @ViewBuilder
     func build(screen: Screen) -> some View {
         switch screen {
+            
         case .main: ContentView()
             
         case .usersList,
@@ -22,18 +26,27 @@ final class Coordinator {
             
         case .profile:
             ProfileView(
-                //                viewModel: .init(profileService: services.profileService)
+                profileService: services.profileService
             )
-        case .profileEdit:
-            ProfileEditView()
             
-        case .myNft:
-            MyNFTView(nfts: ProfileViewMock.mockNFTs)
+        case .profileEdit(let profile):
+            ProfileEditView(profile: profile)
             
-        case .favouriteNft:
-            FavNFTView(allNFTs: ProfileViewMock.mockNFTs)
+        case .myNft(let ids):
+            MyNFTView(
+                viewModel: MyNFTViewModel(
+                    nftService: services.nftService,
+                    nftIds: ids
+                )
+            )
             
-            
+        case .favouriteNft(let ids):
+            FavNFTView(
+                viewModel: FavNFTViewModel(
+                    nftService: services.nftService,
+                    nftIds: ids
+                )
+            )
             
         case .webView(url: let url): WebView(url: url)
         }

@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct FavNFTCell: View {
-    let nft: NftItem
+    let nft: Nft
     let rating: Int
     let isFavourite: Bool
     let onLikeTap: () -> Void
@@ -42,17 +42,11 @@ struct FavNFTCell: View {
     
     private var nftAsyncImage: some View {
         NFTImageView(
-            imageURL: nft.images?.first,
+            imageURL: nft.images.first?.absoluteString,
             placeholder: Image(.emptyNft)
         )
         .frame(width: 80, height: 80)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-    
-    private var placeholder: some View {
-        Image("EmptyNft")
-            .resizable()
-            .scaledToFill()
     }
     
     private var nftDescriptionSection: some View {
@@ -72,8 +66,8 @@ struct FavNFTCell: View {
     
     private var nftPrice: some View {
         Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
-        .font(Font(UIFont.caption1))
-        .foregroundColor(.ypBlack)
+            .font(Font(UIFont.caption1))
+            .foregroundColor(.ypBlack)
     }
 }
 
@@ -84,18 +78,17 @@ private enum Constants {
 // MARK: - Preview_FavNFTCell
 #Preview {
     FavNFTCell(
-        nft: NftItem(
+        nft: Nft(
             id: "1",
-            name: "Test NFT",
             images: [
-                "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png"
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png")!
             ],
             rating: 2,
             price: 40.59,
+            name: "Test NFT",
             author: "John Doe",
             createdAt: nil,
-            description: "Test description",
-            website: nil
+            description: "Test description"
         ),
         rating: 2,
         isFavourite: true,

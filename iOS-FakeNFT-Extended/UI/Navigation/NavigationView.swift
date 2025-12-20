@@ -14,16 +14,27 @@ struct NavigationView: View {
                 .navigationDestination(for: Screen.self) { screen in
                     coordinator.build(screen: screen)
                         .navigationBarBackButtonHidden(true)
-                        .toolbar { backToolbar }
+                        .toolbar {
+                            if !coordinator.path.isEmpty {
+                                ToolbarItem(placement: .navigationBarLeading) {
+                                    backButton
+                                }
+                            }
+                        }
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            coordinator.push(.profileEdit)
-                        } label: {
-                            Image(systemName: "square.and.pencil")
-                                .font(.system(size: 24, weight: .semibold))
-                                .foregroundColor(.ypBlack)
+                    
+                    if !coordinator.isProfileLoading {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                if let profile = coordinator.currentProfile {
+                                    coordinator.push(.profileEdit(profile: profile))
+                                }
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.system(size: 24, weight: .semibold))
+                                    .foregroundColor(.ypBlack)
+                            }
                         }
                     }
                 }
@@ -34,7 +45,7 @@ struct NavigationView: View {
     private var root: some View {
         coordinator.build(screen: .main)
     }
-
+    
     @ViewBuilder
     private func destination(_ screen: Screen) -> some View {
         coordinator.build(screen: screen)
@@ -60,6 +71,7 @@ struct NavigationView: View {
     }
 }
 
+// MARK: - Preview_NavigationView
 #Preview {
     NavigationView()
 }

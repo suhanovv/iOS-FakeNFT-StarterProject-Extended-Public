@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct ProfileEditView: View {
-    // MARK: - AppStorage
-    @AppStorage(StorageKeys.name) private var storedName: String = ""
-    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
-    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
-    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    let profile: User
     
     @State private var viewModel = ProfileEditViewModel()
     @Environment(Coordinator.self) private var coordinator
@@ -30,11 +26,7 @@ struct ProfileEditView: View {
             }
         }
         .onAppear {
-            viewModel.onAppear(
-                storedName: storedName,
-                storedDescription: storedDescription,
-                storedWebsite: storedWebsite
-            )
+            viewModel.onAppear(profile: profile)
         }
         .confirmationDialog(
             Text(Constants.photoDialog),
@@ -42,12 +34,11 @@ struct ProfileEditView: View {
             titleVisibility: .visible
         ) {
             Button(Constants.changePhoto) {
-                viewModel.photoURLText = savedPhotoURL
                 viewModel.showLinkPhotoAlert = true
             }
             
             Button(Constants.deletePhoto, role: .destructive) {
-                savedPhotoURL = ""
+                viewModel.photoURLText = ""
             }
             
             Button(Constants.cancel, role: .cancel) {}
@@ -56,9 +47,6 @@ struct ProfileEditView: View {
             hideKeyboard()
         }
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            navigationToolbar
-        }
         .overlay {
             alertOverlaySection
         }
@@ -68,13 +56,12 @@ struct ProfileEditView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if viewModel.hasChanges(
-                storedName: storedName,
-                storedDescription: storedDescription,
-                storedWebsite: storedWebsite
-            ) {
+            if viewModel.hasChanges(comparedTo: profile) {
                 saveButton
             }
+        }
+        .overlay {
+            ProgressBarView(isActive: viewModel.isSaving)
         }
     }
     
@@ -82,7 +69,7 @@ struct ProfileEditView: View {
     private var photoSection: some View {
         ZStack(alignment: .bottomTrailing) {
             ProfilePhotoView(
-                url: viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+                url: viewModel.avatarURL
             )
             .offset(y: -4)
             .onTapGesture {
@@ -141,20 +128,14 @@ struct ProfileEditView: View {
             title: Constants.photoAlert,
             placeholder: Constants.photoAlertPh,
             text: $viewModel.photoURLText
-        ) {
-            viewModel.applyPhotoURL(savedPhotoURL: &savedPhotoURL)
-        }
+        ) {}
     }
     
     private var navigationToolbar: some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    if viewModel.hasChanges(
-                        storedName: storedName,
-                        storedDescription: storedDescription,
-                        storedWebsite: storedWebsite
-                    ) {
+                    if viewModel.hasChanges(comparedTo: profile) {
                         viewModel.showExitAlert = true
                     } else {
                         coordinator.pop()
@@ -172,12 +153,10 @@ struct ProfileEditView: View {
         VStack {
             Spacer()
             Button {
-                viewModel.saveProfile(
-                    storedName: &storedName,
-                    storedDescription: &storedDescription,
-                    storedWebsite: &storedWebsite
-                )
-                coordinator.pop()
+                Task {
+                    try await viewModel.saveProfile()
+                    coordinator.pop()
+                }
             } label: {
                 Text(Constants.save)
                     .font(Font(UIFont.bodyBold))
@@ -207,9 +186,28 @@ private enum Constants {
     static let save = NSLocalizedString("Profile.saveButton", comment: "")
 }
 
+// MARK: - Preview_ProfileEditView
 #Preview {
+    let coordinator = Coordinator(
+        services: ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl()
+        )
+    )
+
     NavigationStack {
-        ProfileEditView()
-            .environment(\.locale, .init(identifier: "ru"))
+        ProfileEditView(
+            profile: User(
+                name: "Test",
+                avatar: URL(string: "https://picsum.photos/200"),
+                description: "Desc",
+                website: URL(string: "https://example.com")!,
+                nfts: [],
+                likes: [],
+                rating: 5,
+                id: "1"
+            )
+        )
     }
+    .environment(coordinator)
 }

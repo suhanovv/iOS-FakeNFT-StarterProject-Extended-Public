@@ -8,21 +8,10 @@
 import SwiftUI
 
 struct FavNFTView: View {
-    @AppStorage(StorageKeys.favouriteNFTIds) private var favs: Data = Data()
-    @State private var viewModel = FavNFTViewModel()
-    @Environment(Coordinator.self) private var coordinator
+    @State private var viewModel: FavNFTViewModel
     
-    let allNFTs: [NftItem]
-    
-    private var favouriteIds: [String] {
-        viewModel.favouriteIds(from: favs)
-    }
-    
-    private var favouriteNFTs: [NftItem] {
-        viewModel.favouriteNFTs(
-            allNFTs: allNFTs,
-            favouriteIds: favouriteIds
-        )
+    init(viewModel: FavNFTViewModel) {
+        _viewModel = State(initialValue: viewModel)
     }
     
     let columns = [
@@ -31,48 +20,48 @@ struct FavNFTView: View {
     ]
     
     var body: some View {
-        Group {
-            if favouriteNFTs.isEmpty {
-                FavNFTEmptyView()
-            } else {
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(favouriteNFTs) { nft in
-                            FavNFTCell(
-                                nft: nft,
-                                rating: nft.rating ?? 0,
-                                isFavourite: true,
-                                onLikeTap: {
-                                    favs = viewModel.removeFavourite(nft.id, from: favs)
-                                }
-                            )
-                        }
+        content
+            .task {
+                await viewModel.load()
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .ignoresSafeArea(.container, edges: .bottom)
+            .toolbarBackground(.hidden, for: .bottomBar)
+            .toolbar {
+                if !viewModel.nfts.isEmpty {
+                    ToolbarItem(placement: .principal) {
+                        Text(Constants.favouriteNFT)
+                            .font(Font(UIFont.bodyBold))
                     }
-                    .padding(.vertical, 20)
                 }
             }
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .tabBar)
-        .toolbar {
-            //            ToolbarItem(placement: .navigationBarLeading) {
-            //                Button {
-            //                    coordinator.pop()
-            //                } label: {
-            //                    Image(systemName: "chevron.left")
-            //                        .font(.system(size: 17, weight: .semibold))
-            //                        .foregroundColor(.ypBlack)
-            //                }
-            //            }
-            
-            if !favouriteNFTs.isEmpty {
-                ToolbarItem(placement: .principal) {
-                    Text(Constants.favouriteNFT)
-                        .font(Font(UIFont.bodyBold))
+    }
+    
+    @ViewBuilder
+    private var content: some View {
+        if viewModel.isLoading {
+            ProgressBarView(isActive: true)
+        } else if viewModel.nfts.isEmpty {
+            FavNFTEmptyView()
+        } else {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(viewModel.nfts) { nft in
+                        FavNFTCell(
+                            nft: nft,
+                            rating: nft.rating ?? 0,
+                            isFavourite: true,
+                            onLikeTap: {
+                                viewModel.nfts.removeAll { $0.id == nft.id }
+                            }
+                        )
+                    }
                 }
+                .padding(.vertical, 20)
             }
         }
+        
     }
 }
 
@@ -81,20 +70,31 @@ private enum Constants {
 }
 
 // MARK: - Preview_FavNFTView
-#Preview {
-    NavigationStack {
-        FavouritesPreview()
+#if DEBUG
+actor PreviewNftService: NftService {
+    func loadNft(id: String) async throws -> Nft {
+        Nft(
+            id: id,
+            images: [
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Lilo/1.png")!
+            ],
+            rating: 4,
+            price: 12.5,
+            name: "Preview NFT",
+            author: "Preview",
+            createdAt: nil,
+            description: "Preview description"
+        )
     }
 }
-struct FavouritesPreview: View {
-    @AppStorage(StorageKeys.favouriteNFTIds) private var favs: Data = Data()
-    
-    init() {
-        let ids = ["1", "2", "3"]
-        favs = (try? JSONEncoder().encode(ids)) ?? Data()
-    }
-    
-    var body: some View {
-        FavNFTView(allNFTs: ProfileViewMock.mockNFTs)
+#endif
+#Preview {
+    NavigationStack {
+        FavNFTView(
+            viewModel: FavNFTViewModel(
+                nftService: PreviewNftService(),
+                nftIds: ["1", "2", "3"]
+            )
+        )
     }
 }
