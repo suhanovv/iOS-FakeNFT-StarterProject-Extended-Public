@@ -4,12 +4,12 @@ struct NftDetailBridgeView: UIViewControllerRepresentable {
     typealias UIViewControllerType = NftDetailViewController
 
     @Environment(ServicesAssembly.self) var servicesAssembly
+    let nftId: String
 
     func makeUIViewController(context: Context) -> NftDetailViewController {
         let assembly = NftDetailAssembly(servicesAssembler: servicesAssembly)
-        let nftInput = NftDetailInput(id: Constants.testNftId)
-        let nftViewController = assembly.build(with: nftInput) as! NftDetailViewController
-        return nftViewController
+        let input = NftDetailInput(id: nftId)
+        return assembly.build(with: input) as! NftDetailViewController
     }
 
     func updateUIViewController(_ uiViewController: NftDetailViewController, context: Context) {

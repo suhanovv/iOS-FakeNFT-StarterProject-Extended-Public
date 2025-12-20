@@ -17,7 +17,12 @@ final class ServicesAssembly {
     }
 
     var collectionsService: CollectionsServiceProtocol {
-        CollectionsService()
+        CollectionsServiceActor(networkClient: networkClient)
+    }
+
+    var collectionService: CollectionServiceProtocol {
+        CollectionServiceActor(networkClient: networkClient)
     }
 }
+
 

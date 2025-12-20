@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import Kingfisher
 
 // MARK: - NftCellView
 
@@ -15,7 +16,7 @@ struct NftCellView: View {
     // MARK: - Properties
     
     let name: String
-    let price: Decimal
+    let price: Double
     let rating: Int
     let imageURL: URL?
 
@@ -26,7 +27,7 @@ struct NftCellView: View {
     
     init(
         name: String,
-        price: Decimal,
+        price: Double,
         rating: Int,
         imageURL: URL?,
         isFavorite: Bool = false,
@@ -55,15 +56,18 @@ struct NftCellView: View {
 
     private var nftImageSection: some View {
         ZStack(alignment: .topTrailing) {
-            Image(.nftCell)
-                .resizable()
-                .scaledToFill()
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
-            Button(action: onFavoriteTap) {
-                Image("Nft Card Icons/Like")
-                    .renderingMode(.template)
-                    .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+            if let url = imageURL {
+                KFImage(url)
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                
+                Button(action: onFavoriteTap) {
+                    Image("Nft Card Icons/Like")
+                        .renderingMode(.template)
+                        .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+                }
             }
         }
     }
@@ -81,10 +85,11 @@ struct NftCellView: View {
     private var infoSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(name)
+                Text(name.capitalized)
                     .font(.init(UIFont.bodyBold))
+                    .lineLimit(1)
 
-                Text("\(price) ETH")
+                Text("\(price.formattedPrice()) ETH")
                     .font(.caption)
             }
 

@@ -22,23 +22,26 @@ final class CatalogueViewModel: ObservableObject {
 
     @Published var collections: [CollectionDTO] = []
     @Published var state: ScreenState = .initial
+    @Published var isFullyLoaded = false
     @Published private(set) var sortOption: CollectionsSortOption = .nftCount
 
     // MARK: - Init
-
-    init(collectionsService: CollectionsServiceProtocol = CollectionsService()) {
+    
+    init(collectionsService: CollectionsServiceProtocol) {
         self.collectionsService = collectionsService
     }
 
     // MARK: - Public methods
 
     func load() async {
+        guard !isFullyLoaded else { return }
         state = .loading
         do {
             let collections = try await collectionsService.fetchCollections()
             allCollections = collections
             applySort()
             state = .loaded
+            isFullyLoaded = true 
         } catch {
             state = .error(error.localizedDescription)
         }
@@ -59,11 +62,11 @@ final class CatalogueViewModel: ObservableObject {
             }
 
         case .nftCount:
-            collections = allCollections.sorted {
-                if $0.nftIds.count == $1.nftIds.count {
-                    return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+            collections = allCollections.sorted { a, b in
+                if a.nftCount == b.nftCount {
+                    return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
                 }
-                return $0.nftIds.count > $1.nftIds.count
+                return a.nftCount > b.nftCount
             }
         }
     }

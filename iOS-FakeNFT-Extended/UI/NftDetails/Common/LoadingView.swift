@@ -7,6 +7,7 @@ protocol LoadingView {
     func hideLoading()
 }
 
+@MainActor
 extension LoadingView {
     func showLoading() {
         activityIndicator.startAnimating()

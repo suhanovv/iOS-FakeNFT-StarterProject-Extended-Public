@@ -57,28 +57,28 @@
   (Estimate Time: 2h / Fact Time: 2h)
 
 
-## Milestone 3/3 (Estimate Time: 24h / Fact Time:)
+## Milestone 3/3 (Estimate Time: 24h / Fact Time: 18h)
 
 - Реализовать сетевой сервис загрузки списка коллекций через `actor`  
   - запросы с использованием `async/await`  
   - данные помечены `Sendable`  
-  (Estimate Time: 6h / Fact Time: )
+  (Estimate Time: 6h / Fact Time: 5h)
 
 - Реализовать сетевой сервис загрузки данных конкретной коллекции через отдельный `actor`  
-  (Estimate Time: 6h / Fact Time: )
+  (Estimate Time: 6h / Fact Time: 4h)
 
 - Интегрировать сетевые сервисы с ViewModel экрана "Каталог":  
   - загрузка данных  
   - отображение `ProgressView` во время загрузки  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 4h)
 
 - Интегрировать сетевые сервисы с ViewModel экрана "Коллекция":  
   - загрузка деталей коллекции и NFT  
   - отображение `ProgressView` во время загрузки  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 4h)
 
 - Проверить корректную работу многопоточности:  
   - обновление UI только из `@MainActor`  
   - отсутствие GCD и completion-handler-ов  
   - при необходимости использование `async let` / `withTaskGroup`  
-  (Estimate Time: 4h / Fact Time: )
+  (Estimate Time: 4h / Fact Time: 1h)
