@@ -15,7 +15,8 @@ struct MyNFTView: View {
     
     @State private var isNftMenuPresented = false
     @State private var viewModel = MyNFTViewModel()
-    @Environment(\.dismiss) private var dismiss
+    
+    @Environment(Coordinator.self) private var coordinator
     
     private var sortedNfts: [NftItem] {
         viewModel.sortedNFTs(from: nfts, sortType: sortType)
@@ -48,22 +49,13 @@ struct MyNFTView: View {
                     }
                 }
                 .listStyle(.plain)
+                .navigationBarTitleDisplayMode(.inline)
                 .padding(.vertical, 20)
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.ypBlack)
-                }
-            }
-            
             if !sortedNfts.isEmpty {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.myNFT)
@@ -117,3 +109,4 @@ private enum Constants {
         MyNFTView(nfts: ProfileViewMock.mockNFTs)
     }
 }
+

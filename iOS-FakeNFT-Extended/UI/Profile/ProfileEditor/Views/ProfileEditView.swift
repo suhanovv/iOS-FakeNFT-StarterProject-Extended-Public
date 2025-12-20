@@ -15,8 +15,7 @@ struct ProfileEditView: View {
     @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     
     @State private var viewModel = ProfileEditViewModel()
-    @Binding var isEditing: Bool
-    @Environment(\.dismiss) var dismiss
+    @Environment(Coordinator.self) private var coordinator
     
     // MARK: - Body
     var body: some View {
@@ -65,7 +64,7 @@ struct ProfileEditView: View {
         }
         .overlay {
             ExitAlert(isPresented: $viewModel.showExitAlert) {
-                dismiss()
+                coordinator.pop()
             }
         }
         .overlay(alignment: .bottom) {
@@ -158,7 +157,7 @@ struct ProfileEditView: View {
                     ) {
                         viewModel.showExitAlert = true
                     } else {
-                        dismiss()
+                        coordinator.pop()
                     }
                 } label: {
                     Image(systemName: "chevron.left")
@@ -178,8 +177,7 @@ struct ProfileEditView: View {
                     storedDescription: &storedDescription,
                     storedWebsite: &storedWebsite
                 )
-                isEditing = false
-                dismiss()
+                coordinator.pop()
             } label: {
                 Text(Constants.save)
                     .font(Font(UIFont.bodyBold))
@@ -211,7 +209,7 @@ private enum Constants {
 
 #Preview {
     NavigationStack {
-        ProfileEditView(isEditing: .constant(true))
+        ProfileEditView()
             .environment(\.locale, .init(identifier: "ru"))
     }
 }
