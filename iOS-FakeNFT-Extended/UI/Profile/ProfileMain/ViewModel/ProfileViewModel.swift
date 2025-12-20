@@ -9,10 +9,26 @@ import Observation
 import Foundation
 
 @Observable
+@MainActor
 final class ProfileViewModel {
-    var isEditing = false
+    
+    private let profileService: ProfileServiceProtocol
+    
+    var profile: User?
+    
+    init(profileService: ProfileServiceProtocol) {
+        self.profileService = profileService
+    }
     
     func photoURL(savedPhotoURL: String) -> URL? {
         URL(string: savedPhotoURL)
     }
+    
+    //    func loadProfile() async {
+    //        do {
+    //            profile = try await profileService.loadProfile()
+    //        } catch {
+    //            // error
+    //        }
+    //    }
 }

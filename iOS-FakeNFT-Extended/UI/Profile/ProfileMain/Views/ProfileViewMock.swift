@@ -85,3 +85,29 @@ struct ProfileViewMock {
         )
     ]
 }
+
+struct ProfileServiceMock: ProfileServiceProtocol {
+    func loadProfile() async throws -> Profile {
+        Profile(
+            name: "Mock User",
+            avatar: nil,
+            description: "Mock description",
+            website: URL(string: "https://example.com") ?? URL(fileURLWithPath: ""),
+            nfts: [],
+            likes: [],
+            id: "mock-id"
+        )
+    }
+    
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        []
+    }
+    
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        []
+    }
+    
+    func getProfileLikes() async throws -> [String] {
+        []
+    }
+}

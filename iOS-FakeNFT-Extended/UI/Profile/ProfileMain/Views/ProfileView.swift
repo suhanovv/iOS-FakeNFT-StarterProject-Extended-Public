@@ -15,9 +15,9 @@ struct ProfileView: View {
     @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
     @AppStorage(StorageKeys.favouriteNFTIds) private var favouritesMarker: Data = Data()
     
-    @State private var viewModel = ProfileViewModel()
-    @State private var isMyNFTPresented = false
-    @State private var isFavNFTPresented = false
+    @Environment(Coordinator.self) private var coordinator
+    
+    @State private var viewModel = ProfileViewModel(profileService: ProfileServiceMock())
     
     private var photoURL: URL? {
         viewModel.photoURL(savedPhotoURL: savedPhotoURL)
@@ -49,20 +49,6 @@ struct ProfileView: View {
             listRows
         }
         .padding(.horizontal, 16)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $viewModel.isEditing) {
-            ProfileEditView(isEditing: $viewModel.isEditing)
-                .toolbar(.hidden, for: .tabBar)
-        }
-        .navigationDestination(isPresented: $isMyNFTPresented) {
-            MyNFTView(nfts: ProfileViewMock.mockNFTs)
-        }
-        .navigationDestination(isPresented: $isFavNFTPresented) {
-            FavNFTView(allNFTs: ProfileViewMock.mockNFTs)
-        }
-        .toolbar {
-            navigationToolbar
-        }
     }
     
     // MARK: - Views
@@ -85,37 +71,30 @@ struct ProfileView: View {
     @ViewBuilder
     private var webRow: some View {
         if let url = URL(string: storedWebsite) {
-            Link(url.host ?? storedWebsite, destination: url)
-                .font(Font(UIFont.caption1))
-                .foregroundColor(.ypBlueUniversal)
-                .underline()
+            Button {
+                coordinator.push(.webView(url: url))
+            } label: {
+                Text(url.host ?? storedWebsite)
+                    .font(Font(UIFont.caption1))
+                    .foregroundColor(.ypBlueUniversal)
+                    .underline()
+            }
+            .buttonStyle(.plain)
         }
     }
     
     private var listRows: some View {
         List {
             ProfileListRow(title: Constants.myNFT, count: myNFTCount) {
-                isMyNFTPresented = true
+                coordinator.push(.myNft)
             }
             ProfileListRow(title: Constants.favouriteNFT, count: favNFTCount) {
-                isFavNFTPresented = true
+                coordinator.push(.favouriteNft)
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .padding(.top, 40)
-    }
-    
-    private var navigationToolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                viewModel.isEditing = true
-            } label: {
-                Image(systemName: "square.and.pencil")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(.ypBlack)
-            }
-        }
     }
 }
 
@@ -125,13 +104,18 @@ private enum Constants {
 }
 
 // MARK: - Preview_ProfileView
-#Preview {
+#Preview("Profile – filled") {
+    let services = ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl())
     NavigationStack {
         ProfileView()
+            .environment(Coordinator(services: services))
             .onAppear {
-                UserDefaults.standard.set("Joaquin Phoenix", forKey: "profile_name")
-                UserDefaults.standard.set("Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", forKey: "profile_description")
-                UserDefaults.standard.set("JoaquinPhoenix.com", forKey: "profile_website")
+                UserDefaults.standard.set("Joaquin Phoenix", forKey: StorageKeys.name)
+                UserDefaults.standard.set(
+                    "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
+                    forKey: StorageKeys.description
+                )
+                UserDefaults.standard.set("https://joaquinphoenix.com", forKey: StorageKeys.website)
                 UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: StorageKeys.photoURL)
             }
     }
