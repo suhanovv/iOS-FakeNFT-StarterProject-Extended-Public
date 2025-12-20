@@ -14,31 +14,28 @@ final class CollectionViewModel: ObservableObject {
     
     @Published var nfts: [Nft] = []
     @Published var state: ScreenState = .initial
+    @Published private(set) var collection: CollectionDTO?
     
-    // MARK: - Input
-    
-    let collection: CollectionDTO
-
     // MARK: - External dependencies
     
+    private let collectionId: String
     private let collectionService: CollectionServiceProtocol
-
+    
     // MARK: - Init
-
-    init(
-        collection: CollectionDTO,
-        collectionService: CollectionServiceProtocol
-    ) {
-        self.collection = collection
+    
+    init(collectionId: String, collectionService: CollectionServiceProtocol) {
+        self.collectionId = collectionId
         self.collectionService = collectionService
     }
-
+    
     // MARK: - Public methods
     
     func load() async {
         state = .loading
         do {
-            nfts = try await collectionService.loadNfts(ids: collection.nftIds)
+            let collection = try await collectionService.fetchCollection(id: collectionId)
+            self.collection = collection
+            self.nfts = try await collectionService.loadNfts(ids: collection.nftIds)
             state = .loaded
         } catch {
             state = .error(error.localizedDescription)

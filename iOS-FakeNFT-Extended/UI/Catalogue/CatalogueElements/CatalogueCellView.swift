@@ -31,7 +31,7 @@ struct CatalogueCellView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             
             Text("\(collection.name.capitalized) (\(collection.nftCount))")
-                .font(.init(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
         }
         .padding(.horizontal)
         

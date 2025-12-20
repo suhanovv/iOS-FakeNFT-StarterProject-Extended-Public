@@ -105,7 +105,11 @@ enum MockData {
 >>>>>>> b26ab0f (feat: add ViewModels for Catalogue and Collection, add sorting logic for Catalogue and saving sorting results)
             name: "Archie",
             rating: 3,
-            price: 1
+            price: 1,
+            author: nil,
+            website: nil,
+            description: nil,
+            createdAt: nil
         ),
         Nft(
             id: "2",
@@ -116,7 +120,11 @@ enum MockData {
 >>>>>>> b26ab0f (feat: add ViewModels for Catalogue and Collection, add sorting logic for Catalogue and saving sorting results)
             name: "Ruby",
             rating: 3,
-            price: 1
+            price: 1,
+            author: nil,
+            website: nil,
+            description: nil,
+            createdAt: nil
         ),
         Nft(
             id: "3",
@@ -155,3 +163,4 @@ enum MockData {
         )
     ]
 }
+

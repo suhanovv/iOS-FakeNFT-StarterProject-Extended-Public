@@ -22,6 +22,7 @@ struct CatalogueView: View {
     // MARK: - Properties
     
     @Environment(ServicesAssembly.self) private var services
+    @Environment(Coordinator.self) private var coordinator
     @StateObject private var viewModel: CatalogueViewModel
     
     @AppStorage(Constants.sortOptionStorageKey)
@@ -83,17 +84,14 @@ struct CatalogueView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach(viewModel.collections) { collection in
-                        NavigationLink {
-                            CollectionView(
-                                collection: collection,
-                                collectionService: services.collectionService
-                            )
-                            .navigationBarBackButtonHidden(true)
+                        Button {
+                            coordinator.push(.collection(id: collection.id))
                         } label: {
                             CatalogueCellView(collection: collection)
                                 .contentShape(Rectangle())
                                 .foregroundColor(.primary)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.top, 16)

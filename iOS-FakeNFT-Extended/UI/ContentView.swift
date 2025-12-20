@@ -16,12 +16,15 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            TestCatalogView()
-                .tabItem {
-                    Label(Constants.tabCatalogTitle, image: .TabBarIcons.cart)
-                }
-                .environment(coordinator.services)
-                .backgroundStyle(.ypWhite)
+            NavigationStack {
+                CatalogueView(collectionsService: coordinator.services.collectionsService)
+            }
+            .tabItem {
+                Label(Constants.tabCatalogTitle, image: .TabBarIcons.cart)
+            }
+            .environment(coordinator.services)
+            .backgroundStyle(.ypWhite)
+
             coordinator.build(screen: .usersList)
                 .tabItem {
                     Label(Constants.tabStatisticsTitle, image: .TabBarIcons.statistics)

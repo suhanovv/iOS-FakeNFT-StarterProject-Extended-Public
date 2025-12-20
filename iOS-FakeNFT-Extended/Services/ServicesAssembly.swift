@@ -40,6 +40,18 @@ final class ServicesAssembly {
 =======
 >>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
     }
+    
+    var userService: UsersServiceProtocol {
+        UsersService(networkClient: networkClient)
+    }
+    
+    var profileService: ProfileServiceProtocol {
+        ProfileService(networkClient: networkClient)
+    }
+    
+    var orderService: OrderServiceProtocol {
+        OrderService(networkClient: networkClient)
+    }
 }
 
 

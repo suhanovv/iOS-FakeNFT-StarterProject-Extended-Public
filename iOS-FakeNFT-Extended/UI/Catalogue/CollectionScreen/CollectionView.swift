@@ -5,78 +5,82 @@
 //  Created by Diana Viter on 09.12.2025.
 //
 
-
 import SwiftUI
-import WebKit
 import Kingfisher
 
 struct CollectionView: View {
-    
+
     // MARK: - Properties
-    
+
     @StateObject private var viewModel: CollectionViewModel
-    
+
     private let columns = Array(repeating: GridItem(spacing: 9), count: 3)
-    @Environment(\.dismiss) private var dismiss
-    
+    @Environment(Coordinator.self) private var coordinator
+
     // MARK: - Init
-    
+
     init(
-        collection: CollectionDTO,
+        collectionId: String,
         collectionService: CollectionServiceProtocol
     ) {
         _viewModel = StateObject(
             wrappedValue: CollectionViewModel(
-                collection: collection,
+                collectionId: collectionId,
                 collectionService: collectionService
             )
         )
     }
-    
+
     // MARK: - Body
-    
+
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            contentView
-            backButton
+        Group {
+            if let collection = viewModel.collection {
+                contentView(collection: collection)
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.ypWhite)
+            }
         }
         .toolbar(.hidden, for: .tabBar)
         .task {
             await viewModel.load()
         }
     }
-    
+
     // MARK: - Views
-    
-    private var contentView: some View {
+
+    private func contentView(collection: CollectionDTO) -> some View {
         VStack {
-            headerImage
-            collectionInfoSection
+            headerImage(coverURL: collection.cover)
+            collectionInfoSection(collection: collection)
         }
         .ignoresSafeArea(edges: .top)
+        .background(.ypWhite)
     }
-    
-    private var headerImage: some View {
-        KFImage(viewModel.collection.cover)
+
+    private func headerImage(coverURL: URL) -> some View {
+        KFImage(coverURL)
             .resizable()
             .scaledToFit()
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.bottom)
     }
-    
-    private var collectionInfoSection: some View {
+
+    private func collectionInfoSection(collection: CollectionDTO) -> some View {
         VStack(alignment: .leading) {
-            collectionTextBlock
-            
+            collectionTextBlock(collection: collection)
+
             switch viewModel.state {
             case .initial, .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, minHeight: 120)
                 ScrollView { nftGrid }
-                
+
             case .loaded:
                 ScrollView { nftGrid }
-                
+
             case .error(let message):
                 Text(message)
                     .font(.caption)
@@ -85,50 +89,49 @@ struct CollectionView: View {
         }
         .padding(.horizontal)
     }
-    
-    private var collectionTextBlock: some View {
+
+    private func collectionTextBlock(collection: CollectionDTO) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(viewModel.collection.name.capitalized)
-                .font(.init(UIFont.headline3))
+            Text(collection.name.capitalized)
+                .font(.system(size: 22, weight: .bold))
                 .tracking(0.2)
                 .padding(.bottom, 8)
-            
-            authorSection
-            
-            Text(viewModel.collection.description.sentenceCase())
-                .font(Font(UIFont.caption2))
+
+            authorSection(collection: collection)
+
+            Text(collection.description.sentenceCase())
+                .font(.system(size: 13))
                 .tracking(0.2)
                 .padding(.bottom)
         }
     }
-    
-    private var authorSection: some View {
+
+    private func authorSection(collection: CollectionDTO) -> some View {
         let fallbackURL = URL(string: "https://practicum.yandex.ru/ios-developer/")
-        let url = viewModel.collection.website ?? fallbackURL
+        let url = collection.website ?? fallbackURL
 
         return HStack {
             Text("Автор коллекции:")
-                .font(Font(UIFont.caption2))
+                .font(.system(size: 13))
                 .tracking(0.2)
 
             if let url {
-                NavigationLink {
-                    WebViewScreen(url: url)
+                Button {
+                    coordinator.push(.webView(url: url))
                 } label: {
-                    Text(viewModel.collection.author)
-                        .font(Font(UIFont.caption2))
+                    Text(collection.author)
+                        .font(.system(size: 13))
                         .tracking(0.2)
                 }
                 .tint(.blue)
             } else {
-                Text(viewModel.collection.author)
-                    .font(Font(UIFont.caption2))
+                Text(collection.author)
+                    .font(.system(size: 13))
                     .tracking(0.2)
             }
         }
     }
 
-    
     private var nftGrid: some View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
             ForEach(viewModel.nfts) { nft in
@@ -137,7 +140,7 @@ struct CollectionView: View {
                 } label: {
                     NftCellView(
                         name: nft.name,
-                        price: nft.price,
+                        price: NSDecimalNumber(decimal: nft.price).doubleValue,
                         rating: nft.rating,
                         imageURL: nft.images.first,
                         isFavorite: false,
@@ -148,16 +151,8 @@ struct CollectionView: View {
             }
         }
     }
-    
-    private var backButton: some View {
-        Button(action: { dismiss() }) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 22, weight: .medium))
-                .foregroundColor(.black)
-                .padding()
-        }
-    }
 }
+
 
 // MARK: - Preview
 
@@ -174,8 +169,9 @@ final class MockCollectionNftsService: CollectionServiceProtocol {
 #Preview {
     NavigationStack {
         CollectionView(
-            collection: MockData.peachCollection,
+            collectionId: MockData.peachCollection.id,
             collectionService: MockCollectionNftsService()
         )
     }
 }
+

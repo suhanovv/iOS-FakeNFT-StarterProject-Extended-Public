@@ -125,11 +125,11 @@ struct NftCellView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(name.capitalized)
-                    .font(.init(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                     .lineLimit(1)
 
                 Text("\(price.formattedPrice()) ETH")
-                    .font(.caption)
+                    .font(.system(size: 13))
             }
 
             Spacer()

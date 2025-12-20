@@ -65,31 +65,16 @@ extension Nft {
     let price: Decimal
 
     /// Имя автора NFT (string, приходит напрямую из API).
-    let author: String
+    let author: String?
 
     /// Веб-сайт автора или проекта. Может отсутствовать.
     let website: URL?
 
     /// Описание NFT. Может быть длинным — приходит в текстовом виде.
-    let description: String
+    let description: String?
 
     /// Дата создания NFT в текстовом формате (например ISO-8601).
-    let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case images
-        case rating
-        case price
-        case author
-        case website
-        case description
-        case createdAt
-    }
->>>>>>> d2b1764 (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
-    let price: Double
+    let createdAt: String?
 }
 
 extension Nft {
@@ -98,21 +83,30 @@ extension Nft {
         images: [
             URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Bethany/1.png")!,
             URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Bethany/2.png")!,
-            URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Bethany/3.png")!],
+            URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Bethany/3.png")!
+        ],
         name: "Dominique Parks",
         rating: 2,
-        price: 49.99
+        price: 49.99,
+        author: nil,
+        website: nil,
+        description: nil,
+        createdAt: nil
     )
-    
+
     static let sampleCarmine: Nft = .init(
         id: "1fda6f0c-a615-4a1a-aa9c-a1cbd7cc76ae",
         images: [
             URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/1.png")!,
             URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/2.png")!,
-            URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/3.png")!],
+            URL(string:"https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/3.png")!
+        ],
         name: "Carmine Wooten",
         rating: 4,
-        price: 32.89
+        price: 32.89,
+        author: nil,
+        website: nil,
+        description: nil,
+        createdAt: nil
     )
->>>>>>> 279ca2f (feat: add ViewModels for Catalogue and Collection, add sorting logic for Catalogue and saving sorting results)
 }
