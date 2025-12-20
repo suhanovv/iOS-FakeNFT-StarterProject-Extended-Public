@@ -24,6 +24,7 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {}
+<<<<<<< HEAD
 
     final class Coordinator: NSObject, WKNavigationDelegate {
         let fallbackURL: URL?
@@ -103,19 +104,86 @@ struct WebViewScreen: View {
             .frame(height: 300)
     } else {
         Text("Invalid preview URLs")
+=======
+
+    final class Coordinator: NSObject, WKNavigationDelegate {
+        let fallbackURL: URL?
+        private var didFallback = false
+
+        init(fallbackURL: URL?) {
+            self.fallbackURL = fallbackURL
+        }
+
+        private func fallback(_ webView: WKWebView, error: Error) {
+            guard
+                !didFallback,
+                let fallbackURL
+            else { return }
+
+            didFallback = true
+            print("WebView failed, fallback:", error)
+            webView.load(URLRequest(url: fallbackURL))
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            didFailProvisionalNavigation navigation: WKNavigation!,
+            withError error: Error
+        ) {
+            fallback(webView, error: error)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            didFail navigation: WKNavigation!,
+            withError error: Error
+        ) {
+            fallback(webView, error: error)
+        }
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
     }
 }
 
+struct WebViewScreen: View {
+    let url: URL?
+    @Environment(\.dismiss) private var dismiss
+
+    private let fallbackURL = URL(string: "https://practicum.yandex.ru/ios-developer/")
+
+    var body: some View {
+        Group {
+            if let url {
+                WebView(url: url, fallbackURL: fallbackURL)
+            } else if let fallbackURL {
+                WebView(url: fallbackURL, fallbackURL: nil)
+            } else {
+                Text("Не удалось открыть страницу")
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.black)
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
 
 // MARK: - Previews
 
 #Preview("WebView Preview") {
-    WebView(url: URL(string: "https://apple.com")!)
-        .frame(height: 300)
-}
-
-#Preview("WebViewScreen Preview") {
-    NavigationStack {
-        WebViewScreen(url: URL(string: "https://apple.com")!)
+    if
+        let url = URL(string: "https://apple.com"),
+        let fallbackURL = URL(string: "https://practicum.yandex.ru/ios-developer/")
+    {
+        WebView(url: url, fallbackURL: fallbackURL)
+            .frame(height: 300)
+    } else {
+        Text("Invalid preview URLs")
     }
 }

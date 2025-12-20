@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import Kingfisher
 
 // MARK: - NftCellView
 
@@ -15,8 +16,12 @@ struct NftCellView: View {
     // MARK: - Properties
     
     let name: String
+<<<<<<< HEAD
     let price: Decimal
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
+=======
+    let price: Double
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
     let rating: Int
     let imageURL: URL?
 
@@ -27,8 +32,12 @@ struct NftCellView: View {
     
     init(
         name: String,
+<<<<<<< HEAD
         price: Decimal,
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
+=======
+        price: Double,
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
         rating: Int,
         imageURL: URL?,
         isFavorite: Bool = false,
@@ -65,6 +74,7 @@ struct NftCellView: View {
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 
+<<<<<<< HEAD
 =======
 
     var body: some View {
@@ -90,6 +100,13 @@ struct NftCellView: View {
                 Image("Nft Card Icons/Like")
                     .renderingMode(.template)
                     .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+=======
+                Button(action: onFavoriteTap) {
+                    Image("Nft Card Icons/Like")
+                        .renderingMode(.template)
+                        .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
+                }
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
             }
         }
     }
@@ -107,10 +124,11 @@ struct NftCellView: View {
     private var infoSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(name)
+                Text(name.capitalized)
                     .font(.init(UIFont.bodyBold))
+                    .lineLimit(1)
 
-                Text("\(price) ETH")
+                Text("\(price.formattedPrice()) ETH")
                     .font(.caption)
             }
 

@@ -338,6 +338,9 @@
 				1223C8F32EF42F1000EE781B /* DoubleFormatter.swift */,
 				1223C8F12EF42EF800EE781B /* StringFormatter.swift */,
 				D73EF16E2EEC8CD700840749 /* PropertyWrappers */,
+				1223C9522EF4381C00EE781B /* StringToInt.swift */,
+				1223C8F32EF42F1000EE781B /* DoubleFormatter.swift */,
+				1223C8F12EF42EF800EE781B /* StringFormatter.swift */,
 				ABC5E19B2C31F69C002B4068 /* MemoryStorage */,
 				ABC5E1A22C31F7E8002B4068 /* NetworkClient */,
 			);
@@ -368,7 +371,6 @@
 				D7AE28462EE0B72B00325B47 /* Order.swift */,
 				D7AE283C2EE0B46F00325B47 /* User.swift */,
 				1237F6532EE829FB0094FC9D /* CollectionDTO.swift */,
-				1237F6512EE829E30094FC9D /* AuthorDTO.swift */,
 				ABC5E1A02C31F6D7002B4068 /* Nft.swift */,
 			);
 			path = Network;
@@ -392,18 +394,16 @@
 				D7AE28332EE09D9700325B47 /* Profile */,
 				D7AE28322EE09D9000325B47 /* Users */,
 				D7AE28302EE09D5A00325B47 /* Nft */,
-				1223C8E82EEEB85300EE781B /* Untitled.swift */,
 				1237F6552EE82A7B0094FC9D /* CollectionsSortOption.swift */,
-				ABC5E1AC2C31FB6C002B4068 /* Requests */,
+				ABC5E1AC2C31FB6C002B4068 /* Services */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
-				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				1223C89B2EED6B1100EE781B /* CollectionsService.swift */,
 				1223C8EF2EF41E3100EE781B /* CollectionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		ABC5E1AC2C31FB6C002B4068 /* Requests */ = {
+		ABC5E1AC2C31FB6C002B4068 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				1223C95C2EF5991B00EE781B /* CollectionRequest.swift */,
@@ -660,7 +660,6 @@
 				ABC5E1AE2C31FB7F002B4068 /* NftByIdRequest.swift in Sources */,
 				1237F6592EE82AA80094FC9D /* WebView.swift in Sources */,
 				D7AE28472EE0B72B00325B47 /* Order.swift in Sources */,
-				ABC5E1AE2C31FB7F002B4068 /* NftByIdRequest.swift in Sources */,
 				1237F6592EE82AA80094FC9D /* WebView.swift in Sources */,
 				ABC5E1DB2C3204CE002B4068 /* UIView+Constraints.swift in Sources */,
 				1237F6632EE82B320094FC9D /* CatalogueCellView.swift in Sources */,
@@ -685,7 +684,6 @@
 				ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */,
 				1223C8592EE8532000EE781B /* MockCatalogue.swift in Sources */,
 				D7AE283D2EE0B46F00325B47 /* User.swift in Sources */,
-				ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */,
 				1223C8592EE8532000EE781B /* MockCatalogue.swift in Sources */,
 				ABC5E1D12C32042C002B4068 /* NftDetailPresenter.swift in Sources */,
 				ABC5E1B02C31FB90002B4068 /* RequestConstants.swift in Sources */,

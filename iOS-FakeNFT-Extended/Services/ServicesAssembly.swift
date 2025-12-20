@@ -24,6 +24,7 @@ final class ServicesAssembly {
 
     var collectionService: CollectionServiceProtocol {
         CollectionServiceActor(networkClient: networkClient)
+<<<<<<< HEAD
     }
     
     var userService: UsersServiceProtocol {
@@ -36,6 +37,9 @@ final class ServicesAssembly {
 
     var collectionsService: CollectionsServiceProtocol {
         CollectionsService()
+=======
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
     }
 }
+
 

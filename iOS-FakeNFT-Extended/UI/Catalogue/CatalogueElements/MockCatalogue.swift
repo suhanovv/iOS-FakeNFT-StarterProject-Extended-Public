@@ -27,6 +27,9 @@ enum MockData {
         cover: makeURL("https://example.com/cover.png"),
         description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
         author: "John Doe",
         website: makeURL("https://practicum.yandex.ru/ios-developer/"),
         nftIds: ["1", "2", "3", "4", "5", "6"]

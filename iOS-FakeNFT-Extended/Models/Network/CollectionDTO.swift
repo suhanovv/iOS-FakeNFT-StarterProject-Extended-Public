@@ -12,6 +12,7 @@ import Foundation
 /// DTO-модель коллекции, приходящая из API.
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
 struct CollectionDTO: Identifiable, Codable, Sendable {
+<<<<<<< HEAD
 
     /// Уникальный идентификатор коллекции (значение приходит из API).
     let id: String
@@ -38,6 +39,8 @@ struct CollectionDTO: Identifiable, Codable, Sendable {
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
 >>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
 struct CollectionDTO: Identifiable, Codable {
+=======
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
 
     /// Уникальный идентификатор коллекции (значение приходит из API).
     let id: String
@@ -51,11 +54,8 @@ struct CollectionDTO: Identifiable, Codable {
     /// Описание коллекции, приходящее из API.
     let description: String
 
-    /// Идентификатор автора коллекции (ключ `author` в API).
-    let authorId: String
-
     /// Имя автора коллекции (может отсутствовать в ответе API).
-    let authorName: String?
+    let author: String
 
     /// Сайт автора или коллекции (опционально, может быть nil).
     let website: URL?
@@ -73,16 +73,23 @@ struct CollectionDTO: Identifiable, Codable {
         case cover
         case description
 <<<<<<< HEAD
+<<<<<<< HEAD
         case author
 =======
         case authorId = "author"
         case authorName
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
+=======
+        case author
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
         case website
         case nftIds = "nfts"
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
 
 extension CollectionDTO {
     var nftCount: Int {
@@ -91,5 +98,8 @@ extension CollectionDTO {
         ).count
     }
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
+=======
+>>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
