@@ -7,12 +7,9 @@
 
 import Foundation
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 /// DTO-модель коллекции, приходящая из API.
 /// Используется для сетевого слоя и декодирования данных о коллекциях.
 struct CollectionDTO: Identifiable, Codable, Sendable {
-<<<<<<< HEAD
 
     /// Уникальный идентификатор коллекции (значение приходит из API).
     let id: String
@@ -33,38 +30,6 @@ struct CollectionDTO: Identifiable, Codable, Sendable {
     let website: URL?
 
     /// Список идентификаторов NFT, входящих в коллекцию (ключ `nfts` в API).
-=======
-=======
-/// DTO-модель коллекции, приходящая из API.
-/// Используется для сетевого слоя и декодирования данных о коллекциях.
->>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
-struct CollectionDTO: Identifiable, Codable {
-=======
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
-
-    /// Уникальный идентификатор коллекции (значение приходит из API).
-    let id: String
-
-    /// Название коллекции, отображаемое в каталоге.
-    let name: String
-
-    /// URL обложки коллекции. Используется для превью на карточке.
-    let cover: URL
-
-    /// Описание коллекции, приходящее из API.
-    let description: String
-
-    /// Имя автора коллекции (может отсутствовать в ответе API).
-    let author: String
-
-    /// Сайт автора или коллекции (опционально, может быть nil).
-    let website: URL?
-<<<<<<< HEAD
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
-
-    /// Список идентификаторов NFT, входящих в коллекцию (ключ `nfts` в API).
->>>>>>> 125d0bf (chore: small cleanup across files based on review comments)
     let nftIds: [String]
 
     enum CodingKeys: String, CodingKey {
@@ -72,24 +37,11 @@ struct CollectionDTO: Identifiable, Codable {
         case name
         case cover
         case description
-<<<<<<< HEAD
-<<<<<<< HEAD
         case author
-=======
-        case authorId = "author"
-        case authorName
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
-        case author
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
         case website
         case nftIds = "nfts"
     }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
 
 extension CollectionDTO {
     var nftCount: Int {
@@ -98,8 +50,3 @@ extension CollectionDTO {
         ).count
     }
 }
-<<<<<<< HEAD
-=======
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)

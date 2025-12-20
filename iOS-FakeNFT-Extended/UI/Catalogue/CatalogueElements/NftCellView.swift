@@ -16,12 +16,7 @@ struct NftCellView: View {
     // MARK: - Properties
     
     let name: String
-<<<<<<< HEAD
-    let price: Decimal
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
     let price: Double
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
     let rating: Int
     let imageURL: URL?
 
@@ -32,12 +27,7 @@ struct NftCellView: View {
     
     init(
         name: String,
-<<<<<<< HEAD
-        price: Decimal,
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-=======
         price: Double,
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
         rating: Int,
         imageURL: URL?,
         isFavorite: Bool = false,
@@ -50,7 +40,6 @@ struct NftCellView: View {
         _isFavorite = State(initialValue: isFavorite)
         _isInCart = State(initialValue: isInCart)
     }
-<<<<<<< HEAD
     
     // MARK: - Body
 
@@ -74,39 +63,11 @@ struct NftCellView: View {
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 
-<<<<<<< HEAD
-=======
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            nftImageSection
-            ratingSection
-            infoSection
-        }
-        .frame(alignment: .leading)
->>>>>>> 427e8ea (feat(catalogue): add catalogue & collection UI, DTOs and navigation)
-    }
-    
-    // MARK: - Views
-
-    private var nftImageSection: some View {
-        ZStack(alignment: .topTrailing) {
-            Image(.nftCell)
-                .resizable()
-                .scaledToFill()
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
-            Button(action: onFavoriteTap) {
-                Image("Nft Card Icons/Like")
-                    .renderingMode(.template)
-                    .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
-=======
                 Button(action: onFavoriteTap) {
                     Image("Nft Card Icons/Like")
                         .renderingMode(.template)
                         .foregroundStyle(isFavorite ? .ypRedUniversal : .ypWhiteUniversal)
                 }
->>>>>>> 86f145d (feat: add actor-based networking and concurrency-safe catalogue services)
             }
         }
     }
@@ -129,7 +90,7 @@ struct NftCellView: View {
                     .lineLimit(1)
 
                 Text("\(price.formattedPrice()) ETH")
-                    .font(.system(size: 13))
+                    .font(.caption)
             }
 
             Spacer()

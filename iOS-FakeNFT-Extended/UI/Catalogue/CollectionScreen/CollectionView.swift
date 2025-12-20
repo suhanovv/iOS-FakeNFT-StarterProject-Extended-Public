@@ -140,7 +140,7 @@ struct CollectionView: View {
                 } label: {
                     NftCellView(
                         name: nft.name,
-                        price: NSDecimalNumber(decimal: nft.price).doubleValue,
+                        price: nft.price,
                         rating: nft.rating,
                         imageURL: nft.images.first,
                         isFavorite: false,

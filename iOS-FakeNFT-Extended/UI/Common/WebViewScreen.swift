@@ -46,10 +46,7 @@ struct WebView: UIViewRepresentable {
         return webView
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        // Если понадобится поддержка смены url во время жизни экрана — можно раскомментировать:
-        // if uiView.url != url { uiView.load(URLRequest(url: url)) }
-    }
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
 
     final class Coordinator: NSObject, WKNavigationDelegate {
         let fallbackURL: URL?
@@ -88,7 +85,7 @@ struct WebView: UIViewRepresentable {
     }
 }
 
-// MARK: - Previews
+// MARK: - Preview
 
 #Preview("WebViewScreen") {
     NavigationStack {
