@@ -21,23 +21,29 @@ final class Coordinator {
     @ViewBuilder
     func build(screen: Screen) -> some View {
         switch screen {
-            case .main: ContentView()
-                
-            case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
-                
-            case .userCard(let userId):
-                StatisticsUserCardScreenView(
-                    viewModel: .init(userId: userId, usersService: services.userService))
-                
-            case .userCollection(userId: let userId):
-                StatisticsUserCollectionScreenView(
-                    viewModel: .init(
-                        userId: userId,
-                        profileService: services.profileService,
-                        orderService: services.orderService,
-                        usersService: services.userService,
-                        nftService: services.nftService)
-                )
+        case .main: ContentView()
+            
+        case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
+            
+        case .userCard(let userId):
+            StatisticsUserCardScreenView(
+                viewModel: .init(userId: userId, usersService: services.userService))
+            
+        case .userCollection(userId: let userId):
+            StatisticsUserCollectionScreenView(
+                viewModel: .init(
+                    userId: userId,
+                    profileService: services.profileService,
+                    orderService: services.orderService,
+                    usersService: services.userService,
+                    nftService: services.nftService)
+            )
+            
+        case .catalogue:
+            CatalogueView(
+                collectionsService: services.collectionsService
+            )
+            .environment(services)
             
         case .collection(let id):
             CollectionView(

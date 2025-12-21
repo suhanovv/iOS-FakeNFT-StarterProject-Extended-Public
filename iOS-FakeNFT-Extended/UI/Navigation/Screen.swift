@@ -14,4 +14,5 @@ enum Screen: Hashable {
     case userCollection(userId: String)
     case webView(url: URL)
     case collection(id: String)
+    case catalogue
 }
