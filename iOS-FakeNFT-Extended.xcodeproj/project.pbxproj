@@ -304,6 +304,7 @@
 		ABC5E19F2C31F6CB002B4068 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				125865B12EF7DA0D007E59B4 /* CollectionDTO.swift */,
 				D7AE28382EE0B00B00325B47 /* Profile.swift */,
 				D7AE28462EE0B72B00325B47 /* Order.swift */,
 				D7AE283C2EE0B46F00325B47 /* User.swift */,
@@ -331,7 +332,6 @@
 				D7AE28302EE09D5A00325B47 /* Nft */,
 				125865BA2EF7DA48007E59B4 /* Requests */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
-				125865B12EF7DA0D007E59B4 /* CollectionDTO.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
 			);
 			path = Services;
