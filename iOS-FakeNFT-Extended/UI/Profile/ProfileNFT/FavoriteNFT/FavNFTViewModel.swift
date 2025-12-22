@@ -8,25 +8,88 @@
 import SwiftUI
 
 @Observable
+@MainActor
 final class FavNFTViewModel {
+    private(set) var isInitialLoading = true
+    private(set) var isLikeUpdating = false
+    private(set) var nfts: [Nft] = []
+    private(set) var likedIds: Set<String> = []
+    private let profileService: ProfileServiceProtocol
+    private let nftService: NftService
+    private let nftIds: [String]
+    var state: NFTScreenState = .loading
     
-    func favouriteIds(from data: Data) -> [String] {
-        (try? JSONDecoder().decode([String].self, from: data)) ?? []
+    init(
+        nftService: NftService,
+        profileService: ProfileServiceProtocol,
+        nftIds: [String]
+    ) {
+        self.nftService = nftService
+        self.profileService = profileService
+        self.nftIds = nftIds
     }
     
-    func favouriteNFTs(
-        allNFTs: [NftItem],
-        favouriteIds: [String]
-    ) -> [NftItem] {
-        allNFTs.filter { favouriteIds.contains($0.id) }
+    func loadData() async {
+        state = .loading
+        do {
+            let likes = try await profileService.getProfileLikes()
+            let loadedNfts = try await withThrowingTaskGroup(
+                of: Nft.self,
+                returning: [Nft].self
+            ) { group in
+                for id in nftIds {
+                    group.addTask {
+                        try await self.nftService.loadNft(id: id)
+                    }
+                }
+                var result: [Nft] = []
+                for try await nft in group {
+                    result.append(nft)
+                }
+                return result
+            }
+            likedIds = Set(likes)
+            nfts = loadedNfts
+            state = loadedNfts.isEmpty ? .empty : .loaded
+        } catch {
+            state = .error(operation: .loadData)
+        }
+        isInitialLoading = false
     }
     
-    func removeFavourite(
-        _ id: String,
-        from data: Data
-    ) -> Data {
-        var ids = (try? JSONDecoder().decode([String].self, from: data)) ?? []
-        ids.removeAll { $0 == id }
-        return (try? JSONEncoder().encode(ids)) ?? Data()
+    func toggleLike(nftId: String) async {
+        do {
+            isLikeUpdating = true
+            defer { isLikeUpdating = false }
+            
+            let updatedLikes: [String]
+            if likedIds.contains(nftId) {
+                updatedLikes = try await profileService.removeLikeFromNft(nftId)
+            } else {
+                updatedLikes = try await profileService.addLikeForNft(nftId)
+            }
+            
+            likedIds = Set(updatedLikes)
+            
+            nfts.removeAll { !likedIds.contains($0.id) }
+            
+            if nfts.isEmpty {
+                state = .empty
+            }
+        } catch {
+            state = .error(operation: .toggleLike(nftId))
+        }
+    }
+    
+    func retry(_ operation: NFTScreenOperation) async {
+        switch operation {
+        case .loadData:
+            await loadData()
+        case .toggleLike(let nftId):
+            await toggleLike(nftId: nftId)
+        }
     }
 }
+
+
+

@@ -8,23 +8,44 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // MARK: - AppStorage
-    @AppStorage(StorageKeys.name) private var storedName: String = ""
-    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
-    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
-    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    @Environment(Coordinator.self) private var coordinator
+    @State private var viewModel: ProfileViewModel
     
-    @State private var viewModel = ProfileViewModel()
-    
-    private var photoURL: URL? {
-        viewModel.photoURL(savedPhotoURL: savedPhotoURL)
+    init(profileService: ProfileServiceProtocol) {
+        _viewModel = State(
+            initialValue: ProfileViewModel(profileService: profileService)
+        )
     }
     
     // MARK: - Body
     var body: some View {
+        ZStack {
+            if viewModel.isLoading {
+                ProgressBarView(isActive: true)
+            } else {
+                content
+            }
+        }
+        .task {
+            coordinator.isProfileLoading = true
+            defer { coordinator.isProfileLoading = false }
+            
+            await viewModel.loadProfile()
+            coordinator.currentProfile = viewModel.profile
+        }
+        .onAppear {
+            coordinator.isOnProfileScreen = true
+        }
+        .onDisappear {
+            coordinator.isOnProfileScreen = false
+        }
+    }
+    
+    // MARK: - Views
+    private var content: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center, spacing: 16) {
-                ProfilePhotoView(url: photoURL)
+                ProfilePhotoView(url: viewModel.avatarURL)
                 nameRow
                 Spacer()
             }
@@ -35,27 +56,18 @@ struct ProfileView: View {
             listRows
         }
         .padding(.horizontal, 16)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $viewModel.isEditing) {
-            ProfileEditView(isEditing: $viewModel.isEditing)
-                .toolbar(.hidden, for: .tabBar)
-        }
-        .toolbar {
-            navigationToolbar
-        }
     }
     
-    // MARK: - Views
     private var nameRow: some View {
-        Text(storedName)
+        Text(viewModel.name)
             .font(Font(UIFont.headline3))
             .foregroundColor(.ypBlack)
     }
     
     @ViewBuilder
     private var descriptionRow: some View {
-        if !storedDescription.isEmpty {
-            Text(storedDescription)
+        if !viewModel.description.isEmpty {
+            Text(viewModel.description)
                 .font(Font(UIFont.caption2))
                 .foregroundColor(.ypBlack)
                 .padding(.bottom, 8)
@@ -64,38 +76,40 @@ struct ProfileView: View {
     
     @ViewBuilder
     private var webRow: some View {
-        if let url = URL(string: storedWebsite) {
-            Link(url.host ?? storedWebsite, destination: url)
-                .font(Font(UIFont.caption1))
-                .foregroundColor(.ypBlueUniversal)
-                .underline()
+        if let url = viewModel.websiteURL {
+            Button {
+                coordinator.push(.webView(url: url))
+            } label: {
+                Text(url.host ?? url.absoluteString)
+                    .font(Font(UIFont.caption1))
+                    .foregroundColor(.ypBlueUniversal)
+                    .underline()
+            }
+            .buttonStyle(.plain)
         }
     }
     
     private var listRows: some View {
         List {
-            ProfileListRow(title: Constants.myNFT, count: 21) {
-                // action
+            ProfileListRow(
+                title: Constants.myNFT,
+                count: viewModel.myNFTCount
+            ) {
+                guard let profile = viewModel.profile else { return }
+                coordinator.push(.myNft(ids: profile.nfts))
             }
-            ProfileListRow(title: Constants.favouriteNFT, count: 21) {
-                // action
+            
+            ProfileListRow(
+                title: Constants.favouriteNFT,
+                count: viewModel.favouriteNFTCount
+            ) {
+                guard let profile = viewModel.profile else { return }
+                coordinator.push(.favouriteNft(ids: profile.likes))
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .padding(.top, 40)
-    }
-    
-    private var navigationToolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                viewModel.isEditing = true
-            } label: {
-                Image(systemName: "square.and.pencil")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(.ypBlack)
-            }
-        }
     }
 }
 
@@ -105,14 +119,38 @@ private enum Constants {
 }
 
 // MARK: - Preview_ProfileView
+#if DEBUG
+struct EditProfilePreviewService: ProfileServiceProtocol {
+    func getProfile() async throws -> User {
+        User(
+            name: "Preview User",
+            avatarRaw: "https://fastly.picsum.photos/id/237/100/100.jpg",
+            description: "Preview description",
+            websiteRaw: "https://example.com",
+            nfts: ["1", "2", "3"],
+            likes: ["2"],
+            rating: 5,
+            id: "preview-id"
+        )
+    }
+    func getProfileLikes() async throws -> [String] { ["2"] }
+    func addLikeForNft(_ nftId: String) async throws -> [String] { ["2", nftId] }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { try await getProfile() }
+}
+#endif
 #Preview {
     NavigationStack {
-        ProfileView()
-            .onAppear {
-                UserDefaults.standard.set("Joaquin Phoenix", forKey: "profile_name")
-                UserDefaults.standard.set("Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", forKey: "profile_description")
-                UserDefaults.standard.set("JoaquinPhoenix.com", forKey: "profile_website")
-                UserDefaults.standard.set("https://picsum.photos/id/237/200/200", forKey: StorageKeys.photoURL)
-            }
+        ProfileView(
+            profileService: EditProfilePreviewService()
+        )
+        .environment(
+            Coordinator(
+                services: ServicesAssembly(
+                    networkClient: DefaultNetworkClient(),
+                    nftStorage: NftStorageImpl()
+                )
+            )
+        )
     }
 }

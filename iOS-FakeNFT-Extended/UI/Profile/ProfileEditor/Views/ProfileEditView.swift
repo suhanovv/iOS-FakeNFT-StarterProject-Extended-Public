@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct ProfileEditView: View {
-    // MARK: - AppStorage
-    @AppStorage(StorageKeys.name) private var storedName: String = ""
-    @AppStorage(StorageKeys.description) private var storedDescription: String = ""
-    @AppStorage(StorageKeys.website) private var storedWebsite: String = ""
-    @AppStorage(StorageKeys.photoURL) private var savedPhotoURL: String = ""
+    let profile: User
     
-    @State private var viewModel = ProfileEditViewModel()
-    @Binding var isEditing: Bool
-    @Environment(\.dismiss) var dismiss
+    @State private var viewModel: ProfileEditViewModel
+    @Environment(Coordinator.self) private var coordinator
+    
+    init(profile: User, profileService: ProfileServiceProtocol) {
+        self.profile = profile
+        _viewModel = State(initialValue: ProfileEditViewModel(profile: profile, profileService: profileService))
+    }
     
     // MARK: - Body
     var body: some View {
@@ -31,11 +31,7 @@ struct ProfileEditView: View {
             }
         }
         .onAppear {
-            viewModel.onAppear(
-                storedName: storedName,
-                storedDescription: storedDescription,
-                storedWebsite: storedWebsite
-            )
+            viewModel.onAppear(profile: profile)
         }
         .confirmationDialog(
             Text(Constants.photoDialog),
@@ -43,52 +39,44 @@ struct ProfileEditView: View {
             titleVisibility: .visible
         ) {
             Button(Constants.changePhoto) {
-                viewModel.photoURLText = savedPhotoURL
                 viewModel.showLinkPhotoAlert = true
             }
             
             Button(Constants.deletePhoto, role: .destructive) {
-                savedPhotoURL = ""
+                viewModel.photoURLText = ""
             }
-            
             Button(Constants.cancel, role: .cancel) {}
         }
         .onTapGesture {
             hideKeyboard()
         }
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            navigationToolbar
-        }
         .overlay {
             alertOverlaySection
         }
         .overlay {
             ExitAlert(isPresented: $viewModel.showExitAlert) {
-                dismiss()
+                coordinator.pop()
             }
         }
         .overlay(alignment: .bottom) {
-            if viewModel.hasChanges(
-                storedName: storedName,
-                storedDescription: storedDescription,
-                storedWebsite: storedWebsite
-            ) {
+            if viewModel.hasChanges(comparedTo: profile) {
                 saveButton
             }
+        }
+        .overlay {
+            ProgressBarView(isActive: viewModel.isSaving)
         }
     }
     
     // MARK: - Views
     private var photoSection: some View {
         ZStack(alignment: .bottomTrailing) {
-            ProfilePhotoView(
-                url: viewModel.photoURL(savedPhotoURL: savedPhotoURL)
-            )
-            .offset(y: -4)
-            .onTapGesture {
-                viewModel.isPhotoMenuPresented = true
-            }
+            ProfilePhotoView(url: viewModel.avatarURL)
+                .offset(y: -4)
+                .onTapGesture {
+                    viewModel.isPhotoMenuPresented = true
+                }
             
             Image(systemName: "camera.fill")
                 .font(.system(size: 10))
@@ -142,23 +130,17 @@ struct ProfileEditView: View {
             title: Constants.photoAlert,
             placeholder: Constants.photoAlertPh,
             text: $viewModel.photoURLText
-        ) {
-            viewModel.applyPhotoURL(savedPhotoURL: &savedPhotoURL)
-        }
+        ) {}
     }
     
     private var navigationToolbar: some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    if viewModel.hasChanges(
-                        storedName: storedName,
-                        storedDescription: storedDescription,
-                        storedWebsite: storedWebsite
-                    ) {
+                    if viewModel.hasChanges(comparedTo: profile) {
                         viewModel.showExitAlert = true
                     } else {
-                        dismiss()
+                        coordinator.pop()
                     }
                 } label: {
                     Image(systemName: "chevron.left")
@@ -173,13 +155,13 @@ struct ProfileEditView: View {
         VStack {
             Spacer()
             Button {
-                viewModel.saveProfile(
-                    storedName: &storedName,
-                    storedDescription: &storedDescription,
-                    storedWebsite: &storedWebsite
-                )
-                isEditing = false
-                dismiss()
+                Task {
+                    let updatedProfile = try await viewModel.saveProfile()
+                    
+                    coordinator.currentProfile = updatedProfile
+                    coordinator.isProfileLoading = false
+                    coordinator.pop()
+                }
             } label: {
                 Text(Constants.save)
                     .font(Font(UIFont.bodyBold))
@@ -209,9 +191,40 @@ private enum Constants {
     static let save = NSLocalizedString("Profile.saveButton", comment: "")
 }
 
-#Preview {
-    NavigationStack {
-        ProfileEditView(isEditing: .constant(true))
-            .environment(\.locale, .init(identifier: "ru"))
+// MARK: - Preview_ProfileEditView
+final class PreviewProfileService: ProfileServiceProtocol {
+    private let profile: User
+    init(profile: User) {
+        self.profile = profile
     }
+    func getProfile() async throws -> User { profile }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { profile }
+    func getProfileLikes() async throws -> [String] { [] }
+    func addLikeForNft(_ nftId: String) async throws -> [String] { [] }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+}
+#Preview {
+    let mockProfile = User(
+        name: "Alex Designer",
+        avatarRaw: "https://picsum.photos/200",
+        description: "iOS developer & NFT enjoyer",
+        websiteRaw: "https://example.com",
+        nfts: [],
+        likes: [],
+        rating: 5,
+        id: "1"
+    )
+    let coordinator = Coordinator(
+        services: ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl()
+        )
+    )
+    NavigationStack {
+        ProfileEditView(
+            profile: mockProfile,
+            profileService: PreviewProfileService(profile: mockProfile)
+        )
+    }
+    .environment(coordinator)
 }
