@@ -15,10 +15,11 @@ struct FavNFTCell: View {
     let onLikeTap: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             nftImageSection
             nftDescriptionSection
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var nftImageSection: some View {
@@ -54,6 +55,7 @@ struct FavNFTCell: View {
             Text(nft.name ?? "")
                 .font(Font(UIFont.bodyBold))
                 .foregroundColor(.ypBlack)
+                .lineLimit(1)
             ratingStars
             nftPrice
         }

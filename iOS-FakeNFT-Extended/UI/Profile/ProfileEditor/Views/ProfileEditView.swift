@@ -10,8 +10,13 @@ import SwiftUI
 struct ProfileEditView: View {
     let profile: User
     
-    @State private var viewModel = ProfileEditViewModel()
+    @State private var viewModel: ProfileEditViewModel
     @Environment(Coordinator.self) private var coordinator
+    
+    init(profile: User, profileService: ProfileServiceProtocol) {
+        self.profile = profile
+        _viewModel = State(initialValue: ProfileEditViewModel(profile: profile, profileService: profileService))
+    }
     
     // MARK: - Body
     var body: some View {
@@ -40,7 +45,6 @@ struct ProfileEditView: View {
             Button(Constants.deletePhoto, role: .destructive) {
                 viewModel.photoURLText = ""
             }
-            
             Button(Constants.cancel, role: .cancel) {}
         }
         .onTapGesture {
@@ -68,13 +72,11 @@ struct ProfileEditView: View {
     // MARK: - Views
     private var photoSection: some View {
         ZStack(alignment: .bottomTrailing) {
-            ProfilePhotoView(
-                url: viewModel.avatarURL
-            )
-            .offset(y: -4)
-            .onTapGesture {
-                viewModel.isPhotoMenuPresented = true
-            }
+            ProfilePhotoView(url: viewModel.avatarURL)
+                .offset(y: -4)
+                .onTapGesture {
+                    viewModel.isPhotoMenuPresented = true
+                }
             
             Image(systemName: "camera.fill")
                 .font(.system(size: 10))
@@ -154,7 +156,10 @@ struct ProfileEditView: View {
             Spacer()
             Button {
                 Task {
-                    try await viewModel.saveProfile()
+                    let updatedProfile = try await viewModel.saveProfile()
+                    
+                    coordinator.currentProfile = updatedProfile
+                    coordinator.isProfileLoading = false
                     coordinator.pop()
                 }
             } label: {
@@ -187,26 +192,38 @@ private enum Constants {
 }
 
 // MARK: - Preview_ProfileEditView
+final class PreviewProfileService: ProfileServiceProtocol {
+    private let profile: User
+    init(profile: User) {
+        self.profile = profile
+    }
+    func getProfile() async throws -> User { profile }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { profile }
+    func getProfileLikes() async throws -> [String] { [] }
+    func addLikeForNft(_ nftId: String) async throws -> [String] { [] }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+}
 #Preview {
+    let mockProfile = User(
+        name: "Alex Designer",
+        avatarRaw: "https://picsum.photos/200",
+        description: "iOS developer & NFT enjoyer",
+        websiteRaw: "https://example.com",
+        nfts: [],
+        likes: [],
+        rating: 5,
+        id: "1"
+    )
     let coordinator = Coordinator(
         services: ServicesAssembly(
             networkClient: DefaultNetworkClient(),
             nftStorage: NftStorageImpl()
         )
     )
-
     NavigationStack {
         ProfileEditView(
-            profile: User(
-                name: "Test",
-                avatar: URL(string: "https://picsum.photos/200"),
-                description: "Desc",
-                website: URL(string: "https://example.com")!,
-                nfts: [],
-                likes: [],
-                rating: 5,
-                id: "1"
-            )
+            profile: mockProfile,
+            profileService: PreviewProfileService(profile: mockProfile)
         )
     }
     .environment(coordinator)

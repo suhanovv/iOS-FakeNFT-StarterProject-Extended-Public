@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ProfileView: View {
     @Environment(Coordinator.self) private var coordinator
-    
     @State private var viewModel: ProfileViewModel
     
     init(profileService: ProfileServiceProtocol) {
@@ -27,13 +26,18 @@ struct ProfileView: View {
                 content
             }
         }
-        .onAppear {
-            coordinator.isProfileLoading = true
-        }
         .task {
+            coordinator.isProfileLoading = true
             defer { coordinator.isProfileLoading = false }
+            
             await viewModel.loadProfile()
             coordinator.currentProfile = viewModel.profile
+        }
+        .onAppear {
+            coordinator.isOnProfileScreen = true
+        }
+        .onDisappear {
+            coordinator.isOnProfileScreen = false
         }
     }
     
@@ -116,38 +120,29 @@ private enum Constants {
 
 // MARK: - Preview_ProfileView
 #if DEBUG
-struct PreviewProfileService: ProfileServiceProtocol {
-
+struct EditProfilePreviewService: ProfileServiceProtocol {
     func getProfile() async throws -> User {
         User(
             name: "Preview User",
-            avatar: URL(string: "https://picsum.photos/200")!,
+            avatarRaw: "https://fastly.picsum.photos/id/237/100/100.jpg",
             description: "Preview description",
-            website: URL(string: "https://example.com")!,
+            websiteRaw: "https://example.com",
             nfts: ["1", "2", "3"],
             likes: ["2"],
             rating: 5,
-            id: "preview"
+            id: "preview-id"
         )
     }
-
-    func getProfileLikes() async throws -> [String] {
-        ["2"]
-    }
-
-    func addLikeForNft(_ nftId: String) async throws -> [String] {
-        ["2", nftId]
-    }
-
-    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
-        []
-    }
+    func getProfileLikes() async throws -> [String] { ["2"] }
+    func addLikeForNft(_ nftId: String) async throws -> [String] { ["2", nftId] }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { try await getProfile() }
 }
 #endif
 #Preview {
     NavigationStack {
         ProfileView(
-            profileService: PreviewProfileService()
+            profileService: EditProfilePreviewService()
         )
         .environment(
             Coordinator(
