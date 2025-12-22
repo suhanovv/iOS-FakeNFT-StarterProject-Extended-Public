@@ -35,7 +35,7 @@ struct StatisticsUserCardScreenView: View {
         }
         .alert(
             Constants.errorTitle,
-            isPresented: .constant(viewModel.state == .error),
+            isPresented: .constant(viewModel.state == .error)
         ) {
             Button(Constants.errorButtonCancelTitle, role: .cancel) {
                 viewModel.setState(.loaded)
