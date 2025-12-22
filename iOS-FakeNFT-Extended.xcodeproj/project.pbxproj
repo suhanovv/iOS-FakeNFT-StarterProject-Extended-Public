@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		125865A72EF7D9D7007E59B4 /* CatalogueCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125865992EF7D9D7007E59B4 /* CatalogueCellView.swift */; };
 		125865A82EF7D9D7007E59B4 /* MockNftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125865A32EF7D9D7007E59B4 /* MockNftService.swift */; };
-		125865A92EF7D9D7007E59B4 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1258659B2EF7D9D7007E59B4 /* MockData.swift */; };
 		125865AA2EF7D9D7007E59B4 /* MockCatalogue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1258659A2EF7D9D7007E59B4 /* MockCatalogue.swift */; };
 		125865AB2EF7D9D7007E59B4 /* CatalogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1258659F2EF7D9D7007E59B4 /* CatalogueViewModel.swift */; };
 		125865AC2EF7D9D7007E59B4 /* NftCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1258659C2EF7D9D7007E59B4 /* NftCellView.swift */; };
@@ -76,7 +75,6 @@
 /* Begin PBXFileReference section */
 		125865992EF7D9D7007E59B4 /* CatalogueCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogueCellView.swift; sourceTree = "<group>"; };
 		1258659A2EF7D9D7007E59B4 /* MockCatalogue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCatalogue.swift; sourceTree = "<group>"; };
-		1258659B2EF7D9D7007E59B4 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		1258659C2EF7D9D7007E59B4 /* NftCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCellView.swift; sourceTree = "<group>"; };
 		1258659E2EF7D9D7007E59B4 /* CatalogueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogueView.swift; sourceTree = "<group>"; };
 		1258659F2EF7D9D7007E59B4 /* CatalogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogueViewModel.swift; sourceTree = "<group>"; };
@@ -170,7 +168,6 @@
 			children = (
 				125865992EF7D9D7007E59B4 /* CatalogueCellView.swift */,
 				1258659A2EF7D9D7007E59B4 /* MockCatalogue.swift */,
-				1258659B2EF7D9D7007E59B4 /* MockData.swift */,
 				1258659C2EF7D9D7007E59B4 /* NftCellView.swift */,
 			);
 			path = CatalogueElements;
@@ -566,7 +563,6 @@
 				ABC5E1D52C320446002B4068 /* NftDetailInput.swift in Sources */,
 				125865A72EF7D9D7007E59B4 /* CatalogueCellView.swift in Sources */,
 				125865A82EF7D9D7007E59B4 /* MockNftService.swift in Sources */,
-				125865A92EF7D9D7007E59B4 /* MockData.swift in Sources */,
 				125865AA2EF7D9D7007E59B4 /* MockCatalogue.swift in Sources */,
 				125865AB2EF7D9D7007E59B4 /* CatalogueViewModel.swift in Sources */,
 				125865AC2EF7D9D7007E59B4 /* NftCellView.swift in Sources */,

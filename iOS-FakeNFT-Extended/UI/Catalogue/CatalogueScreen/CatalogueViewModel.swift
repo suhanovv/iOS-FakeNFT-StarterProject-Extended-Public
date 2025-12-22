@@ -10,6 +10,13 @@ import SwiftUI
 @MainActor
 final class CatalogueViewModel: ObservableObject {
 
+    // MARK: - State model
+
+    @Published var collections: [CollectionDTO] = []
+    @Published var state: ScreenState = .initial
+    @Published var isFullyLoaded = false
+    @Published private(set) var sortOption: CollectionsSortOption = .nftCount
+    
     // MARK: - External dependencies
     
     private let collectionsService: CollectionsServiceProtocol
@@ -17,13 +24,6 @@ final class CatalogueViewModel: ObservableObject {
     // MARK: - Source
     
     private var allCollections: [CollectionDTO] = []
-
-    // MARK: - State model
-
-    @Published var collections: [CollectionDTO] = []
-    @Published var state: ScreenState = .initial
-    @Published var isFullyLoaded = false
-    @Published private(set) var sortOption: CollectionsSortOption = .nftCount
 
     // MARK: - Init
     
