@@ -23,13 +23,12 @@ struct NavigationView: View {
                         }
                 }
                 .toolbar {
-                    
-                    if !coordinator.isProfileLoading {
+                    if coordinator.isOnProfileScreen,
+                       !coordinator.isProfileLoading,
+                       let profile = coordinator.currentProfile {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                if let profile = coordinator.currentProfile {
-                                    coordinator.push(.profileEdit(profile: profile))
-                                }
+                                coordinator.push(.profileEdit(profile: profile))
                             } label: {
                                 Image(systemName: "square.and.pencil")
                                     .font(.system(size: 24, weight: .semibold))

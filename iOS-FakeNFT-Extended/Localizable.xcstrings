@@ -145,6 +145,23 @@
         }
       }
     },
+    "Profile.error.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to retrieve data"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось получить данные"
+          }
+        }
+      }
+    },
     "Profile.exitAlert.exitButton" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -345,6 +362,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Цена"
+          }
+        }
+      }
+    },
+    "Profile.retryButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
           }
         }
       }

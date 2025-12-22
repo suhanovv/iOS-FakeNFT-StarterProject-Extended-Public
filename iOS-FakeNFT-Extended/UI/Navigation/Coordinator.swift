@@ -5,9 +5,9 @@ import SwiftUI
 final class Coordinator {
     var path = NavigationPath()
     let services: ServicesAssembly
-    
     var isProfileLoading: Bool = false
     var currentProfile: User? = nil
+    var isOnProfileScreen: Bool = false
     
     init(services: ServicesAssembly) {
         self.services = services
@@ -30,12 +30,13 @@ final class Coordinator {
             )
             
         case .profileEdit(let profile):
-            ProfileEditView(profile: profile)
+            ProfileEditView(profile: profile, profileService: services.profileService)
             
         case .myNft(let ids):
             MyNFTView(
                 viewModel: MyNFTViewModel(
                     nftService: services.nftService,
+                    profileService: services.profileService,
                     nftIds: ids
                 )
             )
@@ -44,6 +45,7 @@ final class Coordinator {
             FavNFTView(
                 viewModel: FavNFTViewModel(
                     nftService: services.nftService,
+                    profileService: services.profileService,
                     nftIds: ids
                 )
             )

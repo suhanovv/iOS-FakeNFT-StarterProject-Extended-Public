@@ -5,6 +5,7 @@ protocol ProfileServiceProtocol: Sendable {
     func removeLikeFromNft(_ nftId: String) async throws -> [String]
     func getProfileLikes() async throws -> [String]
     func getProfile() async throws -> User
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User
 }
 
 actor ProfileService: ProfileServiceProtocol {
@@ -42,5 +43,10 @@ actor ProfileService: ProfileServiceProtocol {
     func getProfile() async throws -> User {
         let request = GetProfileRequest()
         return try await networkClient.send(request: request)
+    }
+    
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User {
+        let networkRequest = UpdateProfileRequest(dto: request)
+        return try await networkClient.send(request: networkRequest)
     }
 }

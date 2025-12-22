@@ -25,18 +25,7 @@ final class ProfileViewModel {
         isLoading = true
         isError = false
         do {
-            let profileDTO = try await profileService.getProfile()
-            
-            profile = User(
-                name: profileDTO.name,
-                avatar: profileDTO.avatar,
-                description: profileDTO.description,
-                website: profileDTO.website,
-                nfts: profileDTO.nfts,
-                likes: profileDTO.likes,
-                rating: profileDTO.rating,
-                id: profileDTO.id
-            )
+            profile = try await profileService.getProfile()
         } catch {
             isError = true
         }
@@ -56,7 +45,7 @@ final class ProfileViewModel {
     }
     
     var websiteURL: URL? {
-        profile?.website
+        profile?.websiteURL
     }
     
     var myNFTCount: Int {

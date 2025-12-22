@@ -7,12 +7,26 @@
 
 import Foundation
 
-struct ProfileUpdateRequest {
+struct ProfileUpdateRequest: Encodable {
     let name: String?
-    let avatar: URL?
+    let avatar: String?
     let description: String?
-    let website: URL?
+    let website: String?
     let likes: [String]?
+    
+    init(
+        name: String? = nil,
+        avatar: String? = nil,
+        description: String? = nil,
+        website: String? = nil,
+        likes: [String]? = nil
+    ) {
+        self.name = name
+        self.avatar = avatar
+        self.description = description
+        self.website = website
+        self.likes = likes
+    }
 }
 
 extension ProfileUpdateRequest {
@@ -28,7 +42,7 @@ extension ProfileUpdateRequest {
         }
         
         if let avatar = avatar {
-            components.append("avatar=\(encode(avatar.absoluteString))")
+            components.append("avatar=\(encode(avatar))")
         }
         
         if let description = description {
@@ -36,7 +50,7 @@ extension ProfileUpdateRequest {
         }
         
         if let website = website {
-            components.append("website=\(encode(website.absoluteString))")
+            components.append("website=\(encode(website))")
         }
         
         if let likes = likes {
