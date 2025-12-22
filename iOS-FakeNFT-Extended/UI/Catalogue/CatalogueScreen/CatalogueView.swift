@@ -76,7 +76,7 @@ struct CatalogueView: View {
     @ViewBuilder
     private var collectionsScrollView: some View {
         switch viewModel.state {
-        case .loading:
+        case .initial, .loading:
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
