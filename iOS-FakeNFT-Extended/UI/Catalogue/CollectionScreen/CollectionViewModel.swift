@@ -31,6 +31,7 @@ final class CollectionViewModel: ObservableObject {
     // MARK: - Public methods
     
     func load() async {
+        guard collection == nil else { return }   
         state = .loading
         do {
             let collection = try await collectionService.fetchCollection(id: collectionId)

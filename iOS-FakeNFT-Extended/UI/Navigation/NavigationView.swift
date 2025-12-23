@@ -21,6 +21,7 @@ struct NavigationView: View {
                 .navigationDestination(for: Screen.self, destination: destination)
         }
         .environment(coordinator)
+        .environment(coordinator.services)
     }
     
     private var root: some View {

@@ -85,7 +85,14 @@ final class NftDetailViewController: UIViewController {
 
     @objc
     private func close() {
-        dismiss(animated: true)
+        if let navigationController, navigationController.presentingViewController != nil,
+           navigationController.viewControllers.first != self {
+            navigationController.popViewController(animated: true)
+        } else if presentingViewController != nil {
+            dismiss(animated: true)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
 }
 
