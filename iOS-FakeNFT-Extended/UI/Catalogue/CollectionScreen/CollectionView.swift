@@ -137,6 +137,8 @@ struct CollectionView: View {
             ForEach(viewModel.nfts) { nft in
                 NavigationLink {
                     NftDetailBridgeView(nftId: nft.id)
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar(.hidden, for: .navigationBar)
                 } label: {
                     NftCellView(
                         name: nft.name,
