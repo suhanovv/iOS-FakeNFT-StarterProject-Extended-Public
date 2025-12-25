@@ -25,4 +25,3 @@ actor NftServiceImpl: NftService {
         return nft
     }
 }
-
