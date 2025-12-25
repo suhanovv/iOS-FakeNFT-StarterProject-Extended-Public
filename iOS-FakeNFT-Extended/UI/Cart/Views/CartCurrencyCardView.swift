@@ -1,5 +1,5 @@
 //
-//  CurrencyCardView.swift
+//  CartCurrencyCardView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Pavel Komarov on 19.12.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CurrencyCardView: View {
+struct CartCurrencyCardView: View {
 
     // MARK: - Properties
 
@@ -48,7 +48,7 @@ struct CurrencyCardView: View {
 // MARK: - Previews
 
 #Preview("Default") {
-    CurrencyCardView(
+    CartCurrencyCardView(
         image: Image(.CurrencyIcons.bitcoin),
         title: "Bitcoin",
         code: "BTC",
@@ -58,7 +58,7 @@ struct CurrencyCardView: View {
 }
 
 #Preview("Selected") {
-    CurrencyCardView(
+    CartCurrencyCardView(
         image: Image(.CurrencyIcons.bitcoin),
         title: "Bitcoin",
         code: "BTC",

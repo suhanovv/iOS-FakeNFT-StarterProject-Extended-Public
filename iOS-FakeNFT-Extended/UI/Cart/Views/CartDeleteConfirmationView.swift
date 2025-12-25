@@ -1,5 +1,5 @@
 //
-//  DeleteConfirmationView.swift
+//  CartDeleteConfirmationView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Pavel Komarov on 20.12.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DeleteConfirmationView: View {
+struct CartDeleteConfirmationView: View {
 
     // MARK: - Properties
 
@@ -56,7 +56,7 @@ struct DeleteConfirmationView: View {
 // MARK: - Previews
 
 #Preview {
-    DeleteConfirmationView(
+    CartDeleteConfirmationView(
         image: Image(.MockupImages.nftPlaceholder4),
         onDelete: {},
         onCancel: {}
