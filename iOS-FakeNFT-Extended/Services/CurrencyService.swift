@@ -7,13 +7,12 @@
 
 import Foundation
 
-protocol CurrencyService {
+protocol CurrencyServiceProtocol {
     func getCurrencies() async throws -> [Currency]
     func getCurrency(id: String) async throws -> Currency
 }
 
-@MainActor
-final class CurrencyServiceImpl: CurrencyService {
+actor CurrencyService: CurrencyServiceProtocol {
 
     private let networkClient: NetworkClient
 

@@ -36,12 +36,12 @@ final class ServicesAssembly {
         OrderService(networkClient: networkClient)
     }
 
-    var currencyService: CurrencyService {
-        CurrencyServiceImpl(networkClient: networkClient)
+    var currencyService: CurrencyServiceProtocol {
+        CurrencyService(networkClient: networkClient)
     }
 
-    var paymentService: PaymentService {
-        PaymentServiceImpl(networkClient: networkClient)
+    var paymentService: PaymentServiceProtocol {
+        PaymentService(networkClient: networkClient)
     }
 }
 

@@ -7,12 +7,11 @@
 
 import Foundation
 
-protocol PaymentService {
+protocol PaymentServiceProtocol {
     func pay(currencyId: String) async throws -> PaymentResult
 }
 
-@MainActor
-final class PaymentServiceImpl: PaymentService {
+actor PaymentService: PaymentServiceProtocol {
 
     private let networkClient: NetworkClient
     private let orderId: String
