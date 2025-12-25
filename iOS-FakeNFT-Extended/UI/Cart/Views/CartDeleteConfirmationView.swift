@@ -15,6 +15,8 @@ struct CartDeleteConfirmationView: View {
     let onDelete: () -> Void
     let onCancel: () -> Void
 
+    @State private var buttonWidth: CGFloat = 0
+
     // MARK: - View
 
     var body: some View {
@@ -36,6 +38,9 @@ struct CartDeleteConfirmationView: View {
                 deleteButton(title: "Удалить", textColor: .ypRedUniversal, action: onDelete)
                 deleteButton(title: "Вернуться", textColor: .ypWhiteUniversal, action: onCancel)
             }
+            .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
+                buttonWidth = width
+            }
         }
     }
 
@@ -45,11 +50,29 @@ struct CartDeleteConfirmationView: View {
         Button(action: action) {
             Text(title)
                 .foregroundStyle(textColor)
-                .frame(width: 127)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 22)
                 .padding(.vertical, 11)
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.preference(
+                            key: ButtonWidthPreferenceKey.self,
+                            value: geo.size.width
+                        )
+                    }
+                )
+                .frame(width: buttonWidth > 0 ? buttonWidth : nil)
         }
         .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+// MARK: - Preference Key
+
+private struct ButtonWidthPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
 
