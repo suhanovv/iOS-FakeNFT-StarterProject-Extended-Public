@@ -1,10 +1,3 @@
-//
-//  ProgressBarView.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Вадим Суханов on 10.12.2025.
-//
-
 import SwiftUI
 
 struct ProgressBarView: View {
@@ -16,6 +9,7 @@ struct ProgressBarView: View {
             .foregroundStyle(.progressBar)
             .overlay {
                 ProgressView()
+                    .scaleEffect(1.5)
             }
             .opacity(isActive ? 1 : 0)
     }

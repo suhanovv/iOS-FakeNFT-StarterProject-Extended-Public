@@ -1,10 +1,3 @@
-//
-//  NavigationView.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Вадим Суханов on 11.12.2025.
-//
-
 import SwiftUI
 
 struct NavigationView: View {
@@ -18,10 +11,34 @@ struct NavigationView: View {
     var body: some View {
         NavigationStack(path: $coordinator.path) {
             root
-                .navigationDestination(for: Screen.self, destination: destination)
+                .navigationDestination(for: Screen.self) { screen in
+                    coordinator.build(screen: screen)
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar {
+                            if !coordinator.path.isEmpty {
+                                ToolbarItem(placement: .navigationBarLeading) {
+                                    backButton
+                                }
+                            }
+                        }
+                }
+                .toolbar {
+                    if coordinator.isOnProfileScreen,
+                       !coordinator.isProfileLoading,
+                       let profile = coordinator.currentProfile {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                coordinator.push(.profileEdit(profile: profile))
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.system(size: 24, weight: .semibold))
+                                    .foregroundColor(.ypBlack)
+                            }
+                        }
+                    }
+                }
         }
         .environment(coordinator)
-        .environment(coordinator.services)
     }
     
     private var root: some View {
@@ -32,7 +49,11 @@ struct NavigationView: View {
     private func destination(_ screen: Screen) -> some View {
         coordinator.build(screen: screen)
             .navigationBarBackButtonHidden(true)
-            .toolbar { backToolbar }
+            .toolbar {
+                if screen != .profile {
+                    backToolbar
+                }
+            }
     }
     
     private var backToolbar: some ToolbarContent {
@@ -49,6 +70,7 @@ struct NavigationView: View {
     }
 }
 
+// MARK: - Preview_NavigationView
 #Preview {
     NavigationView()
 }

@@ -7,7 +7,10 @@ final class ServicesAssembly {
     private let networkClient: NetworkClient
     private let nftStorage: NftStorage
     
-    init(networkClient: NetworkClient, nftStorage: NftStorage) {
+    init(
+        networkClient: NetworkClient,
+        nftStorage: NftStorage
+    ) {
         self.networkClient = networkClient
         self.nftStorage = nftStorage
     }
@@ -35,6 +38,18 @@ final class ServicesAssembly {
     var orderService: OrderServiceProtocol {
         OrderService(networkClient: networkClient)
     }
+    
+    //    var userService: UsersServiceProtocol {
+    //        UsersService(networkClient: networkClient)
+    //    }
+    
+    var profileService: ProfileServiceProtocol {
+        ProfileService(networkClient: networkClient)
+    }
+    
+    //    var orderService: OrderServiceProtocol {
+    //        OrderService(networkClient: networkClient)
+    //    }
 }
 
 

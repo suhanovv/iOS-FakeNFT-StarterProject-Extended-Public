@@ -1,11 +1,3 @@
-//
-//  Coordinator.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Вадим Суханов on 11.12.2025.
-//
-
-
 import SwiftUI
 
 @Observable
@@ -13,6 +5,9 @@ import SwiftUI
 final class Coordinator {
     var path = NavigationPath()
     let services: ServicesAssembly
+    var isProfileLoading: Bool = false
+    var currentProfile: User? = nil
+    var isOnProfileScreen: Bool = false
     
     init(services: ServicesAssembly) {
         self.services = services
@@ -21,38 +16,41 @@ final class Coordinator {
     @ViewBuilder
     func build(screen: Screen) -> some View {
         switch screen {
+            
         case .main: ContentView()
             
-        case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
+        case .usersList,
+                .userCard,
+                .userCollection:
+            Color.clear
             
-        case .userCard(let userId):
-            StatisticsUserCardScreenView(
-                viewModel: .init(userId: userId, usersService: services.userService))
+        case .profile:
+            ProfileView(
+                profileService: services.profileService
+            )
             
-        case .userCollection(userId: let userId):
-            StatisticsUserCollectionScreenView(
-                viewModel: .init(
-                    userId: userId,
+        case .profileEdit(let profile):
+            ProfileEditView(profile: profile, profileService: services.profileService)
+            
+        case .myNft(let ids):
+            MyNFTView(
+                viewModel: MyNFTViewModel(
+                    nftService: services.nftService,
                     profileService: services.profileService,
-                    orderService: services.orderService,
-                    usersService: services.userService,
-                    nftService: services.nftService)
+                    nftIds: ids
+                )
             )
             
-        case .catalogue:
-            CatalogueView(
-                collectionsService: services.collectionsService
-            )
-            .environment(services)
-            
-        case .collection(let id):
-            CollectionView(
-                collectionId: id,
-                collectionService: services.collectionService
+        case .favouriteNft(let ids):
+            FavNFTView(
+                viewModel: FavNFTViewModel(
+                    nftService: services.nftService,
+                    profileService: services.profileService,
+                    nftIds: ids
+                )
             )
             
-        case .webView(url: let url):
-            WebViewScreen(url: url)
+        case .webView(url: let url): WebView(url: url)
         }
     }
     
