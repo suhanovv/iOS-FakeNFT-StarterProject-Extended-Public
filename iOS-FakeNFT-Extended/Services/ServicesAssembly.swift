@@ -16,21 +16,32 @@ final class ServicesAssembly {
     }
     
     var nftService: NftService {
-        NftServiceImpl(
-            networkClient: networkClient,
-            storage: nftStorage
-        )
+        NftServiceImpl(networkClient: networkClient, storage: nftStorage)
     }
     
-    //    var userService: UsersServiceProtocol {
-    //        UsersService(networkClient: networkClient)
-    //    }
+    var collectionsService: CollectionsServiceProtocol {
+        CollectionsServiceActor(networkClient: networkClient)
+    }
+    
+    var collectionService: CollectionServiceProtocol {
+        CollectionServiceActor(networkClient: networkClient)
+    }
+    
+    var userService: UsersServiceProtocol {
+        UsersService(networkClient: networkClient)
+    }
     
     var profileService: ProfileServiceProtocol {
         ProfileService(networkClient: networkClient)
     }
     
-    //    var orderService: OrderServiceProtocol {
-    //        OrderService(networkClient: networkClient)
-    //    }
+    var orderService: OrderServiceProtocol {
+        OrderService(networkClient: networkClient)
+    }
+
+    var profileService: ProfileServiceProtocol {
+        ProfileService(networkClient: networkClient)
+    }
 }
+
+
