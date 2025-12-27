@@ -1,5 +1,5 @@
 //
-//  ScreenState.swift
+//  NFTScreenState.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Ди Di on 20/12/25.
