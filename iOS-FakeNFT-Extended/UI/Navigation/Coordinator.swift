@@ -25,7 +25,7 @@ final class Coordinator {
             
         case .profile:
             ProfileView(
-                viewModel: .init(profileService: services.profileService)
+                profileService: services.profileService
             )
             
         case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
