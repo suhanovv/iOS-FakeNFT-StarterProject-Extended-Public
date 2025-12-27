@@ -16,12 +16,12 @@ struct ProfileListRow: View {
         Button(action: action) {
             HStack {
                 Text(title)
-                    .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.ypBlack)
                 
                 Text("(\(count))")
-                    .font(Font(UIFont.bodyBold))
-                
+                    .font(.system(size: 17, weight: .bold))
+
                 Spacer()
                 
                 Image(systemName: "chevron.right")

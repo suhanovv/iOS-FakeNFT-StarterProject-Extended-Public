@@ -8,28 +8,34 @@
 import SwiftUI
 
 struct ProfileEditView: View {
-    let profile: User
+    let profile: Profile
     
     @State private var viewModel: ProfileEditViewModel
     @Environment(Coordinator.self) private var coordinator
     
-    init(profile: User, profileService: ProfileServiceProtocol) {
+    init(profile: Profile, profileService: ProfileServiceProtocol) {
         self.profile = profile
         _viewModel = State(initialValue: ProfileEditViewModel(profile: profile, profileService: profileService))
     }
     
     // MARK: - Body
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                photoSection
-                nameSection
-                descriptionSection
-                websiteSection
-                
-                Spacer(minLength: 40)
+        ZStack(alignment: .topLeading) {
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    photoSection
+                    nameSection
+                    descriptionSection
+                    websiteSection
+                    
+                    Spacer(minLength: 40)
+                }
+                .padding(.top, 44)
             }
+            customBackButton
         }
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.onAppear(profile: profile)
         }
@@ -50,17 +56,16 @@ struct ProfileEditView: View {
         .onTapGesture {
             hideKeyboard()
         }
-        .navigationBarBackButtonHidden(true)
         .overlay {
             alertOverlaySection
         }
         .overlay {
-            ExitAlert(isPresented: $viewModel.showExitAlert) {
-                coordinator.pop()
-            }
-        }
+                   ExitAlert(isPresented: $viewModel.showExitConfirmation) {
+                       coordinator.pop()
+                   }
+               }
         .overlay(alignment: .bottom) {
-            if viewModel.hasChanges(comparedTo: profile) {
+            if viewModel.hasChanges() {
                 saveButton
             }
         }
@@ -89,10 +94,10 @@ struct ProfileEditView: View {
     private var nameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileName)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             TextField("", text: $viewModel.name)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding()
                 .background(Color(.ypLightGray))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -103,7 +108,7 @@ struct ProfileEditView: View {
     private var descriptionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileDescription)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             ProfileAutoGrowingTextEditor(text: $viewModel.description)
         }
@@ -113,10 +118,10 @@ struct ProfileEditView: View {
     private var websiteSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileWebsite)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             TextField("", text: $viewModel.website)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding()
                 .background(Color(.ypLightGray))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -133,38 +138,36 @@ struct ProfileEditView: View {
         ) {}
     }
     
-    private var navigationToolbar: some ToolbarContent {
-        Group {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    if viewModel.hasChanges(comparedTo: profile) {
-                        viewModel.showExitAlert = true
-                    } else {
-                        coordinator.pop()
-                    }
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(Font(UIFont.headline5))
-                        .foregroundColor(.ypBlack)
-                }
-            }
-        }
-    }
+    private var customBackButton: some View {
+           Button {
+               if viewModel.hasChanges() {
+                   viewModel.showExitConfirmation = true
+               } else {
+                   coordinator.pop()
+               }
+           } label: {
+               Image(systemName: "chevron.left")
+                   .font(.system(size: 17, weight: .semibold))
+                   .foregroundColor(.ypBlack)
+                   .frame(width: 44, height: 44)
+                   .contentShape(Rectangle())
+           }
+           .padding(.leading, 16)
+           .padding(.top, 8)
+           .zIndex(10)
+       }
     
     private var saveButton: some View {
         VStack {
             Spacer()
             Button {
                 Task {
-                    let updatedProfile = try await viewModel.saveProfile()
-                    
-                    coordinator.currentProfile = updatedProfile
-                    coordinator.isProfileLoading = false
+                    let _ = try await viewModel.saveProfile()
                     coordinator.pop()
                 }
             } label: {
                 Text(Constants.save)
-                    .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.ypWhite)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -193,25 +196,34 @@ private enum Constants {
 
 // MARK: - Preview_ProfileEditView
 final class PreviewProfileService: ProfileServiceProtocol {
-    private let profile: User
-    init(profile: User) {
+    private let profile: Profile
+    init(profile: Profile) {
         self.profile = profile
     }
-    func getProfile() async throws -> User { profile }
-    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { profile }
-    func getProfileLikes() async throws -> [String] { [] }
-    func addLikeForNft(_ nftId: String) async throws -> [String] { [] }
-    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+    func getProfile() async throws -> Profile {
+        profile
+    }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> Profile {
+        profile
+    }
+    func getProfileLikes() async throws -> [String] {
+        profile.likes
+    }
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        profile.likes
+    }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        profile.likes
+    }
 }
 #Preview {
-    let mockProfile = User(
+    let mockProfile = Profile(
         name: "Alex Designer",
-        avatarRaw: "https://picsum.photos/200",
+        avatar: URL(string: "https://picsum.photos/200")!,
         description: "iOS developer & NFT enjoyer",
-        websiteRaw: "https://example.com",
+        website: URL(string: "https://example.com")!,
         nfts: [],
         likes: [],
-        rating: 5,
         id: "1"
     )
     let coordinator = Coordinator(

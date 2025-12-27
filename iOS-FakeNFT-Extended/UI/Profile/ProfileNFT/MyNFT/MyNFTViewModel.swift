@@ -17,6 +17,8 @@ final class MyNFTViewModel {
     private(set) var isLikeUpdating = false
     private(set) var likedIds: Set<String> = []
     var state: NFTScreenState = .loading
+    var showErrorAlert = false
+    var errorMessage: String = ""
     
     init(
         nftService: NftService,
@@ -41,6 +43,8 @@ final class MyNFTViewModel {
             }
             likedIds = Set(updatedLikes)
         } catch {
+            errorMessage = NSLocalizedString("Error.network", comment: "")
+            showErrorAlert = true
             state = .error(operation: .toggleLike(nftId))
         }
     }
@@ -69,6 +73,8 @@ final class MyNFTViewModel {
             nfts = loadedNfts
             state = loadedNfts.isEmpty ? .empty : .loaded
         } catch {
+            errorMessage = NSLocalizedString("Error.network", comment: "")
+            showErrorAlert = true
             state = .error(operation: .loadData)
         }
     }
@@ -86,11 +92,11 @@ final class MyNFTViewModel {
     func sortedNFTs(from nfts: [Nft], sortType: NftSortType) -> [Nft] {
         switch sortType {
         case .byPrice:
-            return nfts.sorted { ($0.price ?? 0) < ($1.price ?? 0) }
+            return nfts.sorted { ($0.price) < ($1.price) }
         case .byRating:
-            return nfts.sorted { ($0.rating ?? 0) > ($1.rating ?? 0) }
+            return nfts.sorted { ($0.rating) > ($1.rating) }
         case .byName:
-            return nfts.sorted { ($0.name ?? "") < ($1.name ?? "") }
+            return nfts.sorted { ($0.name) < ($1.name) }
         }
     }
 }

@@ -52,8 +52,8 @@ struct FavNFTCell: View {
     
     private var nftDescriptionSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(nft.name ?? "")
-                .font(Font(UIFont.bodyBold))
+            Text(nft.name)
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
                 .lineLimit(1)
             ratingStars
@@ -67,8 +67,8 @@ struct FavNFTCell: View {
     }
     
     private var nftPrice: some View {
-        Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
-            .font(Font(UIFont.caption1))
+        Text(nft.price, format: .currency(code: Constants.currencyCode))
+            .font(.system(size: 15, weight: .regular))
             .foregroundColor(.ypBlack)
     }
 }
@@ -89,7 +89,7 @@ private enum Constants {
             price: 40.59,
             name: "Test NFT",
             author: "John Doe",
-            createdAt: nil,
+            createdAt: "2024-01-01T12:00:00Z",
             description: "Test description"
         ),
         rating: 2,

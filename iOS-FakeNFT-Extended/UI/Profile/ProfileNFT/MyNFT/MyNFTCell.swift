@@ -56,17 +56,17 @@ struct MyNFTCell: View {
     
     private var nftDescriptionSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(nft.name ?? "")
-                .font(Font(UIFont.bodyBold))
+            Text(nft.name)
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
+                .lineLimit(2)
             
             ratingStars
             
-            if let author = nft.author {
-                Text("от \(author)")
-                    .font(Font(UIFont.caption2))
-                    .foregroundColor(.ypBlack)
-            }
+            Text("от \(nft.author)")
+                .font(.system(size: 13, weight: .regular))
+                .foregroundColor(.ypBlack)
+                .lineLimit(2)
         }
     }
     
@@ -77,11 +77,13 @@ struct MyNFTCell: View {
     private var nftPriceSection: some View {
         VStack(alignment: .leading) {
             Text(Constants.price)
-                .font(Font(UIFont.caption2))
+                .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.ypBlack)
-            Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
-                .font(Font(UIFont.bodyBold))
+            Text(nft.price, format: .currency(code: Constants.currencyCode))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
+                .lineLimit(1)
+                .fixedSize()
         }
     }
 }
@@ -103,8 +105,8 @@ private enum Constants {
             price: 40.59,
             name: "Favourite NFT",
             author: "John Doe",
-            createdAt: nil,
-            description: nil
+            createdAt: "2024-01-01T12:00:00Z",
+            description: "Favourite NFT description"
         ),
         rating: 5,
         isFavourite: true,
@@ -124,8 +126,8 @@ private enum Constants {
             price: 25.0,
             name: "Not Favourite NFT",
             author: "Jane Doe",
-            createdAt: nil,
-            description: nil
+            createdAt: "2024-01-02T10:30:00Z",
+            description: "Not favourite NFT description"
         ),
         rating: 3,
         isFavourite: false,

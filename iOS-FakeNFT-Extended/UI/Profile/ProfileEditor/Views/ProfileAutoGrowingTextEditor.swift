@@ -9,32 +9,37 @@ import SwiftUI
 
 struct ProfileAutoGrowingTextEditor: View {
     @Binding var text: String
-    @State private var height: CGFloat = 100
-    
-    // MARK: - Body
+    @State private var height: CGFloat = 40
+
+    private let font = Font.system(size: 17)
+    private let padding: CGFloat = 12
+    private let heightCorrection: CGFloat = 8
+
     var body: some View {
         ZStack(alignment: .topLeading) {
+
             Text(text.isEmpty ? " " : text)
-                .font(Font(UIFont.bodyRegular))
-                .padding(11)
+                .font(font)
+                .padding(padding)
                 .background(
                     GeometryReader { geo in
-                        Color.clear.onAppear {
-                            height = geo.size.height
-                        }
-                        .onChange(of: geo.size.height) { oldValue, newValue in
-                            height = newValue
-                        }
+                        Color.clear
+                            .onAppear {
+                                height = geo.size.height + heightCorrection
+                            }
+                            .onChange(of: geo.size.height) { _, newValue in
+                                height = newValue + heightCorrection
+                            }
                     }
                 )
                 .opacity(0)
-            
+
             TextEditor(text: $text)
-                .font(Font(UIFont.bodyRegular))
-                .padding(.horizontal, 16)
+                .font(font)
+                .padding(padding)
                 .frame(height: height)
                 .scrollContentBackground(.hidden)
-                .background(Color(.ypLightGray))
+                .background(Color.ypLightGray)
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }

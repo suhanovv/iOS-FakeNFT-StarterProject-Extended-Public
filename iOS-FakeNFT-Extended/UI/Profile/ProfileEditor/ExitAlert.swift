@@ -28,7 +28,7 @@ struct ExitAlert: View {
         VStack(spacing: 0) {
             VStack {
                 Text(Constants.exitAlert)
-                    .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                     .multilineTextAlignment(.center)
             }
             .padding(.vertical, 16)
@@ -41,7 +41,7 @@ struct ExitAlert: View {
                     isPresented = false
                 } label: {
                     Text(Constants.stayConfirmation)
-                        .font(Font(UIFont.bodyRegular))
+                        .font(.system(size: 17, weight: .regular))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 11)
@@ -54,7 +54,7 @@ struct ExitAlert: View {
                     onExit()
                 } label: {
                     Text(Constants.exitConfirmation)
-                        .font(Font(UIFont.bodyBold))
+                        .font(.system(size: 17, weight: .bold))
                         .foregroundColor(.ypBlueUniversal)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 11)

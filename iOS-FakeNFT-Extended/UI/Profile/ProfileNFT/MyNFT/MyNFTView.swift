@@ -35,7 +35,6 @@ struct MyNFTView: View {
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .bottomBar)
         .toolbar { toolbarContent }
-        .background(errorAlert)
         .confirmationDialog(
             Text(Constants.sortNFT),
             isPresented: $isNftMenuPresented,
@@ -55,6 +54,24 @@ struct MyNFTView: View {
         .task {
             await viewModel.loadData()
         }
+        .alert(
+            Constants.errorTitle,
+            isPresented: $viewModel.showErrorAlert
+        ) {
+            Button(Constants.cancel, role: .cancel) {
+                viewModel.showErrorAlert = false
+            }
+            Button(Constants.retry) {
+                viewModel.showErrorAlert = false
+                Task {
+                    if case .error(let operation) = viewModel.state {
+                        await viewModel.retry(operation)
+                    }
+                }
+            }
+        } message: {
+            Text(viewModel.errorMessage)
+        }
     }
     
     private var content: some View {
@@ -66,7 +83,7 @@ struct MyNFTView: View {
                     ForEach(sortedNfts, id: \.id) { nft in
                         MyNFTCell(
                             nft: nft,
-                            rating: nft.rating ?? 0,
+                            rating: nft.rating,
                             isFavourite: viewModel.likedIds.contains(nft.id),
                             onLikeTap: {
                                 Task {
@@ -93,13 +110,13 @@ struct MyNFTView: View {
             if viewModel.state != .empty {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.myNFT)
-                        .font(Font(UIFont.bodyBold))
+                        .font(.system(size: 17, weight: .bold))
                 }
             }
             if !sortedNfts.isEmpty {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.myNFT)
-                        .font(Font(UIFont.bodyBold))
+                        .font(.system(size: 17, weight: .bold))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -111,36 +128,6 @@ struct MyNFTView: View {
                 }
             }
         }
-    }
-    
-    private var errorAlert: some View {
-        EmptyView()
-            .alert(
-                Constants.errorTitle,
-                isPresented: isErrorPresented
-            ) {
-                Button(Constants.cancel, role: .cancel) {
-                    viewModel.state = .loaded
-                }
-                Button(Constants.retry) {
-                    Task {
-                        if case .error(let operation) = viewModel.state {
-                            await viewModel.retry(operation)
-                        }
-                    }
-                }
-            }
-    }
-    
-    private var isErrorPresented: Binding<Bool> {
-        Binding(
-            get: { viewModel.state.isError },
-            set: { newValue in
-                if !newValue {
-                    viewModel.state = .loaded
-                }
-            }
-        )
     }
 }
 
@@ -159,24 +146,35 @@ private enum Constants {
 // MARK: - Preview_MyNFTView
 #if DEBUG
 final class PreviewMyNFTProfileService: ProfileServiceProtocol {
-    func getProfile() async throws -> User {
-        User(
-            name: "Preview",
-            avatarRaw: nil,
-            description: nil,
-            websiteRaw: "",
-            nfts: ["1", "2"],
-            likes: ["1"],
-            rating: 5,
-            id: "preview"
-        )
+    private let profile = Profile(
+        name: "Preview",
+        avatar: URL(string: "https://picsum.photos/200")!,
+        description: "Preview profile",
+        website: URL(string: "https://example.com")!,
+        nfts: ["1", "2"],
+        likes: ["1"],
+        id: "preview"
+    )
+    func getProfile() async throws -> Profile {
+        profile
     }
-    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { try await getProfile() }
-    func getProfileLikes() async throws -> [String] { ["1"] }
-    func addLikeForNft(_ nftId: String) async throws -> [String] { ["1"] }
-    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> Profile {
+        profile
+    }
+    func getProfileLikes() async throws -> [String] {
+        profile.likes
+    }
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        profile.likes
+    }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        profile.likes.filter { $0 != nftId }
+    }
 }
+#endif
+#if DEBUG
 final class PreviewMyNFTService: NftService {
+
     func loadNft(id: String) async throws -> Nft {
         Nft(
             id: id,
@@ -185,7 +183,7 @@ final class PreviewMyNFTService: NftService {
             price: 10.5,
             name: "My NFT \(id)",
             author: "Preview",
-            createdAt: nil,
+            createdAt: "2024-01-01",
             description: "Preview NFT"
         )
     }
@@ -198,7 +196,8 @@ final class PreviewMyNFTService: NftService {
         profileService: PreviewMyNFTProfileService(),
         nftIds: ["1", "2"]
     )
-    return NavigationStack {
+
+    NavigationStack {
         MyNFTView(viewModel: viewModel)
     }
 }

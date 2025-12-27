@@ -27,48 +27,45 @@ struct ProfileView: View {
             }
         }
         .task {
-            coordinator.isProfileLoading = true
-            defer { coordinator.isProfileLoading = false }
-            
             await viewModel.loadProfile()
-            coordinator.currentProfile = viewModel.profile
-        }
-        .onAppear {
-            coordinator.isOnProfileScreen = true
-        }
-        .onDisappear {
-            coordinator.isOnProfileScreen = false
         }
     }
     
     // MARK: - Views
     private var content: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .center, spacing: 16) {
-                ProfilePhotoView(url: viewModel.avatarURL)
-                nameRow
-                Spacer()
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Spacer()
+                    Button {
+                        guard let profile = viewModel.profile else { return }
+                        coordinator.push(.profileEdit(profile))
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 26, weight: .medium))
+                            .foregroundColor(.ypBlack)
+                    }
+                    .padding(.trailing, -16)
+                }
+                .padding(.top, 8)
+                .padding(.horizontal, 16)
+
+                if let profile = viewModel.profile {
+                    ProfileHeaderView(profile: profile)
+                        .padding(.top, 12)
+                }
+
+                descriptionRow
+                webRow
+                listRows
             }
-            .padding(.vertical, 20)
-            
-            descriptionRow
-            webRow
-            listRows
+            .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
-    }
-    
-    private var nameRow: some View {
-        Text(viewModel.name)
-            .font(Font(UIFont.headline3))
-            .foregroundColor(.ypBlack)
-    }
     
     @ViewBuilder
     private var descriptionRow: some View {
         if !viewModel.description.isEmpty {
             Text(viewModel.description)
-                .font(Font(UIFont.caption2))
+                .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.ypBlack)
                 .padding(.bottom, 8)
         }
@@ -81,9 +78,8 @@ struct ProfileView: View {
                 coordinator.push(.webView(url: url))
             } label: {
                 Text(url.host ?? url.absoluteString)
-                    .font(Font(UIFont.caption1))
+                    .font(.system(size: 15, weight: .regular))
                     .foregroundColor(.ypBlueUniversal)
-                    .underline()
             }
             .buttonStyle(.plain)
         }
@@ -121,22 +117,29 @@ private enum Constants {
 // MARK: - Preview_ProfileView
 #if DEBUG
 struct EditProfilePreviewService: ProfileServiceProtocol {
-    func getProfile() async throws -> User {
-        User(
+    func getProfile() async throws -> Profile {
+        Profile(
             name: "Preview User",
-            avatarRaw: "https://fastly.picsum.photos/id/237/100/100.jpg",
+            avatar: URL(string: "https://fastly.picsum.photos/id/237/100/100.jpg")!,
             description: "Preview description",
-            websiteRaw: "https://example.com",
+            website: URL(string: "https://example.com")!,
             nfts: ["1", "2", "3"],
             likes: ["2"],
-            rating: 5,
             id: "preview-id"
         )
     }
-    func getProfileLikes() async throws -> [String] { ["2"] }
-    func addLikeForNft(_ nftId: String) async throws -> [String] { ["2", nftId] }
-    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
-    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { try await getProfile() }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> Profile {
+        try await getProfile()
+    }
+    func getProfileLikes() async throws -> [String] {
+        ["2"]
+    }
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        ["2", nftId]
+    }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        []
+    }
 }
 #endif
 #Preview {

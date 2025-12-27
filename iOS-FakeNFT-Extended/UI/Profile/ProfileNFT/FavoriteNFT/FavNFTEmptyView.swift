@@ -13,7 +13,7 @@ struct FavNFTEmptyView: View {
             Spacer()
             
             Text(Constants.emptyFavNFT)
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
             
             Spacer()

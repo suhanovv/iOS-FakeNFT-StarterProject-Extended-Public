@@ -13,7 +13,7 @@ struct MyNFTEmptyView: View {
             Spacer()
             
             Text(Constants.emptyMyNFT)
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
             
             Spacer()

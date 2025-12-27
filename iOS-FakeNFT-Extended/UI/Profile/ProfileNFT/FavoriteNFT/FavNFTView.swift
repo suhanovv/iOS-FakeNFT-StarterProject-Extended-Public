@@ -27,9 +27,26 @@ struct FavNFTView: View {
             .toolbarBackground(.hidden, for: .bottomBar)
             .toolbar { toolbarContent }
             .overlay(loadingOverlay)
-            .background(errorAlert)
             .task {
                 await viewModel.loadData()
+            }
+            .alert(
+                Constants.errorTitle,
+                isPresented: $viewModel.showErrorAlert
+            ) {
+                Button(Constants.cancel, role: .cancel) {
+                    viewModel.showErrorAlert = false
+                }
+                Button(Constants.retry) {
+                    viewModel.showErrorAlert = false
+                    Task {
+                        if case .error(let operation) = viewModel.state {
+                            await viewModel.retry(operation)
+                        }
+                    }
+                }
+            } message: {
+                Text(viewModel.errorMessage)
             }
     }
     
@@ -52,7 +69,7 @@ struct FavNFTView: View {
                         ForEach(viewModel.nfts) { nft in
                             FavNFTCell(
                                 nft: nft,
-                                rating: nft.rating ?? 0,
+                                rating: nft.rating,
                                 isFavourite: viewModel.likedIds.contains(nft.id),
                                 onLikeTap: {
                                     Task {
@@ -76,7 +93,7 @@ struct FavNFTView: View {
             if !viewModel.nfts.isEmpty || viewModel.isInitialLoading {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.favouriteNFT)
-                        .font(Font(UIFont.bodyBold))
+                        .font(.system(size: 17, weight: .bold))
                 }
             }
         }
@@ -85,36 +102,6 @@ struct FavNFTView: View {
     private var loadingOverlay: some View {
         ProgressBarView(
             isActive: viewModel.isInitialLoading || viewModel.isLikeUpdating
-        )
-    }
-    
-    private var errorAlert: some View {
-        EmptyView()
-            .alert(
-                Constants.errorTitle,
-                isPresented: isErrorPresented
-            ) {
-                Button(Constants.cancel, role: .cancel) {
-                    viewModel.state = .loaded
-                }
-                Button(Constants.retry) {
-                    Task {
-                        if case .error(let operation) = viewModel.state {
-                            await viewModel.retry(operation)
-                        }
-                    }
-                }
-            }
-    }
-    
-    private var isErrorPresented: Binding<Bool> {
-        Binding(
-            get: { viewModel.state.isError },
-            set: { newValue in
-                if !newValue {
-                    viewModel.state = .loaded
-                }
-            }
         )
     }
 }
@@ -128,25 +115,33 @@ private enum Constants {
 
 // MARK: - Preview_FavNFTView
 #if DEBUG
-final class APreviewProfileService: ProfileServiceProtocol {
-    func getProfile() async throws -> User {
-        User(
-            name: "Preview",
-            avatarRaw: nil,
-            description: nil,
-            websiteRaw: "",
-            nfts: [],
-            likes: [],
-            rating: 5,
-            id: "preview"
-        )
+final class PreviewFavProfileService: ProfileServiceProtocol {
+    private let profile = Profile(
+        name: "Preview",
+        avatar: URL(string: "https://picsum.photos/200")!,
+        description: "Preview profile",
+        website: URL(string: "https://example.com")!,
+        nfts: ["1", "2", "3", "4"],
+        likes: ["1", "2"],
+        id: "preview"
+    )
+    func getProfile() async throws -> Profile {
+        profile
     }
-    func updateProfile(_ request: ProfileUpdateRequest) async throws -> User { try await getProfile() }
-    func getProfileLikes() async throws -> [String] { ["1", "2"] }
-    func addLikeForNft(_ nftId: String) async throws -> [String] { ["1", "2"] }
-    func removeLikeFromNft(_ nftId: String) async throws -> [String] { [] }
+    func updateProfile(_ request: ProfileUpdateRequest) async throws -> Profile {
+        profile
+    }
+    func getProfileLikes() async throws -> [String] {
+        profile.likes
+    }
+    func addLikeForNft(_ nftId: String) async throws -> [String] {
+        profile.likes
+    }
+    func removeLikeFromNft(_ nftId: String) async throws -> [String] {
+        profile.likes.filter { $0 != nftId }
+    }
 }
-final class PreviewNftService: NftService {
+final class PreviewFavNftService: NftService {
     func loadNft(id: String) async throws -> Nft {
         Nft(
             id: id,
@@ -157,20 +152,18 @@ final class PreviewNftService: NftService {
             price: 12.5,
             name: "Preview NFT \(id)",
             author: "Preview",
-            createdAt: nil,
+            createdAt: "2024-01-01",
             description: "Preview description"
         )
     }
 }
-#endif
-#if DEBUG
-#Preview {
+#Preview { 
     let viewModel = FavNFTViewModel(
-        nftService: PreviewNftService(),
-        profileService: APreviewProfileService(),
+        nftService: PreviewFavNftService(),
+        profileService: PreviewFavProfileService(),
         nftIds: ["1", "2", "3", "4"]
     )
-    return NavigationStack {
+    NavigationStack {
         FavNFTView(viewModel: viewModel)
     }
 }

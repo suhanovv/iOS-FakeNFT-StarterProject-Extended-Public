@@ -12,7 +12,7 @@ import Foundation
 @MainActor
 final class ProfileEditViewModel {
     private let profileService: ProfileServiceProtocol
-    private let originalProfile: User
+    private let originalProfile: Profile
     
     var name: String
     var description: String
@@ -22,16 +22,16 @@ final class ProfileEditViewModel {
     var isSaving = false
     var isPhotoMenuPresented = false
     var showLinkPhotoAlert = false
-    var showExitAlert = false
-    
-    init(profile: User, profileService: ProfileServiceProtocol) {
+    var showExitConfirmation = false
+
+    init(profile: Profile, profileService: ProfileServiceProtocol) {
         self.originalProfile = profile
         self.profileService = profileService
-        
+
         self.name = profile.name
-        self.description = profile.description ?? ""
-        self.website = profile.website
-        self.photoURLText = profile.avatarRaw ?? ""
+        self.description = profile.description
+        self.website = profile.website.absoluteString
+        self.photoURLText = profile.avatar.absoluteString
     }
     
     var avatarURL: URL? {
@@ -40,31 +40,29 @@ final class ProfileEditViewModel {
         return URL(string: trimmed)
     }
     
-    func hasChanges(comparedTo profile: User) -> Bool {
-        name != profile.name ||
-        description != (profile.description ?? "") ||
-        website != (profile.website) ||
-        photoURLText != (profile.avatarRaw ?? "")
-        
+    func hasChanges() -> Bool {
+        name != originalProfile.name ||
+        description != originalProfile.description ||
+        website != originalProfile.website.absoluteString ||
+        photoURLText != originalProfile.avatar.absoluteString
     }
     
     // MARK: - Actions
-    func onAppear(profile: User) {
+    func onAppear(profile: Profile) {
         name = profile.name
-        description = profile.description ?? ""
-        website = profile.website
-        photoURLText = profile.avatarRaw ?? ""
-        
+        description = profile.description
+        website = profile.website.absoluteString
+        photoURLText = profile.avatar.absoluteString
     }
     
-    func saveProfile() async throws -> User {
+    func saveProfile() async throws -> Profile {
         guard let request = makeUpdateRequest() else {
             return originalProfile
         }
-        
+
         isSaving = true
         defer { isSaving = false }
-        
+
         return try await profileService.updateProfile(request)
     }
     
@@ -78,21 +76,21 @@ final class ProfileEditViewModel {
         }()
         
         let updatedDescription: String? = {
-            let original = originalProfile.description ?? ""
+            let original = originalProfile.description
             guard description != original else { return nil }
             hasAnyChanges = true
             return description
         }()
         
         let updatedWebsite: String? = {
-            let original = originalProfile.website
+            let original = originalProfile.website.absoluteString
             guard website != original else { return nil }
             hasAnyChanges = true
             return website
         }()
         
         let updatedAvatar: String? = {
-            let original = originalProfile.avatarRaw ?? ""
+            let original = originalProfile.avatar.absoluteString
             guard photoURLText != original else { return nil }
             hasAnyChanges = true
             return photoURLText

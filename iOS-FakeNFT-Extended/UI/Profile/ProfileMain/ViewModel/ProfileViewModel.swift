@@ -13,7 +13,7 @@ import Foundation
 final class ProfileViewModel {
     private let profileService: ProfileServiceProtocol
     
-    var profile: User?
+    var profile: Profile?
     var isLoading = false
     var isError = false
     
@@ -45,7 +45,7 @@ final class ProfileViewModel {
     }
     
     var websiteURL: URL? {
-        profile?.websiteURL
+        profile?.website
     }
     
     var myNFTCount: Int {

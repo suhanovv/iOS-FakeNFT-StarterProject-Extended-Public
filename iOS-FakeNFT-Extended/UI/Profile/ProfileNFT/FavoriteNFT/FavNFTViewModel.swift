@@ -18,6 +18,8 @@ final class FavNFTViewModel {
     private let nftService: NftService
     private let nftIds: [String]
     var state: NFTScreenState = .loading
+    var showErrorAlert = false
+    var errorMessage: String = ""
     
     init(
         nftService: NftService,
@@ -52,6 +54,8 @@ final class FavNFTViewModel {
             nfts = loadedNfts
             state = loadedNfts.isEmpty ? .empty : .loaded
         } catch {
+            errorMessage = NSLocalizedString("Error.network", comment: "")
+            showErrorAlert = true
             state = .error(operation: .loadData)
         }
         isInitialLoading = false
@@ -77,6 +81,8 @@ final class FavNFTViewModel {
                 state = .empty
             }
         } catch {
+            errorMessage = NSLocalizedString("Error.network", comment: "")
+            showErrorAlert = true
             state = .error(operation: .toggleLike(nftId))
         }
     }
