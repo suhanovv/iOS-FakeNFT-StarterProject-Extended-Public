@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 @MainActor
 final class MyNFTViewModel {
+    private(set) var isInitialLoading = true
     private let nftService: NftService
     private let nftIds: [String]
     private let profileService: ProfileServiceProtocol
@@ -71,9 +72,11 @@ final class MyNFTViewModel {
         } catch {
             state = .error(operation: .loadData)
         }
+        isInitialLoading = false
     }
     
     func retry(_ operation: NFTScreenOperation) async {
+        state = .loading 
         switch operation {
         case .loadData:
             await loadData()

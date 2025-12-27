@@ -82,6 +82,7 @@ final class FavNFTViewModel {
     }
     
     func retry(_ operation: NFTScreenOperation) async {
+        state = .loading 
         switch operation {
         case .loadData:
             await loadData()

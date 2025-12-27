@@ -31,25 +31,13 @@ final class ServicesAssembly {
         UsersService(networkClient: networkClient)
     }
     
-    var profileService: ProfileServiceProtocol {
-        ProfileService(networkClient: networkClient)
-    }
-    
     var orderService: OrderServiceProtocol {
         OrderService(networkClient: networkClient)
     }
-    
-    //    var userService: UsersServiceProtocol {
-    //        UsersService(networkClient: networkClient)
-    //    }
-    
+
     var profileService: ProfileServiceProtocol {
         ProfileService(networkClient: networkClient)
     }
-    
-    //    var orderService: OrderServiceProtocol {
-    //        OrderService(networkClient: networkClient)
-    //    }
 }
 
 

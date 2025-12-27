@@ -76,7 +76,7 @@ struct FavNFTView: View {
             if !viewModel.nfts.isEmpty || viewModel.isInitialLoading {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.favouriteNFT)
-                        .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                 }
             }
         }

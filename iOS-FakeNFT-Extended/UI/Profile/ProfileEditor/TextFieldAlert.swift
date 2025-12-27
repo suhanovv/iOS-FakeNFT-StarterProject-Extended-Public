@@ -43,7 +43,7 @@ struct TextFieldAlert: View {
     
     private var titleSection: some View {
         Text(title)
-            .font(Font(UIFont.headline5))
+            .font(.system(size: 17, weight: .semibold))
             .foregroundColor(.ypBlack)
             .padding(.top, 16)
             .padding(.bottom, 7)
@@ -71,7 +71,7 @@ struct TextFieldAlert: View {
             isPresented = false
         } label: {
             Text(Constants.cancel)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)
@@ -84,7 +84,7 @@ struct TextFieldAlert: View {
             onSave()
         } label: {
             Text(Constants.save)
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlueUniversal)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)

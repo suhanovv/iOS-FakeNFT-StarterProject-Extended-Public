@@ -57,15 +57,17 @@ struct MyNFTCell: View {
     private var nftDescriptionSection: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(nft.name ?? "")
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
+                .lineLimit(2)
             
             ratingStars
             
             if let author = nft.author {
                 Text("от \(author)")
-                    .font(Font(UIFont.caption2))
+                    .font(.system(size: 13, weight: .regular))
                     .foregroundColor(.ypBlack)
+                    .lineLimit(2)
             }
         }
     }
@@ -77,11 +79,13 @@ struct MyNFTCell: View {
     private var nftPriceSection: some View {
         VStack(alignment: .leading) {
             Text(Constants.price)
-                .font(Font(UIFont.caption2))
+                .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.ypBlack)
             Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
+                .lineLimit(1)
+                .fixedSize() 
         }
     }
 }

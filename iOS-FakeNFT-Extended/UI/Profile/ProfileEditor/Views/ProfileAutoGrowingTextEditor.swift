@@ -15,7 +15,7 @@ struct ProfileAutoGrowingTextEditor: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Text(text.isEmpty ? " " : text)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding(11)
                 .background(
                     GeometryReader { geo in
@@ -30,7 +30,7 @@ struct ProfileAutoGrowingTextEditor: View {
                 .opacity(0)
             
             TextEditor(text: $text)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding(.horizontal, 16)
                 .frame(height: height)
                 .scrollContentBackground(.hidden)

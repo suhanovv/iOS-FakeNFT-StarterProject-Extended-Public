@@ -93,13 +93,13 @@ struct MyNFTView: View {
             if viewModel.state != .empty {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.myNFT)
-                        .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                 }
             }
             if !sortedNfts.isEmpty {
                 ToolbarItem(placement: .principal) {
                     Text(Constants.myNFT)
-                        .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {

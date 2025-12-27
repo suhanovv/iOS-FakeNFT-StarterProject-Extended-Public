@@ -60,7 +60,7 @@ struct ProfileView: View {
     
     private var nameRow: some View {
         Text(viewModel.name)
-            .font(Font(UIFont.headline3))
+            .font(.system(size: 22, weight: .bold))
             .foregroundColor(.ypBlack)
     }
     
@@ -68,7 +68,7 @@ struct ProfileView: View {
     private var descriptionRow: some View {
         if !viewModel.description.isEmpty {
             Text(viewModel.description)
-                .font(Font(UIFont.caption2))
+                .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.ypBlack)
                 .padding(.bottom, 8)
         }
@@ -81,7 +81,7 @@ struct ProfileView: View {
                 coordinator.push(.webView(url: url))
             } label: {
                 Text(url.host ?? url.absoluteString)
-                    .font(Font(UIFont.caption1))
+                    .font(.system(size: 15, weight: .regular))
                     .foregroundColor(.ypBlueUniversal)
                     .underline()
             }

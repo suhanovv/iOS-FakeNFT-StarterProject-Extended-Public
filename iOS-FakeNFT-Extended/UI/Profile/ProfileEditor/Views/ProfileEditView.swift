@@ -89,10 +89,10 @@ struct ProfileEditView: View {
     private var nameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileName)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             TextField("", text: $viewModel.name)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding()
                 .background(Color(.ypLightGray))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -103,7 +103,7 @@ struct ProfileEditView: View {
     private var descriptionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileDescription)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             ProfileAutoGrowingTextEditor(text: $viewModel.description)
         }
@@ -113,10 +113,10 @@ struct ProfileEditView: View {
     private var websiteSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Constants.profileWebsite)
-                .font(Font(UIFont.headline3))
+                .font(.system(size: 22, weight: .bold))
             
             TextField("", text: $viewModel.website)
-                .font(Font(UIFont.bodyRegular))
+                .font(.system(size: 17, weight: .regular))
                 .padding()
                 .background(Color(.ypLightGray))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -144,7 +144,7 @@ struct ProfileEditView: View {
                     }
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(Font(UIFont.headline5))
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.ypBlack)
                 }
             }
@@ -164,7 +164,7 @@ struct ProfileEditView: View {
                 }
             } label: {
                 Text(Constants.save)
-                    .font(Font(UIFont.bodyBold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.ypWhite)
                     .frame(maxWidth: .infinity)
                     .padding()

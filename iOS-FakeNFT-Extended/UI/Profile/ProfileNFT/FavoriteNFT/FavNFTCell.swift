@@ -53,7 +53,7 @@ struct FavNFTCell: View {
     private var nftDescriptionSection: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(nft.name ?? "")
-                .font(Font(UIFont.bodyBold))
+                .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.ypBlack)
                 .lineLimit(1)
             ratingStars
@@ -68,7 +68,7 @@ struct FavNFTCell: View {
     
     private var nftPrice: some View {
         Text(nft.price ?? 0, format: .currency(code: Constants.currencyCode))
-            .font(Font(UIFont.caption1))
+            .font(.system(size: 15, weight: .regular))
             .foregroundColor(.ypBlack)
     }
 }

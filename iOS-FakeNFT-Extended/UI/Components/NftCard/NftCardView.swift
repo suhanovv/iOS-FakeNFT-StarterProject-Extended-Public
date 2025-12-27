@@ -30,12 +30,12 @@ struct NftCardView: View {
                 .frame(height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading) {
-                RatingView(rating: nft.rating)
+                RatingView(rating: nft.rating ?? 0)
                 HStack {
                     VStack {
-                        Text(nft.name)
+                        Text(nft.name ?? "")
                             .font(.system(size: 17, weight: .bold))
-                        Text(nft.price, format: .currency(code: "ETH"))
+                        Text(nft.price ?? 0, format: .currency(code: "ETH"))
                             .font(.system(size: 10, weight: .medium))
                     }
                     
