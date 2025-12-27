@@ -10,6 +10,7 @@ import Foundation
 enum Screen: Hashable {
     case main
     case usersList
+    case profile
     case userCard(userId: String)
     case userCollection(userId: String)
     case webView(url: URL)

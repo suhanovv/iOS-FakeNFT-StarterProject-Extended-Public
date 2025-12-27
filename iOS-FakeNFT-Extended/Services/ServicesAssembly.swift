@@ -38,10 +38,6 @@ final class ServicesAssembly {
     var orderService: OrderServiceProtocol {
         OrderService(networkClient: networkClient)
     }
-
-    var profileService: ProfileServiceProtocol {
-        ProfileService(networkClient: networkClient)
-    }
 }
 
 

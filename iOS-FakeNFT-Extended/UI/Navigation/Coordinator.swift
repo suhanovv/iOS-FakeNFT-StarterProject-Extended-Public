@@ -23,6 +23,11 @@ final class Coordinator {
         switch screen {
         case .main: ContentView()
             
+        case .profile:
+            ProfileView(
+                viewModel: .init(profileService: services.profileService)
+            )
+            
         case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
             
         case .userCard(let userId):

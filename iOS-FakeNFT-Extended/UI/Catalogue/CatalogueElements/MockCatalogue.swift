@@ -61,25 +61,34 @@ enum MockData {
 
     static let nfts: [Nft] = [
         Nft(
-            id: "1",
-            images: [makeURL("https://example.com/archie.png")],
-            name: "Archie",
-            rating: 3,
-            price: 1
-        ),
-        Nft(
-            id: "2",
-            images: [makeURL("https://example.com/archie.png")],
-            name: "Ruby",
-            rating: 3,
-            price: 1
-        ),
-        Nft(
-            id: "3",
-            images: [makeURL("https://example.com/archie.png")],
-            name: "Nacho",
-            rating: 3,
-            price: 1
-        )
+                id: "1",
+                images: [makeURL("https://example.com/archie.png")],
+                rating: 3,
+                price: 1,
+                name: "Archie",
+                author: "Mock Author",
+                createdAt: "2023-01-01",
+                description: "Mock NFT description"
+            ),
+            Nft(
+                id: "2",
+                images: [makeURL("https://example.com/archie.png")],
+                rating: 3,
+                price: 1,
+                name: "Ruby",
+                author: "Mock Author",
+                createdAt: "2023-01-01",
+                description: "Mock NFT description"
+            ),
+            Nft(
+                id: "3",
+                images: [makeURL("https://example.com/archie.png")],
+                rating: 3,
+                price: 1,
+                name: "Nacho",
+                author: "Mock Author",
+                createdAt: "2023-01-01",
+                description: "Mock NFT description"
+            )
     ]
 }
