@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-/// Хелпер для скрытия клавиатуры по тапу.
-/// Отправляет action resignFirstResponder.
 extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(
