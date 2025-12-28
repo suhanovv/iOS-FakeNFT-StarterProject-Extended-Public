@@ -28,6 +28,30 @@ final class Coordinator {
                 profileService: services.profileService
             )
             
+        case .profileEdit(let profile):
+            ProfileEditView(
+                profile: profile,
+                profileService: services.profileService
+            )
+
+        case .myNft(let ids):
+            MyNFTView(
+                viewModel: MyNFTViewModel(
+                    nftService: services.nftService,
+                    profileService: services.profileService,
+                    nftIds: ids
+                )
+            )
+
+        case .favouriteNft(let ids):
+            FavNFTView(
+                viewModel: FavNFTViewModel(
+                    nftService: services.nftService,
+                    profileService: services.profileService,
+                    nftIds: ids
+                )
+            )
+            
         case .usersList: StatisticsScreenView(viewModel: .init(usersService: services.userService))
             
         case .userCard(let userId):
