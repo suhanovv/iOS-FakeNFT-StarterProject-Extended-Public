@@ -21,7 +21,6 @@
 		0245AEE02F0009AF009AD812 /* NFTRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AED02F0009AF009AD812 /* NFTRatingView.swift */; };
 		0245AEE12F0009AF009AD812 /* ProfileUpdateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AEB22F0009AF009AD812 /* ProfileUpdateRequest.swift */; };
 		0245AEE22F0009AF009AD812 /* ProfileAutoGrowingTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AEB62F0009AF009AD812 /* ProfileAutoGrowingTextEditor.swift */; };
-		0245AEE32F0009AF009AD812 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AECE2F0009AF009AD812 /* FavoritesManager.swift */; };
 		0245AEE42F0009AF009AD812 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AEBD2F0009AF009AD812 /* ProfileViewModel.swift */; };
 		0245AEE52F0009AF009AD812 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AEB72F0009AF009AD812 /* ProfileEditView.swift */; };
 		0245AEE62F0009AF009AD812 /* MyNFTView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245AECA2F0009AF009AD812 /* MyNFTView.swift */; };
@@ -116,7 +115,6 @@
 		0245AECA2F0009AF009AD812 /* MyNFTView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTView.swift; sourceTree = "<group>"; };
 		0245AECB2F0009AF009AD812 /* MyNFTViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTViewModel.swift; sourceTree = "<group>"; };
 		0245AECC2F0009AF009AD812 /* NftSortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftSortType.swift; sourceTree = "<group>"; };
-		0245AECE2F0009AF009AD812 /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		0245AECF2F0009AF009AD812 /* NFTImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTImageView.swift; sourceTree = "<group>"; };
 		0245AED02F0009AF009AD812 /* NFTRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTRatingView.swift; sourceTree = "<group>"; };
 		0245AED12F0009AF009AD812 /* NFTScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTScreenState.swift; sourceTree = "<group>"; };
@@ -303,7 +301,6 @@
 			children = (
 				0245AEC72F0009AF009AD812 /* FavoriteNFT */,
 				0245AECD2F0009AF009AD812 /* MyNFT */,
-				0245AECE2F0009AF009AD812 /* FavoritesManager.swift */,
 				0245AECF2F0009AF009AD812 /* NFTImageView.swift */,
 				0245AED02F0009AF009AD812 /* NFTRatingView.swift */,
 				0245AED12F0009AF009AD812 /* NFTScreenState.swift */,
@@ -746,7 +743,6 @@
 				0245AEE02F0009AF009AD812 /* NFTRatingView.swift in Sources */,
 				0245AEE12F0009AF009AD812 /* ProfileUpdateRequest.swift in Sources */,
 				0245AEE22F0009AF009AD812 /* ProfileAutoGrowingTextEditor.swift in Sources */,
-				0245AEE32F0009AF009AD812 /* FavoritesManager.swift in Sources */,
 				0245AEE42F0009AF009AD812 /* ProfileViewModel.swift in Sources */,
 				0245AEE52F0009AF009AD812 /* ProfileEditView.swift in Sources */,
 				0245AEE62F0009AF009AD812 /* MyNFTView.swift in Sources */,
