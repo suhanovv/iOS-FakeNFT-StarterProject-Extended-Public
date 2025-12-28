@@ -148,9 +148,9 @@ private enum Constants {
 final class PreviewMyNFTProfileService: ProfileServiceProtocol {
     private let profile = Profile(
         name: "Preview",
-        avatar: URL(string: "https://picsum.photos/200")!,
-        description: "Preview profile",
-        website: URL(string: "https://example.com")!,
+        avatar: nil,
+        description: nil,
+        website: nil,
         nfts: ["1", "2"],
         likes: ["1"],
         id: "preview"
@@ -174,7 +174,6 @@ final class PreviewMyNFTProfileService: ProfileServiceProtocol {
 #endif
 #if DEBUG
 final class PreviewMyNFTService: NftService {
-
     func loadNft(id: String) async throws -> Nft {
         Nft(
             id: id,
@@ -196,7 +195,6 @@ final class PreviewMyNFTService: NftService {
         profileService: PreviewMyNFTProfileService(),
         nftIds: ["1", "2"]
     )
-
     NavigationStack {
         MyNFTView(viewModel: viewModel)
     }

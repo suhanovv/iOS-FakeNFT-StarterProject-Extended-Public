@@ -195,6 +195,7 @@ private enum Constants {
 }
 
 // MARK: - Preview_ProfileEditView
+#if DEBUG
 final class PreviewProfileService: ProfileServiceProtocol {
     private let profile: Profile
     init(profile: Profile) {
@@ -219,9 +220,9 @@ final class PreviewProfileService: ProfileServiceProtocol {
 #Preview {
     let mockProfile = Profile(
         name: "Alex Designer",
-        avatar: URL(string: "https://picsum.photos/200")!,
+        avatar: nil,
         description: "iOS developer & NFT enjoyer",
-        website: URL(string: "https://example.com")!,
+        website: nil,
         nfts: [],
         likes: [],
         id: "1"
@@ -240,3 +241,4 @@ final class PreviewProfileService: ProfileServiceProtocol {
     }
     .environment(coordinator)
 }
+#endif
