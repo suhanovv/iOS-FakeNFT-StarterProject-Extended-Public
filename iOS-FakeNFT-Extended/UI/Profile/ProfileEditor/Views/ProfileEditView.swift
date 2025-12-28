@@ -147,13 +147,13 @@ struct ProfileEditView: View {
                }
            } label: {
                Image(systemName: "chevron.left")
-                   .font(.system(size: 17, weight: .semibold))
+                   .font(.system(size: 24, weight: .semibold))
                    .foregroundColor(.ypBlack)
                    .frame(width: 44, height: 44)
                    .contentShape(Rectangle())
            }
-           .padding(.leading, 16)
-           .padding(.top, 8)
+           .padding(.leading, 9)
+           .padding(.top, 11)
            .zIndex(10)
        }
     

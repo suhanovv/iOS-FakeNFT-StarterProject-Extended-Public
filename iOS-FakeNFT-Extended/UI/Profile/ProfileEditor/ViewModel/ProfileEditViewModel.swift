@@ -29,9 +29,9 @@ final class ProfileEditViewModel {
         self.profileService = profileService
 
         self.name = profile.name
-        self.description = profile.description
-        self.website = profile.website.absoluteString
-        self.photoURLText = profile.avatar.absoluteString
+        self.description = profile.description ?? ""
+        self.website = profile.website?.absoluteString ?? ""
+        self.photoURLText = profile.avatar?.absoluteString ?? ""
     }
     
     var avatarURL: URL? {
@@ -43,22 +43,26 @@ final class ProfileEditViewModel {
     func hasChanges() -> Bool {
         name != originalProfile.name ||
         description != originalProfile.description ||
-        website != originalProfile.website.absoluteString ||
-        photoURLText != originalProfile.avatar.absoluteString
+        website != (originalProfile.website?.absoluteString ?? "") ||
+        (photoURLText != (originalProfile.avatar?.absoluteString ?? ""))
     }
     
     // MARK: - Actions
     func onAppear(profile: Profile) {
         name = profile.name
-        description = profile.description
-        website = profile.website.absoluteString
-        photoURLText = profile.avatar.absoluteString
+        description = profile.description ?? ""
+        website = profile.website?.absoluteString ?? ""
+        photoURLText = profile.avatar?.absoluteString ?? ""
     }
     
     func saveProfile() async throws -> Profile {
-        guard let request = makeUpdateRequest() else {
-            return originalProfile
-        }
+        let request = makeUpdateRequest() ?? ProfileUpdateRequest(
+            name: nil,
+            avatar: photoURLText,
+            description: nil,
+            website: nil,
+            likes: nil
+        )
 
         isSaving = true
         defer { isSaving = false }
@@ -83,14 +87,14 @@ final class ProfileEditViewModel {
         }()
         
         let updatedWebsite: String? = {
-            let original = originalProfile.website.absoluteString
+            let original = originalProfile.website?.absoluteString ?? ""
             guard website != original else { return nil }
             hasAnyChanges = true
             return website
         }()
         
         let updatedAvatar: String? = {
-            let original = originalProfile.avatar.absoluteString
+            let original = originalProfile.avatar?.absoluteString ?? ""
             guard photoURLText != original else { return nil }
             hasAnyChanges = true
             return photoURLText
