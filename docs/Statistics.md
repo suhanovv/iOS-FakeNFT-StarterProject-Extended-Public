@@ -1,6 +1,8 @@
 # Statistics
 
 [ссылка на эпик](https://github.com/users/suhanovv/projects/2/views/6)
+[ссылка на демо Dark Theme](https://disk.yandex.ru/i/KSez6iObofZ9Ig)
+[ссылка на демо Light Theme](https://disk.yandex.ru/i/9-5_wZq_SVnN2A)
 
 ## Milestone 1/3 (Estimate Time: 25h / Fact Time:)
 
