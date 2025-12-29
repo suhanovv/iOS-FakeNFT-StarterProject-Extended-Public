@@ -26,8 +26,8 @@ final class NftDetailViewController: UIViewController {
 
     private lazy var closeButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .closeButton
-        button.setImage(UIImage(named: "close"), for: .normal)
+        button.tintColor = .ypBlack
+        button.setImage(UIImage(resource: .CommonIcons.close), for: .normal)
         button.addTarget(self, action: #selector(close), for: .touchUpInside)
         return button
     }()
@@ -85,12 +85,20 @@ final class NftDetailViewController: UIViewController {
 
     @objc
     private func close() {
-        dismiss(animated: true)
+        if let navigationController, navigationController.presentingViewController != nil,
+           navigationController.viewControllers.first != self {
+            navigationController.popViewController(animated: true)
+        } else if presentingViewController != nil {
+            dismiss(animated: true)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
 }
 
 // MARK: - NftDetailView
 
+@MainActor
 extension NftDetailViewController: NftDetailView {
     func displayCells(_ cellModels: [NftDetailCellModel]) {
         self.cellModels = cellModels
