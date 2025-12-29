@@ -54,6 +54,7 @@ actor DefaultNetworkClient: NetworkClient {
         
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
+        urlRequest.timeoutInterval = 10
         
         if let dto = request.dto,
            let contentType = request.contentType {
