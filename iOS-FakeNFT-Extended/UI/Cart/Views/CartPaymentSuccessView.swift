@@ -26,7 +26,7 @@ struct CartPaymentSuccessView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 278, height: 278)
 
-                Text("Успех! Оплата прошла,\nпоздравляем с покупкой!")
+                Text(String(localized: "Cart.paymentSuccess.title"))
                     .font(.title2)
                     .bold()
                     .multilineTextAlignment(.center)
@@ -36,7 +36,7 @@ struct CartPaymentSuccessView: View {
             Spacer()
 
             Button(action: onReturn) {
-                Text("Вернуться в корзину")
+                Text(String(localized: "Cart.paymentSuccess.returnButton"))
                     .font(.headline)
                     .foregroundStyle(.ypWhiteUniversal)
                     .frame(maxWidth: .infinity)

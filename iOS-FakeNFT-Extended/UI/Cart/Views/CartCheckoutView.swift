@@ -44,9 +44,9 @@ struct CartCheckoutView: View {
                 Spacer()
             }
         }
-        .alert("Не удалось произвести оплату", isPresented: $viewModel.showPaymentError) {
-            Button("Отмена", role: .cancel) {}
-            Button("Повторить") {
+        .alert(String(localized: "Cart.checkout.paymentFailed"), isPresented: $viewModel.showPaymentError) {
+            Button(String(localized: "Common.cancel"), role: .cancel) {}
+            Button(String(localized: "Common.retry")) {
                 Task {
                     await viewModel.retryPayment()
                 }
@@ -78,7 +78,7 @@ struct CartCheckoutView: View {
 
             Spacer()
 
-            Text("Выберите способ оплаты")
+            Text(String(localized: "Cart.checkout.choosePaymentMethod"))
                 .font(.headline)
                 .foregroundStyle(.ypBlackUniversal)
 
@@ -135,12 +135,12 @@ struct CartCheckoutView: View {
 
     private var agreementText: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Совершая покупку, вы соглашаетесь с условиями")
+            Text(String(localized: "Cart.checkout.agreementText"))
                 .font(.footnote)
                 .foregroundStyle(.ypBlackUniversal)
 
             Button(action: onAgreementTap) {
-                Text("Пользовательского соглашения")
+                Text(String(localized: "Cart.checkout.userAgreement"))
                     .font(.footnote)
                     .foregroundStyle(.ypBlueUniversal)
             }
@@ -154,7 +154,7 @@ struct CartCheckoutView: View {
                 await viewModel.pay()
             }
         } label: {
-            Text("Оплатить")
+            Text(String(localized: "Cart.checkout.payButton"))
                 .font(.headline)
                 .foregroundStyle(.ypWhiteUniversal)
                 .frame(maxWidth: .infinity)

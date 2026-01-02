@@ -51,11 +51,11 @@ struct CartView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: itemToDelete?.id)
-        .confirmationDialog("Сортировка", isPresented: $showSortOptions, titleVisibility: .visible) {
-            Button("По цене") { viewModel.setSortOption(.price) }
-            Button("По рейтингу") { viewModel.setSortOption(.rating) }
-            Button("По названию") { viewModel.setSortOption(.name) }
-            Button("Закрыть", role: .cancel) {}
+        .confirmationDialog(String(localized: "Cart.sorting.title"), isPresented: $showSortOptions, titleVisibility: .visible) {
+            Button(String(localized: "Cart.sorting.byPrice")) { viewModel.setSortOption(.price) }
+            Button(String(localized: "Cart.sorting.byRating")) { viewModel.setSortOption(.rating) }
+            Button(String(localized: "Cart.sorting.byName")) { viewModel.setSortOption(.name) }
+            Button(String(localized: "Cart.sorting.close"), role: .cancel) {}
         }
         .task {
             await viewModel.loadCart()
@@ -104,7 +104,7 @@ struct CartView: View {
     private var bottomBar: some View {
         HStack(spacing: 24) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(viewModel.itemCount) NFT")
+                Text("\(viewModel.itemCount) " + String(localized: "NFT"))
                     .font(.subheadline)
                     .foregroundStyle(.ypBlackUniversal)
                 Text(viewModel.formattedTotalPrice)
@@ -114,7 +114,7 @@ struct CartView: View {
             }
 
             Button(action: onPayment) {
-                Text("К оплате")
+                Text(String(localized: "Cart.checkoutButton"))
                     .font(.headline)
                     .foregroundStyle(.ypWhiteUniversal)
                     .frame(maxWidth: .infinity)
@@ -129,7 +129,7 @@ struct CartView: View {
     private var emptyStateView: some View {
         VStack {
             Spacer()
-            Text("Корзина пуста")
+            Text(String(localized: "Cart.empty.title"))
                 .font(.headline)
                 .foregroundStyle(.ypBlackUniversal)
             Spacer()

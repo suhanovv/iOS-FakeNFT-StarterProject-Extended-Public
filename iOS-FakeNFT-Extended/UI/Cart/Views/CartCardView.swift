@@ -36,7 +36,7 @@ struct CartCardView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Цена")
+                    Text(String(localized: "Common.price"))
                         .font(.caption)
                         .foregroundStyle(.ypBlackUniversal)
                     Text(priceText)

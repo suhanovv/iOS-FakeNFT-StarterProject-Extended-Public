@@ -28,15 +28,15 @@ struct CartDeleteConfirmationView: View {
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                Text("Вы уверены, что хотите\nудалить объект из корзины?")
+                Text(String(localized: "Cart.deleteConfirmation.title"))
                     .font(.footnote)
                     .foregroundStyle(.ypBlackUniversal)
                     .multilineTextAlignment(.center)
             }
 
             HStack(spacing: 8) {
-                deleteButton(title: "Удалить", textColor: .ypRedUniversal, action: onDelete)
-                deleteButton(title: "Вернуться", textColor: .ypWhiteUniversal, action: onCancel)
+                deleteButton(title: String(localized: "Cart.deleteConfirmation.deleteButton"), textColor: .ypRedUniversal, action: onDelete)
+                deleteButton(title: String(localized: "Cart.deleteConfirmation.returnButton"), textColor: .ypWhiteUniversal, action: onCancel)
             }
             .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
                 buttonWidth = width
