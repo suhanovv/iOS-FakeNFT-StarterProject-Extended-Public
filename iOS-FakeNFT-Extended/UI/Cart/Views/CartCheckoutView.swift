@@ -16,6 +16,8 @@ struct CartCheckoutView: View {
     var onPay: (Currency) -> Void
     var onAgreementTap: () -> Void
 
+    @Binding var showPaymentError: Bool
+
     @State private var selectedCurrency: Currency?
 
     private let columns = [
@@ -31,6 +33,14 @@ struct CartCheckoutView: View {
             currencyGrid
             Spacer()
             bottomBar
+        }
+        .alert("Не удалось произвести оплату", isPresented: $showPaymentError) {
+            Button("Отмена", role: .cancel) {}
+            Button("Повторить") {
+                guard let currency = selectedCurrency else { return }
+                onPay(currency)
+            }
+            .keyboardShortcut(.defaultAction)
         }
     }
 
@@ -150,16 +160,18 @@ extension Currency: Identifiable, Equatable {
         currencies: Currency.previewMock,
         onBack: {},
         onPay: { _ in },
-        onAgreementTap: {}
+        onAgreementTap: {},
+        showPaymentError: .constant(false)
     )
 }
 
-#Preview("Empty") {
+#Preview("Payment Error") {
     CartCheckoutView(
-        currencies: [],
+        currencies: Currency.previewMock,
         onBack: {},
         onPay: { _ in },
-        onAgreementTap: {}
+        onAgreementTap: {},
+        showPaymentError: .constant(true)
     )
 }
 
