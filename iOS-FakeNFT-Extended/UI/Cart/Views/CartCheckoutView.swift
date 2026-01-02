@@ -11,14 +11,10 @@ struct CartCheckoutView: View {
 
     // MARK: - Properties
 
-    var currencies: [Currency]
+    @Bindable var viewModel: ViewModel
     var onBack: () -> Void
-    var onPay: (Currency) -> Void
+    var onPaymentSuccess: () -> Void
     var onAgreementTap: () -> Void
-
-    @Binding var showPaymentError: Bool
-
-    @State private var selectedCurrency: Currency?
 
     private let columns = [
         GridItem(.flexible(), spacing: 8),
@@ -30,17 +26,40 @@ struct CartCheckoutView: View {
     var body: some View {
         VStack(spacing: 0) {
             navigationBar
-            currencyGrid
-            Spacer()
-            bottomBar
+
+            switch viewModel.state {
+            case .initial, .loading:
+                Spacer()
+                ProgressView()
+                Spacer()
+            case .loaded:
+                currencyGrid
+                Spacer()
+                bottomBar
+            case .error(let message):
+                Spacer()
+                Text(message)
+                    .font(.headline)
+                    .foregroundStyle(.ypBlackUniversal)
+                Spacer()
+            }
         }
-        .alert("Не удалось произвести оплату", isPresented: $showPaymentError) {
+        .alert("Не удалось произвести оплату", isPresented: $viewModel.showPaymentError) {
             Button("Отмена", role: .cancel) {}
             Button("Повторить") {
-                guard let currency = selectedCurrency else { return }
-                onPay(currency)
+                Task {
+                    await viewModel.retryPayment()
+                }
             }
             .keyboardShortcut(.defaultAction)
+        }
+        .onChange(of: viewModel.showPaymentSuccess) { _, success in
+            if success {
+                onPaymentSuccess()
+            }
+        }
+        .task {
+            await viewModel.loadCurrencies()
         }
     }
 
@@ -74,15 +93,15 @@ struct CartCheckoutView: View {
     private var currencyGrid: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 7) {
-                ForEach(currencies) { currency in
+                ForEach(viewModel.currencies) { currency in
                     CartCurrencyCardView(
                         image: currencyIcon(for: currency.name),
                         title: currency.title,
                         code: currency.name,
-                        isSelected: selectedCurrency?.id == currency.id
+                        isSelected: viewModel.selectedCurrency?.id == currency.id
                     )
                     .onTapGesture {
-                        selectedCurrency = currency
+                        viewModel.selectedCurrency = currency
                     }
                 }
             }
@@ -131,8 +150,9 @@ struct CartCheckoutView: View {
 
     private var payButton: some View {
         Button {
-            guard let currency = selectedCurrency else { return }
-            onPay(currency)
+            Task {
+                await viewModel.pay()
+            }
         } label: {
             Text("Оплатить")
                 .font(.headline)
@@ -141,7 +161,8 @@ struct CartCheckoutView: View {
                 .frame(height: 60)
         }
         .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
-        .opacity(selectedCurrency == nil ? 0.5 : 1)
+        .opacity(viewModel.selectedCurrency == nil ? 0.5 : 1)
+        .disabled(viewModel.selectedCurrency == nil)
     }
 }
 
@@ -156,36 +177,18 @@ extension Currency: Identifiable, Equatable {
 // MARK: - Previews
 
 #Preview("Default") {
-    CartCheckoutView(
-        currencies: Currency.previewMock,
-        onBack: {},
-        onPay: { _ in },
-        onAgreementTap: {},
-        showPaymentError: .constant(false)
+    let mockServices = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl()
     )
-}
-
-#Preview("Payment Error") {
-    CartCheckoutView(
-        currencies: Currency.previewMock,
-        onBack: {},
-        onPay: { _ in },
-        onAgreementTap: {},
-        showPaymentError: .constant(true)
+    let viewModel = CartCheckoutView.ViewModel(
+        currencyService: mockServices.currencyService,
+        paymentService: mockServices.paymentService
     )
-}
-
-// MARK: - Preview Helpers
-
-private extension Currency {
-    static let previewMock: [Currency] = [
-        Currency(id: "1", title: "Bitcoin", name: "BTC", image: URL(string: "https://example.com/btc.png")!),
-        Currency(id: "2", title: "Dogecoin", name: "DOGE", image: URL(string: "https://example.com/doge.png")!),
-        Currency(id: "3", title: "Tether", name: "USDT", image: URL(string: "https://example.com/usdt.png")!),
-        Currency(id: "4", title: "Apecoin", name: "APE", image: URL(string: "https://example.com/ape.png")!),
-        Currency(id: "5", title: "Solana", name: "SOL", image: URL(string: "https://example.com/sol.png")!),
-        Currency(id: "6", title: "Ethereum", name: "ETH", image: URL(string: "https://example.com/eth.png")!),
-        Currency(id: "7", title: "Cardano", name: "ADA", image: URL(string: "https://example.com/ada.png")!),
-        Currency(id: "8", title: "Shiba Inu", name: "SHIB", image: URL(string: "https://example.com/shib.png")!)
-    ]
+    return CartCheckoutView(
+        viewModel: viewModel,
+        onBack: {},
+        onPaymentSuccess: {},
+        onAgreementTap: {}
+    )
 }

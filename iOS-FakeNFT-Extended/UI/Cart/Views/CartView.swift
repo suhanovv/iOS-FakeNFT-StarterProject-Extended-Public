@@ -11,24 +11,14 @@ struct CartView: View {
 
     // MARK: - Properties
 
-    var cartItems: [CartItem]
-    var onSort: (CartSortOption) -> Void
+    @Bindable var viewModel: ViewModel
     var onPayment: () -> Void
-    var onDelete: (CartItem) -> Void
 
-    @State private var itemToDelete: CartItem?
+    @State private var itemToDelete: CartItemViewModel?
     @State private var showSortOptions = false
 
     private var isShowingDeleteConfirmation: Bool {
         itemToDelete != nil
-    }
-
-    private var totalPrice: Double {
-        cartItems.reduce(0) { $0 + $1.price }
-    }
-
-    private var formattedTotalPrice: String {
-        String(format: "%.2f ETH", totalPrice).replacingOccurrences(of: ".", with: ",")
     }
 
     // MARK: - View
@@ -38,11 +28,20 @@ struct CartView: View {
             VStack(spacing: 0) {
                 navigationBar
 
-                if cartItems.isEmpty {
-                    emptyStateView
-                } else {
-                    cartList
-                    bottomBar
+                switch viewModel.state {
+                case .initial, .loading:
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                case .loaded:
+                    if viewModel.isEmpty {
+                        emptyStateView
+                    } else {
+                        cartList
+                        bottomBar
+                    }
+                case .error(let message):
+                    errorView(message: message)
                 }
             }
             .blur(radius: isShowingDeleteConfirmation ? 10 : 0)
@@ -53,10 +52,13 @@ struct CartView: View {
         }
         .animation(.easeInOut(duration: 0.2), value: itemToDelete?.id)
         .confirmationDialog("Сортировка", isPresented: $showSortOptions, titleVisibility: .visible) {
-            Button("По цене") { onSort(.price) }
-            Button("По рейтингу") { onSort(.rating) }
-            Button("По названию") { onSort(.name) }
+            Button("По цене") { viewModel.setSortOption(.price) }
+            Button("По рейтингу") { viewModel.setSortOption(.rating) }
+            Button("По названию") { viewModel.setSortOption(.name) }
             Button("Закрыть", role: .cancel) {}
+        }
+        .task {
+            await viewModel.loadCart()
         }
     }
 
@@ -81,9 +83,9 @@ struct CartView: View {
     private var cartList: some View {
         ScrollView {
             LazyVStack(spacing: 32) {
-                ForEach(cartItems) { item in
+                ForEach(viewModel.cartItems) { item in
                     CartCardView(
-                        image: item.image,
+                        image: item.displayImage,
                         name: item.name,
                         rating: item.rating,
                         priceText: item.formattedPrice,
@@ -102,10 +104,10 @@ struct CartView: View {
     private var bottomBar: some View {
         HStack(spacing: 24) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(cartItems.count) NFT")
+                Text("\(viewModel.itemCount) NFT")
                     .font(.subheadline)
                     .foregroundStyle(.ypBlackUniversal)
-                Text(formattedTotalPrice)
+                Text(viewModel.formattedTotalPrice)
                     .font(.headline)
                     .bold()
                     .foregroundStyle(.ypGreenUniversal)
@@ -134,7 +136,17 @@ struct CartView: View {
         }
     }
 
-    private func deleteConfirmationOverlay(for item: CartItem) -> some View {
+    private func errorView(message: String) -> some View {
+        VStack {
+            Spacer()
+            Text(message)
+                .font(.headline)
+                .foregroundStyle(.ypBlackUniversal)
+            Spacer()
+        }
+    }
+
+    private func deleteConfirmationOverlay(for item: CartItemViewModel) -> some View {
         Color.clear
             .ignoresSafeArea()
             .contentShape(Rectangle())
@@ -143,9 +155,11 @@ struct CartView: View {
             }
             .overlay {
                 CartDeleteConfirmationView(
-                    image: item.image,
+                    image: item.displayImage,
                     onDelete: {
-                        onDelete(item)
+                        Task {
+                            await viewModel.deleteItem(item)
+                        }
                         itemToDelete = nil
                     },
                     onCancel: {
@@ -165,64 +179,34 @@ enum CartSortOption {
     case name
 }
 
-// MARK: - Cart Item Model
-
-struct CartItem: Identifiable, Equatable {
-    let id: UUID
-    let image: Image
-    let name: String
-    let rating: Int
-    let price: Double
-
-    var formattedPrice: String {
-        String(format: "%.2f ETH", price).replacingOccurrences(of: ".", with: ",")
-    }
-
-    static func == (lhs: CartItem, rhs: CartItem) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    static let mockData: [CartItem] = [
-        CartItem(
-            id: UUID(),
-            image: Image(.MockupImages.nftPlaceholder1),
-            name: "April",
-            rating: 1,
-            price: 1.78
-        ),
-        CartItem(
-            id: UUID(),
-            image: Image(.MockupImages.nftPlaceholder2),
-            name: "Greena",
-            rating: 3,
-            price: 1.78
-        ),
-        CartItem(
-            id: UUID(),
-            image: Image(.MockupImages.nftPlaceholder3),
-            name: "Spring",
-            rating: 5,
-            price: 1.78
-        )
-    ]
-}
-
 // MARK: - Previews
 
 #Preview("Default") {
-    CartView(
-        cartItems: CartItem.mockData,
-        onSort: { _ in },
-        onPayment: {},
-        onDelete: { _ in }
+    let mockServices = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl()
+    )
+    let viewModel = CartView.ViewModel(
+        orderService: mockServices.orderService,
+        nftService: mockServices.nftService
+    )
+    return CartView(
+        viewModel: viewModel,
+        onPayment: {}
     )
 }
 
 #Preview("Empty") {
-    CartView(
-        cartItems: [],
-        onSort: { _ in },
-        onPayment: {},
-        onDelete: { _ in }
+    let mockServices = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl()
+    )
+    let viewModel = CartView.ViewModel(
+        orderService: mockServices.orderService,
+        nftService: mockServices.nftService
+    )
+    return CartView(
+        viewModel: viewModel,
+        onPayment: {}
     )
 }
