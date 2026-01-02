@@ -1,0 +1,179 @@
+//
+//  CartCheckoutView.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Pavel Komarov on 02.01.2026.
+//
+
+import SwiftUI
+
+struct CartCheckoutView: View {
+
+    // MARK: - Properties
+
+    var currencies: [Currency]
+    var onBack: () -> Void
+    var onPay: (Currency) -> Void
+    var onAgreementTap: () -> Void
+
+    @State private var selectedCurrency: Currency?
+
+    private let columns = [
+        GridItem(.flexible(), spacing: 8),
+        GridItem(.flexible(), spacing: 8)
+    ]
+
+    // MARK: - View
+
+    var body: some View {
+        VStack(spacing: 0) {
+            navigationBar
+            currencyGrid
+            Spacer()
+            bottomBar
+        }
+    }
+
+    // MARK: - Subviews
+
+    private var navigationBar: some View {
+        HStack {
+            Button(action: onBack) {
+                Image(.CommonIcons.chevron)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(.ypBlackUniversal)
+            }
+            .frame(width: 44, height: 44)
+
+            Spacer()
+
+            Text("Выберите способ оплаты")
+                .font(.headline)
+                .foregroundStyle(.ypBlackUniversal)
+
+            Spacer()
+
+            Color.clear
+                .frame(width: 44, height: 44)
+        }
+        .padding(.horizontal, 8)
+    }
+
+    private var currencyGrid: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 7) {
+                ForEach(currencies) { currency in
+                    CartCurrencyCardView(
+                        image: currencyIcon(for: currency.name),
+                        title: currency.title,
+                        code: currency.name,
+                        isSelected: selectedCurrency?.id == currency.id
+                    )
+                    .onTapGesture {
+                        selectedCurrency = currency
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 20)
+        }
+    }
+
+    private func currencyIcon(for code: String) -> Image {
+        switch code.uppercased() {
+        case "BTC": Image(.CurrencyIcons.bitcoin)
+        case "DOGE": Image(.CurrencyIcons.dogecoin)
+        case "USDT": Image(.CurrencyIcons.tether)
+        case "APE": Image(.CurrencyIcons.apeCoin)
+        case "SOL": Image(.CurrencyIcons.solana)
+        case "ETH": Image(.CurrencyIcons.ethereum)
+        case "ADA": Image(.CurrencyIcons.cardano)
+        case "SHIB": Image(.CurrencyIcons.shibaInu)
+        default: Image(systemName: "dollarsign.circle.fill")
+        }
+    }
+
+    private var bottomBar: some View {
+        VStack(spacing: 16) {
+            agreementText
+            payButton
+        }
+        .padding()
+        .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var agreementText: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Совершая покупку, вы соглашаетесь с условиями")
+                .font(.footnote)
+                .foregroundStyle(.ypBlackUniversal)
+
+            Button(action: onAgreementTap) {
+                Text("Пользовательского соглашения")
+                    .font(.footnote)
+                    .foregroundStyle(.ypBlueUniversal)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var payButton: some View {
+        Button {
+            guard let currency = selectedCurrency else { return }
+            onPay(currency)
+        } label: {
+            Text("Оплатить")
+                .font(.headline)
+                .foregroundStyle(.ypWhiteUniversal)
+                .frame(maxWidth: .infinity)
+                .frame(height: 60)
+        }
+        .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
+        .opacity(selectedCurrency == nil ? 0.5 : 1)
+    }
+}
+
+// MARK: - Currency + Identifiable
+
+extension Currency: Identifiable, Equatable {
+    static func == (lhs: Currency, rhs: Currency) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+// MARK: - Previews
+
+#Preview("Default") {
+    CartCheckoutView(
+        currencies: Currency.previewMock,
+        onBack: {},
+        onPay: { _ in },
+        onAgreementTap: {}
+    )
+}
+
+#Preview("Empty") {
+    CartCheckoutView(
+        currencies: [],
+        onBack: {},
+        onPay: { _ in },
+        onAgreementTap: {}
+    )
+}
+
+// MARK: - Preview Helpers
+
+private extension Currency {
+    static let previewMock: [Currency] = [
+        Currency(id: "1", title: "Bitcoin", name: "BTC", image: URL(string: "https://example.com/btc.png")!),
+        Currency(id: "2", title: "Dogecoin", name: "DOGE", image: URL(string: "https://example.com/doge.png")!),
+        Currency(id: "3", title: "Tether", name: "USDT", image: URL(string: "https://example.com/usdt.png")!),
+        Currency(id: "4", title: "Apecoin", name: "APE", image: URL(string: "https://example.com/ape.png")!),
+        Currency(id: "5", title: "Solana", name: "SOL", image: URL(string: "https://example.com/sol.png")!),
+        Currency(id: "6", title: "Ethereum", name: "ETH", image: URL(string: "https://example.com/eth.png")!),
+        Currency(id: "7", title: "Cardano", name: "ADA", image: URL(string: "https://example.com/ada.png")!),
+        Currency(id: "8", title: "Shiba Inu", name: "SHIB", image: URL(string: "https://example.com/shib.png")!)
+    ]
+}
