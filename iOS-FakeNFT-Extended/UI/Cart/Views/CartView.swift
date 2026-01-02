@@ -60,9 +60,12 @@ struct CartView: View {
             Spacer()
             Button(action: onSort) {
                 Image(.CommonIcons.sort)
-                    .font(.title2)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 42, height: 42)
                     .foregroundStyle(.ypBlackUniversal)
             }
+            .frame(width: 44, height: 44)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 2)
@@ -102,13 +105,11 @@ struct CartView: View {
             }
 
             Button(action: onPayment) {
-                Spacer()
                 Text("К оплате")
                     .font(.headline)
                     .foregroundStyle(.ypWhiteUniversal)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 19)
-                Spacer()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
             }
             .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
         }
