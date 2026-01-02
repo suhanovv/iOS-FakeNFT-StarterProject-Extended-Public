@@ -11,7 +11,7 @@ struct CartView: View {
 
     // MARK: - Properties
 
-    @State private var cartItems: [CartItem] = CartItem.mockData
+    var cartItems: [CartItem]
 
     private var totalPrice: Double {
         cartItems.reduce(0) { $0 + $1.price }
@@ -26,8 +26,13 @@ struct CartView: View {
     var body: some View {
         VStack(spacing: 0) {
             navigationBar
-            cartList
-            bottomBar
+
+            if cartItems.isEmpty {
+                emptyStateView
+            } else {
+                cartList
+                bottomBar
+            }
         }
     }
 
@@ -94,7 +99,16 @@ struct CartView: View {
         .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
     }
 
+    private var emptyStateView: some View {
+        VStack {
+            Spacer()
+            Text("Корзина пуста")
+                .font(.headline)
+                .foregroundStyle(.ypBlackUniversal)
+            Spacer()
+        }
     }
+}
 
 // MARK: - Cart Item Model
 
@@ -136,6 +150,10 @@ struct CartItem: Identifiable {
 
 // MARK: - Previews
 
-#Preview {
-    CartView()
+#Preview("Default") {
+    CartView(cartItems: CartItem.mockData)
+}
+
+#Preview("Empty") {
+    CartView(cartItems: [])
 }
