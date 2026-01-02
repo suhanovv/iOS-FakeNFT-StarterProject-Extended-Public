@@ -12,11 +12,12 @@ struct CartView: View {
     // MARK: - Properties
 
     var cartItems: [CartItem]
-    var onSort: () -> Void
+    var onSort: (CartSortOption) -> Void
     var onPayment: () -> Void
     var onDelete: (CartItem) -> Void
 
     @State private var itemToDelete: CartItem?
+    @State private var showSortOptions = false
 
     private var isShowingDeleteConfirmation: Bool {
         itemToDelete != nil
@@ -51,6 +52,12 @@ struct CartView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: itemToDelete?.id)
+        .confirmationDialog("Сортировка", isPresented: $showSortOptions, titleVisibility: .visible) {
+            Button("По цене") { onSort(.price) }
+            Button("По рейтингу") { onSort(.rating) }
+            Button("По названию") { onSort(.name) }
+            Button("Закрыть", role: .cancel) {}
+        }
     }
 
     // MARK: - Subviews
@@ -58,7 +65,7 @@ struct CartView: View {
     private var navigationBar: some View {
         HStack {
             Spacer()
-            Button(action: onSort) {
+            Button { showSortOptions = true } label: {
                 Image(.CommonIcons.sort)
                     .resizable()
                     .scaledToFit()
@@ -150,6 +157,14 @@ struct CartView: View {
     }
 }
 
+// MARK: - Cart Sort Option
+
+enum CartSortOption {
+    case price
+    case rating
+    case name
+}
+
 // MARK: - Cart Item Model
 
 struct CartItem: Identifiable, Equatable {
@@ -197,7 +212,7 @@ struct CartItem: Identifiable, Equatable {
 #Preview("Default") {
     CartView(
         cartItems: CartItem.mockData,
-        onSort: {},
+        onSort: { _ in },
         onPayment: {},
         onDelete: { _ in }
     )
@@ -206,7 +221,7 @@ struct CartItem: Identifiable, Equatable {
 #Preview("Empty") {
     CartView(
         cartItems: [],
-        onSort: {},
+        onSort: { _ in },
         onPayment: {},
         onDelete: { _ in }
     )
