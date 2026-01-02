@@ -12,6 +12,15 @@ struct CartView: View {
     // MARK: - Properties
 
     var cartItems: [CartItem]
+    var onSort: () -> Void
+    var onPayment: () -> Void
+    var onDelete: (CartItem) -> Void
+
+    @State private var itemToDelete: CartItem?
+
+    private var isShowingDeleteConfirmation: Bool {
+        itemToDelete != nil
+    }
 
     private var totalPrice: Double {
         cartItems.reduce(0) { $0 + $1.price }
@@ -24,16 +33,24 @@ struct CartView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 0) {
-            navigationBar
+        ZStack {
+            VStack(spacing: 0) {
+                navigationBar
 
-            if cartItems.isEmpty {
-                emptyStateView
-            } else {
-                cartList
-                bottomBar
+                if cartItems.isEmpty {
+                    emptyStateView
+                } else {
+                    cartList
+                    bottomBar
+                }
+            }
+            .blur(radius: isShowingDeleteConfirmation ? 10 : 0)
+
+            if let item = itemToDelete {
+                deleteConfirmationOverlay(for: item)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: itemToDelete?.id)
     }
 
     // MARK: - Subviews
@@ -41,7 +58,7 @@ struct CartView: View {
     private var navigationBar: some View {
         HStack {
             Spacer()
-            Button(action: { /* Sorting */ }) {
+            Button(action: onSort) {
                 Image(.CommonIcons.sort)
                     .font(.title2)
                     .foregroundStyle(.ypBlackUniversal)
@@ -61,7 +78,7 @@ struct CartView: View {
                         rating: item.rating,
                         priceText: item.formattedPrice,
                         onDelete: {
-                            // Deleting
+                            itemToDelete = item
                         }
                     )
                 }
@@ -84,7 +101,7 @@ struct CartView: View {
                     .foregroundStyle(.ypGreenUniversal)
             }
 
-            Button(action: { /* To payment transition */ }) {
+            Button(action: onPayment) {
                 Spacer()
                 Text("К оплате")
                     .font(.headline)
@@ -108,11 +125,33 @@ struct CartView: View {
             Spacer()
         }
     }
+
+    private func deleteConfirmationOverlay(for item: CartItem) -> some View {
+        Color.clear
+            .ignoresSafeArea()
+            .contentShape(Rectangle())
+            .onTapGesture {
+                itemToDelete = nil
+            }
+            .overlay {
+                CartDeleteConfirmationView(
+                    image: item.image,
+                    onDelete: {
+                        onDelete(item)
+                        itemToDelete = nil
+                    },
+                    onCancel: {
+                        itemToDelete = nil
+                    }
+                )
+                .padding(.horizontal, 56)
+            }
+    }
 }
 
 // MARK: - Cart Item Model
 
-struct CartItem: Identifiable {
+struct CartItem: Identifiable, Equatable {
     let id: UUID
     let image: Image
     let name: String
@@ -121,6 +160,10 @@ struct CartItem: Identifiable {
 
     var formattedPrice: String {
         String(format: "%.2f ETH", price).replacingOccurrences(of: ".", with: ",")
+    }
+
+    static func == (lhs: CartItem, rhs: CartItem) -> Bool {
+        lhs.id == rhs.id
     }
 
     static let mockData: [CartItem] = [
@@ -151,9 +194,19 @@ struct CartItem: Identifiable {
 // MARK: - Previews
 
 #Preview("Default") {
-    CartView(cartItems: CartItem.mockData)
+    CartView(
+        cartItems: CartItem.mockData,
+        onSort: {},
+        onPayment: {},
+        onDelete: { _ in }
+    )
 }
 
 #Preview("Empty") {
-    CartView(cartItems: [])
+    CartView(
+        cartItems: [],
+        onSort: {},
+        onPayment: {},
+        onDelete: { _ in }
+    )
 }
