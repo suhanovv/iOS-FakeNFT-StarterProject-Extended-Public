@@ -22,6 +22,8 @@
 		9E2FF8F82F07ABB4009E8CEC /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FF8F72F07ABB4009E8CEC /* CartView.swift */; };
 		9E2FF8FA2F07B789009E8CEC /* CartPaymentSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FF8F92F07B789009E8CEC /* CartPaymentSuccessView.swift */; };
 		9E2FF8FC2F07BC7D009E8CEC /* CartCheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FF8FB2F07BC7D009E8CEC /* CartCheckoutView.swift */; };
+		9E2FF8FF2F07CD82009E8CEC /* CartItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FF8FE2F07CD82009E8CEC /* CartItemViewModel.swift */; };
+		9E2FF9012F07CD86009E8CEC /* CartScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2FF9002F07CD86009E8CEC /* CartScreenState.swift */; };
 		9E4DF5912EFCE59200261A4E /* CartCurrencyCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DF58D2EFCE59200261A4E /* CartCurrencyCardView.swift */; };
 		9E4DF5922EFCE59200261A4E /* CartDeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DF58E2EFCE59200261A4E /* CartDeleteConfirmationView.swift */; };
 		9E4DF5932EFCE59200261A4E /* CartCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DF58C2EFCE59200261A4E /* CartCardView.swift */; };
@@ -101,6 +103,8 @@
 		9E2FF8F72F07ABB4009E8CEC /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
 		9E2FF8F92F07B789009E8CEC /* CartPaymentSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartPaymentSuccessView.swift; sourceTree = "<group>"; };
 		9E2FF8FB2F07BC7D009E8CEC /* CartCheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCheckoutView.swift; sourceTree = "<group>"; };
+		9E2FF8FE2F07CD82009E8CEC /* CartItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemViewModel.swift; sourceTree = "<group>"; };
+		9E2FF9002F07CD86009E8CEC /* CartScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartScreenState.swift; sourceTree = "<group>"; };
 		9E4DF58C2EFCE59200261A4E /* CartCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCardView.swift; sourceTree = "<group>"; };
 		9E4DF58D2EFCE59200261A4E /* CartCurrencyCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCurrencyCardView.swift; sourceTree = "<group>"; };
 		9E4DF58E2EFCE59200261A4E /* CartDeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartDeleteConfirmationView.swift; sourceTree = "<group>"; };
@@ -243,6 +247,8 @@
 		9E4DF58A2EFCE59200261A4E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9E2FF9002F07CD86009E8CEC /* CartScreenState.swift */,
+				9E2FF8FE2F07CD82009E8CEC /* CartItemViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -626,6 +632,7 @@
 				9E2FF8FC2F07BC7D009E8CEC /* CartCheckoutView.swift in Sources */,
 				9EDA131B2EFB696F00BC8140 /* CurrencyRequests.swift in Sources */,
 				9EDA131C2EFB696F00BC8140 /* PaymentRequests.swift in Sources */,
+				9E2FF9012F07CD86009E8CEC /* CartScreenState.swift in Sources */,
 				125865B22EF7DA0D007E59B4 /* CollectionDTO.swift in Sources */,
 				ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */,
 				125865BD2EF7DA48007E59B4 /* CollectionsRequest.swift in Sources */,
@@ -660,6 +667,7 @@
 				9EDA13102EFB695D00BC8140 /* Currency.swift in Sources */,
 				ABC5E1D32C320438002B4068 /* NftDetailAssembly.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
+				9E2FF8FF2F07CD82009E8CEC /* CartItemViewModel.swift in Sources */,
 				D7AE28472EE0B72B00325B47 /* Order.swift in Sources */,
 				ABC5E1DB2C3204CE002B4068 /* UIView+Constraints.swift in Sources */,
 				ABC5E16C2C31F5AF002B4068 /* iOS_FakeNFT_ExtendedApp.swift in Sources */,
@@ -838,6 +846,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"iOS-FakeNFT-Extended/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS-FakeNFT-Extended/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -867,6 +876,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"iOS-FakeNFT-Extended/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS-FakeNFT-Extended/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
