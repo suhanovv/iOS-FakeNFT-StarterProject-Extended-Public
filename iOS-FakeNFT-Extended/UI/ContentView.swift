@@ -18,7 +18,13 @@ struct ContentView: View {
         TabView {
             coordinator.build(screen: .catalogue)
                 .tabItem {
-                    Label(Constants.tabCatalogTitle, image: .TabBarIcons.cart)
+                    Label(Constants.tabCatalogTitle, image: .TabBarIcons.catalog)
+                }
+                .backgroundStyle(.ypWhite)
+
+            coordinator.build(screen: .cart)
+                .tabItem {
+                    Label(Constants.tabCartTitle, image: .TabBarIcons.cart)
                 }
                 .backgroundStyle(.ypWhite)
 
@@ -33,5 +39,6 @@ struct ContentView: View {
 
 private enum Constants {
     static let tabCatalogTitle = NSLocalizedString("Tab.catalog", comment: "")
+    static let tabCartTitle = NSLocalizedString("Tab.cart", comment: "")
     static let tabStatisticsTitle = NSLocalizedString("Tab.statistics", comment: "")
 }

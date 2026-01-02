@@ -53,6 +53,9 @@ final class Coordinator {
             
         case .webView(url: let url):
             WebViewScreen(url: url)
+
+        case .cart:
+            CartContainerView()
         }
     }
     
