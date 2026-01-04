@@ -134,7 +134,7 @@ struct CartCheckoutView: View {
             payButton
         }
         .padding()
-        .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
+        .background(.ypLightGray, in: UnevenRoundedRectangle(topLeadingRadius: 12, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 12))
     }
 
     private var agreementText: some View {

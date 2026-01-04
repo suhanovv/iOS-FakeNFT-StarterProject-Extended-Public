@@ -125,7 +125,7 @@ struct CartView: View {
             .background(.ypBlack, in: RoundedRectangle(cornerRadius: 16))
         }
         .padding()
-        .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
+        .background(.ypLightGray, in: UnevenRoundedRectangle(topLeadingRadius: 12, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 12))
     }
 
     private var emptyStateView: some View {
