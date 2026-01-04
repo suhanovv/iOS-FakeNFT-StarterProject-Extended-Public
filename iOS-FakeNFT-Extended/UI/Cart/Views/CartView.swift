@@ -25,6 +25,8 @@ struct CartView: View {
 
     var body: some View {
         ZStack {
+            Color.ypWhite.ignoresSafeArea()
+
             VStack(spacing: 0) {
                 navigationBar
 
@@ -72,7 +74,7 @@ struct CartView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 42, height: 42)
-                    .foregroundStyle(.ypBlackUniversal)
+                    .foregroundStyle(.ypBlack)
             }
             .frame(width: 44, height: 44)
         }
@@ -106,7 +108,7 @@ struct CartView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(viewModel.itemCount) " + String(localized: "NFT"))
                     .font(.subheadline)
-                    .foregroundStyle(.ypBlackUniversal)
+                    .foregroundStyle(.ypBlack)
                 Text(viewModel.formattedTotalPrice)
                     .font(.headline)
                     .bold()
@@ -116,11 +118,11 @@ struct CartView: View {
             Button(action: onPayment) {
                 Text(String(localized: "Cart.checkoutButton"))
                     .font(.headline)
-                    .foregroundStyle(.ypWhiteUniversal)
+                    .foregroundStyle(.ypWhite)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
             }
-            .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
+            .background(.ypBlack, in: RoundedRectangle(cornerRadius: 16))
         }
         .padding()
         .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
@@ -131,7 +133,7 @@ struct CartView: View {
             Spacer()
             Text(String(localized: "Cart.empty.title"))
                 .font(.headline)
-                .foregroundStyle(.ypBlackUniversal)
+                .foregroundStyle(.ypBlack)
             Spacer()
         }
     }

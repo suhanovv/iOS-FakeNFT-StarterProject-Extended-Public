@@ -20,26 +20,30 @@ struct CartDeleteConfirmationView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(spacing: 12) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 108, height: 108)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+        ZStack {
+            Color.ypWhite.ignoresSafeArea()
 
-                Text(String(localized: "Cart.deleteConfirmation.title"))
-                    .font(.footnote)
-                    .foregroundStyle(.ypBlackUniversal)
-                    .multilineTextAlignment(.center)
-            }
+            VStack(spacing: 20) {
+                VStack(spacing: 12) {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 108, height: 108)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
 
-            HStack(spacing: 8) {
-                deleteButton(title: String(localized: "Cart.deleteConfirmation.deleteButton"), textColor: .ypRedUniversal, action: onDelete)
-                deleteButton(title: String(localized: "Cart.deleteConfirmation.returnButton"), textColor: .ypWhiteUniversal, action: onCancel)
-            }
-            .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
-                buttonWidth = width
+                    Text(String(localized: "Cart.deleteConfirmation.title"))
+                        .font(.footnote)
+                        .foregroundStyle(.ypBlack)
+                        .multilineTextAlignment(.center)
+                }
+
+                HStack(spacing: 8) {
+                    deleteButton(title: String(localized: "Cart.deleteConfirmation.deleteButton"), textColor: .ypRedUniversal, action: onDelete)
+                    deleteButton(title: String(localized: "Cart.deleteConfirmation.returnButton"), textColor: .ypWhite, action: onCancel)
+                }
+                .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
+                    buttonWidth = width
+                }
             }
         }
     }
@@ -62,7 +66,7 @@ struct CartDeleteConfirmationView: View {
                 )
                 .frame(width: buttonWidth > 0 ? buttonWidth : nil)
         }
-        .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 12))
+        .background(.ypBlack, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 

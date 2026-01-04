@@ -24,24 +24,28 @@ struct CartCheckoutView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 0) {
-            navigationBar
+        ZStack {
+            Color.ypWhite.ignoresSafeArea()
 
-            switch viewModel.state {
-            case .initial, .loading:
-                Spacer()
-                ProgressView()
-                Spacer()
-            case .loaded:
-                currencyGrid
-                Spacer()
-                bottomBar
-            case .error(let message):
-                Spacer()
-                Text(message)
-                    .font(.headline)
-                    .foregroundStyle(.ypBlackUniversal)
-                Spacer()
+            VStack(spacing: 0) {
+                navigationBar
+
+                switch viewModel.state {
+                case .initial, .loading:
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                case .loaded:
+                    currencyGrid
+                    Spacer()
+                    bottomBar
+                case .error(let message):
+                    Spacer()
+                    Text(message)
+                        .font(.headline)
+                        .foregroundStyle(.ypBlackUniversal)
+                    Spacer()
+                }
             }
         }
         .alert(String(localized: "Cart.checkout.paymentFailed"), isPresented: $viewModel.showPaymentError) {
@@ -72,7 +76,7 @@ struct CartCheckoutView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 24, height: 24)
-                    .foregroundStyle(.ypBlackUniversal)
+                    .foregroundStyle(.ypBlack)
             }
             .frame(width: 44, height: 44)
 
@@ -80,7 +84,7 @@ struct CartCheckoutView: View {
 
             Text(String(localized: "Cart.checkout.choosePaymentMethod"))
                 .font(.headline)
-                .foregroundStyle(.ypBlackUniversal)
+                .foregroundStyle(.ypBlack)
 
             Spacer()
 
@@ -137,7 +141,7 @@ struct CartCheckoutView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(String(localized: "Cart.checkout.agreementText"))
                 .font(.footnote)
-                .foregroundStyle(.ypBlackUniversal)
+                .foregroundStyle(.ypBlack)
 
             Button(action: onAgreementTap) {
                 Text(String(localized: "Cart.checkout.userAgreement"))
@@ -156,12 +160,11 @@ struct CartCheckoutView: View {
         } label: {
             Text(String(localized: "Cart.checkout.payButton"))
                 .font(.headline)
-                .foregroundStyle(.ypWhiteUniversal)
+                .foregroundStyle(.ypWhite)
                 .frame(maxWidth: .infinity)
                 .frame(height: 60)
         }
-        .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
-        .opacity(viewModel.selectedCurrency == nil ? 0.5 : 1)
+        .background(.ypBlack, in: RoundedRectangle(cornerRadius: 16))
         .disabled(viewModel.selectedCurrency == nil)
     }
 }

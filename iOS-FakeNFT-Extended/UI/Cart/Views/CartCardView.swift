@@ -31,17 +31,17 @@ struct CartCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(name)
                         .bold()
-                        .foregroundStyle(.ypBlackUniversal)
+                        .foregroundStyle(.ypBlack)
                     StarView(rating: rating)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(String(localized: "Common.price"))
                         .font(.caption)
-                        .foregroundStyle(.ypBlackUniversal)
+                        .foregroundStyle(.ypBlack)
                     Text(priceText)
                         .bold()
-                        .foregroundStyle(.ypBlackUniversal)
+                        .foregroundStyle(.ypBlack)
                 }
             }
             .padding(.vertical, 8)
@@ -53,7 +53,7 @@ struct CartCardView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)
-                    .foregroundStyle(.ypBlackUniversal)
+                    .foregroundStyle(.ypBlack)
             }
             .frame(width: 44, height: 44)
         }

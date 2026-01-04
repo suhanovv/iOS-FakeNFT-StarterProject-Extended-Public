@@ -17,33 +17,37 @@ struct CartPaymentSuccessView: View {
     // MARK: - View
 
     var body: some View {
-        VStack {
-            Spacer()
+        ZStack {
+            Color.ypWhite.ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 278, height: 278)
+            VStack {
+                Spacer()
 
-                Text(String(localized: "Cart.paymentSuccess.title"))
-                    .font(.title2)
-                    .bold()
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.ypBlackUniversal)
+                VStack(spacing: 20) {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 278, height: 278)
+
+                    Text(String(localized: "Cart.paymentSuccess.title"))
+                        .font(.title2)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.ypBlack)
+                }
+
+                Spacer()
+
+                Button(action: onReturn) {
+                    Text(String(localized: "Cart.paymentSuccess.returnButton"))
+                        .font(.headline)
+                        .foregroundStyle(.ypWhite)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60)
+                }
+                .background(.ypBlack, in: RoundedRectangle(cornerRadius: 16))
+                .padding()
             }
-
-            Spacer()
-
-            Button(action: onReturn) {
-                Text(String(localized: "Cart.paymentSuccess.returnButton"))
-                    .font(.headline)
-                    .foregroundStyle(.ypWhiteUniversal)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 60)
-            }
-            .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 16))
-            .padding()
         }
     }
 }
