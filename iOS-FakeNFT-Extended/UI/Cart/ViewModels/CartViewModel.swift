@@ -46,6 +46,12 @@ extension CartView {
 
         private var allItems: [CartItemViewModel] = []
 
+        #if DEBUG
+
+        private var shouldSkipAutoLoad = false
+
+        #endif
+
         // MARK: - Init
 
         init(orderService: OrderServiceProtocol, nftService: NftService) {
@@ -56,6 +62,7 @@ extension CartView {
         // MARK: - Public Methods
 
         func loadCart() async {
+            guard !shouldSkipAutoLoad else { return }
             state = .loading
             // Mock implementation for Milestone 2
             // In Milestone 3...
@@ -82,6 +89,17 @@ extension CartView {
             allItems = []
             cartItems = []
         }
+
+        #if DEBUG
+
+        func setEmptyState() {
+            shouldSkipAutoLoad = true
+            allItems = []
+            cartItems = []
+            state = .loaded
+        }
+
+        #endif // DEBUG
 
         // MARK: - Private Methods
 

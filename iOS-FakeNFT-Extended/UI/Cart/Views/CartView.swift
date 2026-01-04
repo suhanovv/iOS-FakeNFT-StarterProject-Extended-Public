@@ -207,6 +207,7 @@ enum CartSortOption {
         orderService: mockServices.orderService,
         nftService: mockServices.nftService
     )
+    viewModel.setEmptyState()
     return CartView(
         viewModel: viewModel,
         onPayment: {}
