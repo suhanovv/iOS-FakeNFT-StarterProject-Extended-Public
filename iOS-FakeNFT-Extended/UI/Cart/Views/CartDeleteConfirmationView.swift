@@ -21,8 +21,6 @@ struct CartDeleteConfirmationView: View {
 
     var body: some View {
         ZStack {
-            Color.ypWhite.ignoresSafeArea()
-
             VStack(spacing: 20) {
                 VStack(spacing: 12) {
                     image

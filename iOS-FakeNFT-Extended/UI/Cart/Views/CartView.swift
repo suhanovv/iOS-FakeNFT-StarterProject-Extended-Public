@@ -173,14 +173,6 @@ struct CartView: View {
     }
 }
 
-// MARK: - Cart Sort Option
-
-enum CartSortOption {
-    case price
-    case rating
-    case name
-}
-
 // MARK: - Previews
 
 #Preview("Default") {
