@@ -16,7 +16,7 @@ struct CartItemViewModel: Identifiable, Equatable {
     let price: Double
 
     var formattedPrice: String {
-        String(format: "%.2f ETH", price).replacingOccurrences(of: ".", with: ",")
+        price.formatted(.currency(code: "ETH"))
     }
 
     var displayImage: Image {
