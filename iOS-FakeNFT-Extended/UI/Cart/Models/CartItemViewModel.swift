@@ -45,32 +45,4 @@ struct CartItemViewModel: Identifiable, Equatable {
         self.rating = rating
         self.price = price
     }
-
-    // MARK: - Mock Data (for Previews only)
-
-    #if DEBUG
-    static let mockData: [CartItemViewModel] = [
-        CartItemViewModel(
-            id: "1",
-            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png"),
-            name: "April",
-            rating: 1,
-            price: 1.78
-        ),
-        CartItemViewModel(
-            id: "2",
-            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/1.png"),
-            name: "Greena",
-            rating: 3,
-            price: 2.34
-        ),
-        CartItemViewModel(
-            id: "3",
-            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Brown/Emma/1.png"),
-            name: "Spring",
-            rating: 5,
-            price: 0.95
-        )
-    ]
-    #endif
 }
