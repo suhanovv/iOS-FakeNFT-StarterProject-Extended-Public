@@ -28,7 +28,7 @@ struct CartCurrencyCardView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 Text(title)
-                    .foregroundStyle(.ypBlackUniversal)
+                    .foregroundStyle(.ypBlack)
                 Text(code)
                     .foregroundStyle(.ypGreenUniversal)
             }
@@ -40,7 +40,7 @@ struct CartCurrencyCardView: View {
         .background(.ypLightGray, in: RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isSelected ? .ypBlackUniversal : .clear, lineWidth: 1)
+                .stroke(isSelected ? .ypBlack : .clear, lineWidth: 1)
         )
     }
 }

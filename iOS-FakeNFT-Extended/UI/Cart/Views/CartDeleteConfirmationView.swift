@@ -20,26 +20,28 @@ struct CartDeleteConfirmationView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(spacing: 12) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 108, height: 108)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+        ZStack {
+            VStack(spacing: 20) {
+                VStack(spacing: 12) {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 108, height: 108)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                Text("Вы уверены, что хотите\nудалить объект из корзины?")
-                    .font(.footnote)
-                    .foregroundStyle(.ypBlackUniversal)
-                    .multilineTextAlignment(.center)
-            }
+                    Text(String(localized: "Cart.deleteConfirmation.title"))
+                        .font(.footnote)
+                        .foregroundStyle(.ypBlack)
+                        .multilineTextAlignment(.center)
+                }
 
-            HStack(spacing: 8) {
-                deleteButton(title: "Удалить", textColor: .ypRedUniversal, action: onDelete)
-                deleteButton(title: "Вернуться", textColor: .ypWhiteUniversal, action: onCancel)
-            }
-            .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
-                buttonWidth = width
+                HStack(spacing: 8) {
+                    deleteButton(title: String(localized: "Cart.deleteConfirmation.deleteButton"), textColor: .ypRedUniversal, action: onDelete)
+                    deleteButton(title: String(localized: "Cart.deleteConfirmation.returnButton"), textColor: .ypWhite, action: onCancel)
+                }
+                .onPreferenceChange(ButtonWidthPreferenceKey.self) { width in
+                    buttonWidth = width
+                }
             }
         }
     }
@@ -62,7 +64,7 @@ struct CartDeleteConfirmationView: View {
                 )
                 .frame(width: buttonWidth > 0 ? buttonWidth : nil)
         }
-        .background(.ypBlackUniversal, in: RoundedRectangle(cornerRadius: 12))
+        .background(.ypBlack, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
