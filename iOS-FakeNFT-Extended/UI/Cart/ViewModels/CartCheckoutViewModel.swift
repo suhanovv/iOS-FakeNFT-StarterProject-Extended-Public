@@ -46,35 +46,30 @@ extension CartCheckoutView {
 
         func loadCurrencies() async {
             state = .loading
-            // Mock implementation for Milestone 2
-            // In Milestone 3...
-            // currencies = try await currencyService.getCurrencies()
-            currencies = Currency.mockData
-            state = .loaded
+            do {
+                currencies = try await currencyService.currencies
+                state = .loaded
+            } catch {
+                state = .error(error.localizedDescription)
+            }
         }
 
         func pay() async {
             guard let currency = selectedCurrency else { return }
             state = .loading
 
-            // Mock: simulate successful payment
-            try? await Task.sleep(for: .milliseconds(500))
-
-            // In Milestone 3...
-            // do {
-            //     let result = try await paymentService.pay(orderId: orderId, currencyId: currency.id)
-            //     if result.success {
-            //         showPaymentSuccess = true
-            //     } else {
-            //         showPaymentError = true
-            //     }
-            // } catch {
-            //     showPaymentError = true
-            // }
-
-            _ = currency // silence unused warning
-            showPaymentSuccess = true
-            state = .loaded
+            do {
+                let result = try await paymentService.pay(orderId: orderId, currencyId: currency.id)
+                if result.success {
+                    showPaymentSuccess = true
+                } else {
+                    showPaymentError = true
+                }
+                state = .loaded
+            } catch {
+                showPaymentError = true
+                state = .loaded
+            }
         }
 
         func retryPayment() async {
@@ -84,17 +79,19 @@ extension CartCheckoutView {
     }
 }
 
-// MARK: - Currency Mock Data
+// MARK: - Currency Mock Data (for Previews only)
 
+#if DEBUG
 extension Currency {
     static let mockData: [Currency] = [
-        Currency(id: "1", title: "Bitcoin", name: "BTC", image: URL(string: "https://example.com/btc.png")!),
-        Currency(id: "2", title: "Dogecoin", name: "DOGE", image: URL(string: "https://example.com/doge.png")!),
-        Currency(id: "3", title: "Tether", name: "USDT", image: URL(string: "https://example.com/usdt.png")!),
-        Currency(id: "4", title: "Apecoin", name: "APE", image: URL(string: "https://example.com/ape.png")!),
-        Currency(id: "5", title: "Solana", name: "SOL", image: URL(string: "https://example.com/sol.png")!),
-        Currency(id: "6", title: "Ethereum", name: "ETH", image: URL(string: "https://example.com/eth.png")!),
-        Currency(id: "7", title: "Cardano", name: "ADA", image: URL(string: "https://example.com/ada.png")!),
-        Currency(id: "8", title: "Shiba Inu", name: "SHIB", image: URL(string: "https://example.com/shib.png")!)
+        Currency(id: "5", title: "Bitcoin", name: "BTC", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")!),
+        Currency(id: "6", title: "Dogecoin", name: "DOGE", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Dogecoin_(DOGE).png")!),
+        Currency(id: "2", title: "Tether", name: "USDT", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png")!),
+        Currency(id: "3", title: "Apecoin", name: "APE", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png")!),
+        Currency(id: "4", title: "Solana", name: "SOL", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png")!),
+        Currency(id: "7", title: "Ethereum", name: "ETH", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Ethereum_(ETH).png")!),
+        Currency(id: "1", title: "Cardano", name: "ADA", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png")!),
+        Currency(id: "0", title: "Shiba Inu", name: "SHIB", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png")!)
     ]
 }
+#endif
