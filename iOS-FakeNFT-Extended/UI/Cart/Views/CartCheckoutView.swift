@@ -179,14 +179,32 @@ extension Currency: Identifiable, Equatable {
 
 // MARK: - Previews
 
+#if DEBUG
+
+private actor MockCurrencyService: CurrencyServiceProtocol {
+    var currencies: [Currency] {
+        get async throws {
+            Currency.mockData
+        }
+    }
+    
+    subscript(id: String) -> Currency {
+        get async throws {
+            Currency.mockData.first { $0.id == id } ?? Currency.mockData[0]
+        }
+    }
+}
+
+private actor MockPaymentService: PaymentServiceProtocol {
+    func pay(orderId: String, currencyId: String) async throws -> PaymentResult {
+        PaymentResult(success: true, orderId: orderId, id: currencyId)
+    }
+}
+
 #Preview("Default") {
-    let mockServices = ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl()
-    )
     let viewModel = CartCheckoutView.ViewModel(
-        currencyService: mockServices.currencyService,
-        paymentService: mockServices.paymentService
+        currencyService: MockCurrencyService(),
+        paymentService: MockPaymentService()
     )
     return CartCheckoutView(
         viewModel: viewModel,
@@ -195,3 +213,5 @@ extension Currency: Identifiable, Equatable {
         onAgreementTap: {}
     )
 }
+
+#endif

@@ -46,8 +46,9 @@ struct CartItemViewModel: Identifiable, Equatable {
         self.price = price
     }
 
-    // MARK: - Mock Data
+    // MARK: - Mock Data (for Previews only)
 
+    #if DEBUG
     static let mockData: [CartItemViewModel] = [
         CartItemViewModel(
             id: "1",
@@ -71,4 +72,5 @@ struct CartItemViewModel: Identifiable, Equatable {
             price: 0.95
         )
     ]
+    #endif
 }

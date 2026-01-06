@@ -175,29 +175,48 @@ struct CartView: View {
 
 // MARK: - Previews
 
+#if DEBUG
+
+private actor PreviewOrderService: OrderServiceProtocol {
+    func getOrder() async throws -> Order {
+        Order(id: "preview-order", nfts: ["1", "2", "3"])
+    }
+    
+    func addToCartNft(_ nftId: String) async throws -> Order {
+        Order(id: "preview-order", nfts: ["1", "2", "3", nftId])
+    }
+    
+    func removeFromCartNft(_ nftId: String) async throws -> Order {
+        Order(id: "preview-order", nfts: ["1", "2", "3"].filter { $0 != nftId })
+    }
+}
+
+private actor PreviewNftService: NftService {
+    func loadNft(id: String) async throws -> Nft {
+        Nft(
+            id: id,
+            images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png")!],
+            name: "Preview NFT \(id)",
+            rating: Int.random(in: 1...5),
+            price: Double.random(in: 0.5...5.0)
+        )
+    }
+}
+
 #Preview("Default") {
-    let mockServices = ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl()
-    )
-    let viewModel = CartView.ViewModel(
-        orderService: mockServices.orderService,
-        nftService: mockServices.nftService
-    )
-    return CartView(
-        viewModel: viewModel,
+    CartView(
+        viewModel: CartView.ViewModel(
+            orderService: PreviewOrderService(),
+            nftService: PreviewNftService()
+        ),
         onPayment: {}
     )
 }
 
 #Preview("Empty") {
-    let mockServices = ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl()
-    )
     let viewModel = CartView.ViewModel(
-        orderService: mockServices.orderService,
-        nftService: mockServices.nftService
+        orderService: PreviewOrderService(),
+        nftService: PreviewNftService()
     )
     viewModel.setEmptyState()
     return CartView(
@@ -205,3 +224,5 @@ struct CartView: View {
         onPayment: {}
     )
 }
+
+#endif
