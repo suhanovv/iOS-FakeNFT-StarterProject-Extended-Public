@@ -7,21 +7,19 @@
 
 import Foundation
 
-protocol PaymentServiceProtocol {
-    func pay(currencyId: String) async throws -> PaymentResult
+protocol PaymentServiceProtocol: Sendable {
+    func pay(orderId: String, currencyId: String) async throws -> PaymentResult
 }
 
 actor PaymentService: PaymentServiceProtocol {
 
     private let networkClient: NetworkClient
-    private let orderId: String
 
-    init(networkClient: NetworkClient, orderId: String = "1") {
+    init(networkClient: NetworkClient) {
         self.networkClient = networkClient
-        self.orderId = orderId
     }
 
-    func pay(currencyId: String) async throws -> PaymentResult {
+    func pay(orderId: String, currencyId: String) async throws -> PaymentResult {
         let request = PayOrderRequest(orderId: orderId, currencyId: currencyId)
         return try await networkClient.send(request: request)
     }

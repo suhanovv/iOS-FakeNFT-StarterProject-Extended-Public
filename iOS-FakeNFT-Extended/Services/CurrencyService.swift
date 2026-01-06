@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CurrencyServiceProtocol {
+protocol CurrencyServiceProtocol: Sendable {
     var currencies: [Currency] { get async throws }
     subscript(id: String) -> Currency { get async throws }
 }

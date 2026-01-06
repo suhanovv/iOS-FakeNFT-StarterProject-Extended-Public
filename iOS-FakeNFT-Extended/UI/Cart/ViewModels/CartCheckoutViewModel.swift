@@ -28,12 +28,18 @@ extension CartCheckoutView {
 
         private let currencyService: CurrencyServiceProtocol
         private let paymentService: PaymentServiceProtocol
+        private let orderId: String
 
         // MARK: - Init
 
-        init(currencyService: CurrencyServiceProtocol, paymentService: PaymentServiceProtocol) {
+        init(
+            currencyService: CurrencyServiceProtocol,
+            paymentService: PaymentServiceProtocol,
+            orderId: String = "1"
+        ) {
             self.currencyService = currencyService
             self.paymentService = paymentService
+            self.orderId = orderId
         }
 
         // MARK: - Public Methods
@@ -56,7 +62,7 @@ extension CartCheckoutView {
 
             // In Milestone 3...
             // do {
-            //     let result = try await paymentService.pay(currencyId: currency.id)
+            //     let result = try await paymentService.pay(orderId: orderId, currencyId: currency.id)
             //     if result.success {
             //         showPaymentSuccess = true
             //     } else {
