@@ -4,6 +4,7 @@ protocol OrderServiceProtocol: Sendable {
     func getOrder() async throws -> Order
     func addToCartNft(_ nftId: String) async throws -> Order
     func removeFromCartNft(_ nftId: String) async throws -> Order
+    func clearCart() async throws -> Order
 }
 
 actor OrderService: OrderServiceProtocol {
@@ -31,6 +32,10 @@ actor OrderService: OrderServiceProtocol {
         let currentOrder = try await getOrder()
         let newNfts: [String] = currentOrder.nfts.filter { $0 != nftId }
         return try await makeUpdateRequestAndSend(with: newNfts)
+    }
+    
+    func clearCart() async throws -> Order {
+        try await makeUpdateRequestAndSend(with: [])
     }
     
     private func makeUpdateRequestAndSend(with nfts: [String]) async throws -> Order {

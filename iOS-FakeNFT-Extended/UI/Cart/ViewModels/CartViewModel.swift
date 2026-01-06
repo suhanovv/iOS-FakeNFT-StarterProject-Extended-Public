@@ -66,6 +66,8 @@ extension CartView {
             guard !shouldSkipAutoLoad else { return }
             #endif
             
+            guard state == .initial else { return }
+            
             state = .loading
             do {
                 let order = try await orderService.getOrder()
@@ -96,6 +98,7 @@ extension CartView {
         func clearCartAfterPayment() {
             allItems = []
             cartItems = []
+            state = .initial
         }
 
         #if DEBUG

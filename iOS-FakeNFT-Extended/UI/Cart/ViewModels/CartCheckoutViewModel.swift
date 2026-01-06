@@ -28,6 +28,7 @@ extension CartCheckoutView {
 
         private let currencyService: CurrencyServiceProtocol
         private let paymentService: PaymentServiceProtocol
+        private let orderService: OrderServiceProtocol
         private let orderId: String
 
         // MARK: - Init
@@ -35,10 +36,12 @@ extension CartCheckoutView {
         init(
             currencyService: CurrencyServiceProtocol,
             paymentService: PaymentServiceProtocol,
+            orderService: OrderServiceProtocol,
             orderId: String = "1"
         ) {
             self.currencyService = currencyService
             self.paymentService = paymentService
+            self.orderService = orderService
             self.orderId = orderId
         }
 
@@ -61,6 +64,8 @@ extension CartCheckoutView {
             do {
                 let result = try await paymentService.pay(orderId: orderId, currencyId: currency.id)
                 if result.success {
+                    // Clear cart on server after successful payment
+                    _ = try await orderService.clearCart()
                     showPaymentSuccess = true
                 } else {
                     showPaymentError = true
@@ -79,19 +84,4 @@ extension CartCheckoutView {
     }
 }
 
-// MARK: - Currency Mock Data (for Previews only)
 
-#if DEBUG
-extension Currency {
-    static let mockData: [Currency] = [
-        Currency(id: "5", title: "Bitcoin", name: "BTC", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")!),
-        Currency(id: "6", title: "Dogecoin", name: "DOGE", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Dogecoin_(DOGE).png")!),
-        Currency(id: "2", title: "Tether", name: "USDT", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png")!),
-        Currency(id: "3", title: "Apecoin", name: "APE", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png")!),
-        Currency(id: "4", title: "Solana", name: "SOL", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png")!),
-        Currency(id: "7", title: "Ethereum", name: "ETH", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Ethereum_(ETH).png")!),
-        Currency(id: "1", title: "Cardano", name: "ADA", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png")!),
-        Currency(id: "0", title: "Shiba Inu", name: "SHIB", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png")!)
-    ]
-}
-#endif

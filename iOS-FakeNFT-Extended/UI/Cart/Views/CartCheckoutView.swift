@@ -99,7 +99,7 @@ struct CartCheckoutView: View {
             LazyVGrid(columns: columns, spacing: 7) {
                 ForEach(viewModel.currencies) { currency in
                     CartCurrencyCardView(
-                        image: currencyIcon(for: currency.name),
+                        imageURL: currency.image,
                         title: currency.title,
                         code: currency.name,
                         isSelected: viewModel.selectedCurrency?.id == currency.id
@@ -111,20 +111,6 @@ struct CartCheckoutView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 20)
-        }
-    }
-
-    private func currencyIcon(for code: String) -> Image {
-        switch code.uppercased() {
-        case "BTC": Image(.CurrencyIcons.bitcoin)
-        case "DOGE": Image(.CurrencyIcons.dogecoin)
-        case "USDT": Image(.CurrencyIcons.tether)
-        case "APE": Image(.CurrencyIcons.apeCoin)
-        case "SOL": Image(.CurrencyIcons.solana)
-        case "ETH": Image(.CurrencyIcons.ethereum)
-        case "ADA": Image(.CurrencyIcons.cardano)
-        case "SHIB": Image(.CurrencyIcons.shibaInu)
-        default: Image(systemName: "dollarsign.circle.fill")
         }
     }
 
@@ -176,42 +162,3 @@ extension Currency: Identifiable, Equatable {
         lhs.id == rhs.id
     }
 }
-
-// MARK: - Previews
-
-#if DEBUG
-
-private actor MockCurrencyService: CurrencyServiceProtocol {
-    var currencies: [Currency] {
-        get async throws {
-            Currency.mockData
-        }
-    }
-    
-    subscript(id: String) -> Currency {
-        get async throws {
-            Currency.mockData.first { $0.id == id } ?? Currency.mockData[0]
-        }
-    }
-}
-
-private actor MockPaymentService: PaymentServiceProtocol {
-    func pay(orderId: String, currencyId: String) async throws -> PaymentResult {
-        PaymentResult(success: true, orderId: orderId, id: currencyId)
-    }
-}
-
-#Preview("Default") {
-    let viewModel = CartCheckoutView.ViewModel(
-        currencyService: MockCurrencyService(),
-        paymentService: MockPaymentService()
-    )
-    return CartCheckoutView(
-        viewModel: viewModel,
-        onBack: {},
-        onPaymentSuccess: {},
-        onAgreementTap: {}
-    )
-}
-
-#endif

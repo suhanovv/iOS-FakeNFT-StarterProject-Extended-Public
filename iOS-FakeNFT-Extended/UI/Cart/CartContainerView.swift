@@ -54,7 +54,9 @@ struct CartContainerView: View {
             )
         }
         .task {
-            setupCartViewModel()
+            if cartViewModel == nil {
+                setupCartViewModel()
+            }
         }
     }
 
@@ -68,7 +70,8 @@ struct CartContainerView: View {
     private func setupCheckoutViewModel() {
         checkoutViewModel = CartCheckoutView.ViewModel(
             currencyService: services.currencyService,
-            paymentService: services.paymentService
+            paymentService: services.paymentService,
+            orderService: services.orderService
         )
     }
 

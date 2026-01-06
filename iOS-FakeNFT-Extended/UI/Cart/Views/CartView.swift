@@ -189,6 +189,10 @@ private actor PreviewOrderService: OrderServiceProtocol {
     func removeFromCartNft(_ nftId: String) async throws -> Order {
         Order(id: "preview-order", nfts: ["1", "2", "3"].filter { $0 != nftId })
     }
+
+    func clearCart() async throws -> Order {
+        Order(id: "preview-order", nfts: [])
+    }
 }
 
 private actor PreviewNftService: NftService {
