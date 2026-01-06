@@ -10,7 +10,6 @@ import SwiftUI
 struct CartItemViewModel: Identifiable, Equatable {
     let id: String
     let imageURL: URL?
-    let placeholderImage: Image
     let name: String
     let rating: Int
     let price: Double
@@ -19,12 +18,32 @@ struct CartItemViewModel: Identifiable, Equatable {
         price.formatted(.currency(code: "ETH"))
     }
 
-    var displayImage: Image {
-        placeholderImage
-    }
-
     static func == (lhs: CartItemViewModel, rhs: CartItemViewModel) -> Bool {
         lhs.id == rhs.id
+    }
+
+    // MARK: - Init from Nft
+
+    init(from nft: Nft) {
+        self.id = nft.id
+        self.imageURL = nft.images.first
+        self.name = nft.name
+        self.rating = nft.rating
+        self.price = nft.price
+    }
+
+    init(
+        id: String,
+        imageURL: URL?,
+        name: String,
+        rating: Int,
+        price: Double
+    ) {
+        self.id = id
+        self.imageURL = imageURL
+        self.name = name
+        self.rating = rating
+        self.price = price
     }
 
     // MARK: - Mock Data
@@ -32,24 +51,21 @@ struct CartItemViewModel: Identifiable, Equatable {
     static let mockData: [CartItemViewModel] = [
         CartItemViewModel(
             id: "1",
-            imageURL: nil,
-            placeholderImage: Image(.MockupImages.nftPlaceholder1),
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png"),
             name: "April",
             rating: 1,
             price: 1.78
         ),
         CartItemViewModel(
             id: "2",
-            imageURL: nil,
-            placeholderImage: Image(.MockupImages.nftPlaceholder2),
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Piper/1.png"),
             name: "Greena",
             rating: 3,
             price: 2.34
         ),
         CartItemViewModel(
             id: "3",
-            imageURL: nil,
-            placeholderImage: Image(.MockupImages.nftPlaceholder3),
+            imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Brown/Emma/1.png"),
             name: "Spring",
             rating: 5,
             price: 0.95

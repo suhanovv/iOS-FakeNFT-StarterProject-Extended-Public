@@ -87,7 +87,7 @@ struct CartView: View {
             LazyVStack(spacing: 32) {
                 ForEach(viewModel.cartItems) { item in
                     CartCardView(
-                        image: item.displayImage,
+                        imageURL: item.imageURL,
                         name: item.name,
                         rating: item.rating,
                         priceText: item.formattedPrice,
@@ -157,7 +157,7 @@ struct CartView: View {
             }
             .overlay {
                 CartDeleteConfirmationView(
-                    image: item.displayImage,
+                    imageURL: item.imageURL,
                     onDelete: {
                         Task {
                             await viewModel.deleteItem(item)

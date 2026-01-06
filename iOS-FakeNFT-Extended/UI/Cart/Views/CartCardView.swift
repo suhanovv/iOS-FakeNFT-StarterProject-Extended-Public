@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CartCardView: View {
 
     // MARK: - Properties
 
-    let image: Image
+    let imageURL: URL?
     let name: String
     let rating: Int
     let priceText: String
@@ -21,9 +22,7 @@ struct CartCardView: View {
 
     var body: some View {
         HStack(spacing: 20) {
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            nftImage
                 .frame(width: 108, height: 108)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
@@ -61,6 +60,18 @@ struct CartCardView: View {
 
     // MARK: - Subviews
 
+    @ViewBuilder
+    private var nftImage: some View {
+        KFImage(imageURL)
+            .placeholder {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.ypLightGray)
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+    }
+
     private struct StarView: View {
         let rating: Int
 
@@ -85,7 +96,7 @@ struct CartCardView: View {
 
 #Preview {
     CartCardView(
-        image: Image(.MockupImages.nftPlaceholder4),
+        imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png"),
         name: "April",
         rating: 4,
         priceText: "1,78 ETH",

@@ -62,22 +62,30 @@ extension CartView {
         // MARK: - Public Methods
 
         func loadCart() async {
+            #if DEBUG
             guard !shouldSkipAutoLoad else { return }
+            #endif
+            
             state = .loading
-            // Mock implementation for Milestone 2
-            // In Milestone 3...
-            // let order = try await orderService.getOrder()
-            // allItems = order.nfts.map { ... }
-            allItems = CartItemViewModel.mockData
-            applySort()
-            state = .loaded
+            do {
+                let order = try await orderService.getOrder()
+                let nfts = try await loadNfts(ids: order.nfts)
+                allItems = nfts.map { CartItemViewModel(from: $0) }
+                applySort()
+                state = .loaded
+            } catch {
+                state = .error(error.localizedDescription)
+            }
         }
 
         func deleteItem(_ item: CartItemViewModel) async {
-            // Mock: remove from local array
-            // In Milestone 3... await orderService.removeFromCartNft(item.id)
-            allItems.removeAll { $0.id == item.id }
-            applySort()
+            do {
+                _ = try await orderService.removeFromCartNft(item.id)
+                allItems.removeAll { $0.id == item.id }
+                applySort()
+            } catch {
+                state = .error(error.localizedDescription)
+            }
         }
 
         func setSortOption(_ option: CartSortOption) {
@@ -113,6 +121,21 @@ extension CartView {
                 cartItems = allItems.sorted {
                     $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
                 }
+            }
+        }
+
+        private func loadNfts(ids: [String]) async throws -> [Nft] {
+            try await withThrowingTaskGroup(of: Nft.self) { group in
+                for id in ids {
+                    group.addTask {
+                        try await self.nftService.loadNft(id: id)
+                    }
+                }
+                var nfts: [Nft] = []
+                for try await nft in group {
+                    nfts.append(nft)
+                }
+                return nfts
             }
         }
     }
