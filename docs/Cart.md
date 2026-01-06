@@ -27,13 +27,11 @@
 - Реализовать отображение Alert при ошибке оплаты (Estimate Time: 2h / Fact Time: 15m)
 - Реализовать обновление счетчиков и суммы при изменении корзины (Estimate Time: 2h / Fact Time: 5m)
 
-## Milestone 3/3 (Estimate Time: 31h / Fact Time:)
+## Milestone 3/3 (Estimate Time: 31h / Fact Time: 6h)
 
-- Спроектировать общую архитектуру сервисов (вынесение общей логики, протоколы) (Estimate Time: 8h / Fact Time:)
-- Реализовать сервис управления заказом (получение order, добавление NFT в order) (Estimate Time: 3h / Fact Time:)
-- Реализовать сервис получения валют (получение списка currencies, кеширование) (Estimate Time: 3h / Fact Time:)
-- Реализовать сервис обработки платежа (set currency, выполнение pay) (Estimate Time: 3h / Fact Time:)
-- Подвязать сервисы к экранам с учетом пагинации, убрать моки (Estimate Time: 8h / Fact Time:)
-- Реализовать обработку ошибок (NFT уже продан, недостаточно средств, timeout, network errors) (Estimate Time: 6h / Fact Time:)
-
-139 ->
+- Спроектировать общую архитектуру сервисов (вынесение общей логики, протоколы) (Estimate Time: 8h / Fact Time: 3h)
+- Реализовать сервис управления заказом (получение order, добавление NFT в order) (Estimate Time: 3h / Fact Time: 30m)
+- Реализовать сервис получения валют (получение списка currencies, кеширование) (Estimate Time: 3h / Fact Time: 15m)
+- Реализовать сервис обработки платежа (set currency, выполнение pay) (Estimate Time: 3h / Fact Time: 15m)
+- Подвязать сервисы к экранам с учетом пагинации, убрать моки (Estimate Time: 8h / Fact Time: 4h)
+- Реализовать обработку ошибок (NFT уже продан, недостаточно средств, timeout, network errors) (Estimate Time: 3h / Fact Time: 1h)
