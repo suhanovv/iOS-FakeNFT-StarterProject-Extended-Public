@@ -8,25 +8,47 @@
 import Foundation
 
 protocol CurrencyServiceProtocol {
-    func getCurrencies() async throws -> [Currency]
-    func getCurrency(id: String) async throws -> Currency
+    var currencies: [Currency] { get async throws }
+    subscript(id: String) -> Currency { get async throws }
 }
 
 actor CurrencyService: CurrencyServiceProtocol {
 
     private let networkClient: NetworkClient
 
+    private var cached: [Currency] = []
+    private var hasLoadedAll = false
+
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
 
-    func getCurrencies() async throws -> [Currency] {
-        let request = GetCurrenciesRequest()
-        return try await networkClient.send(request: request)
+    var currencies: [Currency] {
+        get async throws {
+            if hasLoadedAll {
+                return cached
+            }
+
+            let request = GetCurrenciesRequest()
+            let result: [Currency] = try await networkClient.send(request: request)
+
+            cached = result
+            hasLoadedAll = true
+            return result
+        }
     }
 
-    func getCurrency(id: String) async throws -> Currency {
-        let request = GetCurrencyByIdRequest(id: id)
-        return try await networkClient.send(request: request)
+    subscript(id: String) -> Currency {
+        get async throws {
+            if let found = cached.first(where: { $0.id == id }) {
+                return found
+            }
+
+            let request = GetCurrencyByIdRequest(id: id)
+            let result: Currency = try await networkClient.send(request: request)
+
+            cached.append(result)
+            return result
+        }
     }
 }
