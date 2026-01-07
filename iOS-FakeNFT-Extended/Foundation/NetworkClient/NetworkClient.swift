@@ -54,12 +54,13 @@ actor DefaultNetworkClient: NetworkClient {
         
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
+        urlRequest.timeoutInterval = 10
         
         if let dto = request.dto,
            let contentType = request.contentType {
             switch contentType {
-                case .json: urlRequest.httpBody = makeJsonData(dto: dto)
-                case .formUrlEncoded: urlRequest.httpBody = makeFormUrlEncodedData(dto: dto)
+            case .json: urlRequest.httpBody = makeJsonData(dto: dto)
+            case .formUrlEncoded: urlRequest.httpBody = makeFormUrlEncodedData(dto: dto)
             }
             urlRequest.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
         }
@@ -77,15 +78,15 @@ actor DefaultNetworkClient: NetworkClient {
            let dict = try? JSONSerialization.jsonObject(with: encodedData, options: .fragmentsAllowed) as? [String : Any] {
             let allParams = dict.reduce(into: [String]()) { (data, pair) in
                 let stringValue = switch pair.value.self {
-                    case is NSNull: "null"
-                    case is [String]:
-                        if let values = pair.value as? [String],
-                           values.count > 0 {
-                            values.joined(separator: ",")
-                        } else {
-                            "null"
-                        }
-                    default: pair.value
+                case is NSNull: "null"
+                case is [String]:
+                    if let values = pair.value as? [String],
+                       values.count > 0 {
+                        values.joined(separator: ",")
+                    } else {
+                        "null"
+                    }
+                default: pair.value
                 }
                 data.append("\(pair.key)=\(stringValue)")
             }

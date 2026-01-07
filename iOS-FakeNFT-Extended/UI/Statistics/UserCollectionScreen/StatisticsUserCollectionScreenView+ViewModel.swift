@@ -81,7 +81,7 @@ extension StatisticsUserCollectionScreenView {
                 likes = Set(try await profileService.getProfileLikes())
                 cart = Set(try await orderService.getOrder().nfts)
                 
-                collection = try await loadUserCollection()
+                collection = try await loadUserCollection().sorted { $0.id < $1.id}
                 state = .loaded
             } catch {
                 state = .error(operation: .loadData)

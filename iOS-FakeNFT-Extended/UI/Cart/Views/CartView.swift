@@ -200,9 +200,12 @@ private actor PreviewNftService: NftService {
         Nft(
             id: id,
             images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png")!],
-            name: "Preview NFT \(id)",
             rating: Int.random(in: 1...5),
-            price: Double.random(in: 0.5...5.0)
+            price: Double.random(in: 0.5...5.0),
+            name: "Preview NFT \(id)",
+            author: "Preview Author",
+            createdAt: "2024-01-01",
+            description: "Preview description"
         )
     }
 }

@@ -29,7 +29,7 @@ struct StatisticsUserCardScreenView: View {
             }
             Spacer()
         }
-        .opacity(viewModel.state == nil ? 0 : 1)
+        .opacity(viewModel.state == nil || viewModel.user == nil ? 0 : 1)
         .overlay {
             ProgressBarView(isActive: viewModel.state == .loading)
         }
