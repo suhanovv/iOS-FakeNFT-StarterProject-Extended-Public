@@ -1,19 +1,21 @@
 import SwiftUI
 
 struct TestCatalogView: View {
-    @Environment(ServicesAssembly.self) var servicesAssembly
     @State private var presentingNft = false
+    @State private var selectedNftId: String?
 
     var body: some View {
         Button {
-            showNft()
+            selectedNftId = "7773e33c-ec15-4230-a102-92426a3a6d5a"
+            presentingNft = true
         } label: {
             Text(Constants.openNftTitle)
                 .tint(.blue)
         }
-        .backgroundStyle(.background)
         .sheet(isPresented: $presentingNft) {
-            NftDetailBridgeView()
+            if let id = selectedNftId {
+                NftDetailBridgeView(nftId: id)
+            }
         }
     }
 
