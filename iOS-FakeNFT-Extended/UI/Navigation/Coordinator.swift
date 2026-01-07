@@ -77,11 +77,15 @@ final class Coordinator {
         case .collection(let id):
             CollectionView(
                 collectionId: id,
-                collectionService: services.collectionService
+                collectionService: services.collectionService,
+                orderService: services.orderService
             )
             
         case .webView(url: let url):
             WebViewScreen(url: url)
+
+        case .cart:
+            CartContainerView()
         }
     }
     

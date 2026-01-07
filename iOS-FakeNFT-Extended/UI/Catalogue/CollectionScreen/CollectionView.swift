@@ -21,12 +21,14 @@ struct CollectionView: View {
 
     init(
         collectionId: String,
-        collectionService: CollectionServiceProtocol
+        collectionService: CollectionServiceProtocol,
+        orderService: OrderServiceProtocol? = nil
     ) {
         _viewModel = StateObject(
             wrappedValue: CollectionViewModel(
                 collectionId: collectionId,
-                collectionService: collectionService
+                collectionService: collectionService,
+                orderService: orderService
             )
         )
     }
@@ -141,12 +143,19 @@ struct CollectionView: View {
                         .toolbar(.hidden, for: .navigationBar)
                 } label: {
                     NftCellView(
+                        nftId: nft.id,
                         name: nft.name,
                         price: nft.price,
                         rating: nft.rating,
                         imageURL: nft.images.first,
                         isFavorite: false,
-                        isInCart: false
+                        isInCart: viewModel.isInCart(nft.id),
+                        onFavoriteTap: {},
+                        onCartTap: {
+                            Task {
+                                await viewModel.toggleCart(nftId: nft.id)
+                            }
+                        }
                     )
                 }
                 .buttonStyle(.plain)
