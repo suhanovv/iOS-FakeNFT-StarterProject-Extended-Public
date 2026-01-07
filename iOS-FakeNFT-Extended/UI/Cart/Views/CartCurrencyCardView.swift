@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CartCurrencyCardView: View {
 
     // MARK: - Properties
 
-    let image: Image
+    let imageURL: URL?
     let title: String
     let code: String
     var isSelected: Bool
@@ -20,7 +21,11 @@ struct CartCurrencyCardView: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            image
+            KFImage(imageURL)
+                .placeholder {
+                    ProgressView()
+                        .frame(width: 36, height: 36)
+                }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 36, height: 36)
@@ -49,7 +54,7 @@ struct CartCurrencyCardView: View {
 
 #Preview("Default") {
     CartCurrencyCardView(
-        image: Image(.CurrencyIcons.bitcoin),
+        imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png"),
         title: "Bitcoin",
         code: "BTC",
         isSelected: false
@@ -59,7 +64,7 @@ struct CartCurrencyCardView: View {
 
 #Preview("Selected") {
     CartCurrencyCardView(
-        image: Image(.CurrencyIcons.bitcoin),
+        imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png"),
         title: "Bitcoin",
         code: "BTC",
         isSelected: true

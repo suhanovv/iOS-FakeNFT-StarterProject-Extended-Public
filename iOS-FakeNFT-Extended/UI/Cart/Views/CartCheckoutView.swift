@@ -99,7 +99,7 @@ struct CartCheckoutView: View {
             LazyVGrid(columns: columns, spacing: 7) {
                 ForEach(viewModel.currencies) { currency in
                     CartCurrencyCardView(
-                        image: currencyIcon(for: currency.name),
+                        imageURL: currency.image,
                         title: currency.title,
                         code: currency.name,
                         isSelected: viewModel.selectedCurrency?.id == currency.id
@@ -111,20 +111,6 @@ struct CartCheckoutView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 20)
-        }
-    }
-
-    private func currencyIcon(for code: String) -> Image {
-        switch code.uppercased() {
-        case "BTC": Image(.CurrencyIcons.bitcoin)
-        case "DOGE": Image(.CurrencyIcons.dogecoin)
-        case "USDT": Image(.CurrencyIcons.tether)
-        case "APE": Image(.CurrencyIcons.apeCoin)
-        case "SOL": Image(.CurrencyIcons.solana)
-        case "ETH": Image(.CurrencyIcons.ethereum)
-        case "ADA": Image(.CurrencyIcons.cardano)
-        case "SHIB": Image(.CurrencyIcons.shibaInu)
-        default: Image(systemName: "dollarsign.circle.fill")
         }
     }
 
@@ -179,19 +165,66 @@ extension Currency: Identifiable, Equatable {
 
 // MARK: - Previews
 
+#if DEBUG
+
+private actor PreviewCurrencyService: CurrencyServiceProtocol {
+    var currencies: [Currency] {
+        get async throws {
+            [
+                Currency(id: "0", title: "Shiba_Inu", name: "SHIB", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png")!),
+                Currency(id: "1", title: "Cardano", name: "ADA", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png")!),
+                Currency(id: "2", title: "Tether", name: "USDT", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png")!),
+                Currency(id: "3", title: "ApeCoin", name: "APE", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png")!),
+                Currency(id: "4", title: "Solana", name: "SOL", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png")!),
+                Currency(id: "5", title: "Bitcoin", name: "BITCOIN", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")!),
+                Currency(id: "6", title: "Dogecoin", name: "DOGECOIN", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Dogecoin_(DOGE).png")!),
+                Currency(id: "7", title: "Ethereum", name: "ETHEREUM", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Ethereum_(ETH).png")!)
+            ]
+        }
+    }
+
+    subscript(id: String) -> Currency {
+        get async throws {
+            Currency(id: id, title: "Bitcoin", name: "BITCOIN", image: URL(string: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Bitcoin_(BTC).png")!)
+        }
+    }
+}
+
+private actor PreviewPaymentService: PaymentServiceProtocol {
+    func pay(orderId: String, currencyId: String) async throws -> PaymentResult {
+        PaymentResult(success: true, orderId: orderId, id: currencyId)
+    }
+}
+
+private actor PreviewOrderService: OrderServiceProtocol {
+    func getOrder() async throws -> Order {
+        Order(id: "1", nfts: [])
+    }
+
+    func addToCartNft(_ nftId: String) async throws -> Order {
+        Order(id: "1", nfts: [nftId])
+    }
+
+    func removeFromCartNft(_ nftId: String) async throws -> Order {
+        Order(id: "1", nfts: [])
+    }
+
+    func clearCart() async throws -> Order {
+        Order(id: "1", nfts: [])
+    }
+}
+
 #Preview("Default") {
-    let mockServices = ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl()
-    )
-    let viewModel = CartCheckoutView.ViewModel(
-        currencyService: mockServices.currencyService,
-        paymentService: mockServices.paymentService
-    )
-    return CartCheckoutView(
-        viewModel: viewModel,
+    CartCheckoutView(
+        viewModel: CartCheckoutView.ViewModel(
+            currencyService: PreviewCurrencyService(),
+            paymentService: PreviewPaymentService(),
+            orderService: PreviewOrderService()
+        ),
         onBack: {},
         onPaymentSuccess: {},
         onAgreementTap: {}
     )
 }
+
+#endif

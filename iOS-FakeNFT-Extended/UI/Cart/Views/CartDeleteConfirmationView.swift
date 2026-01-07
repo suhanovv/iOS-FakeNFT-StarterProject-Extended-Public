@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CartDeleteConfirmationView: View {
 
     // MARK: - Properties
 
-    let image: Image
+    let imageURL: URL?
     let onDelete: () -> Void
     let onCancel: () -> Void
 
@@ -23,7 +24,12 @@ struct CartDeleteConfirmationView: View {
         ZStack {
             VStack(spacing: 20) {
                 VStack(spacing: 12) {
-                    image
+                    KFImage(imageURL)
+                        .placeholder {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(Color.ypLightGray)
+                        }
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 108, height: 108)
@@ -82,7 +88,7 @@ private struct ButtonWidthPreferenceKey: PreferenceKey {
 
 #Preview {
     CartDeleteConfirmationView(
-        image: Image(.MockupImages.nftPlaceholder4),
+        imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png"),
         onDelete: {},
         onCancel: {}
     )

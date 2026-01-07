@@ -15,30 +15,38 @@ struct NftCellView: View {
     
     // MARK: - Properties
     
+    let nftId: String
     let name: String
     let price: Double
     let rating: Int
     let imageURL: URL?
-
-    @State private var isFavorite: Bool
-    @State private var isInCart: Bool
+    let isFavorite: Bool
+    let isInCart: Bool
+    let onFavoriteTap: () -> Void
+    let onCartTap: () -> Void
     
     // MARK: - Init
     
     init(
+        nftId: String,
         name: String,
         price: Double,
         rating: Int,
         imageURL: URL?,
         isFavorite: Bool = false,
-        isInCart: Bool = false
+        isInCart: Bool = false,
+        onFavoriteTap: @escaping () -> Void = {},
+        onCartTap: @escaping () -> Void = {}
     ) {
+        self.nftId = nftId
         self.name = name
         self.price = price
         self.rating = rating
         self.imageURL = imageURL
-        _isFavorite = State(initialValue: isFavorite)
-        _isInCart = State(initialValue: isInCart)
+        self.isFavorite = isFavorite
+        self.isInCart = isInCart
+        self.onFavoriteTap = onFavoriteTap
+        self.onCartTap = onCartTap
     }
     
     // MARK: - Body
@@ -101,26 +109,17 @@ struct NftCellView: View {
             }
         }
     }
-    
-    // MARK: - Actions
-
-    private func onFavoriteTap() {
-        isFavorite.toggle()
-    }
-
-    private func onCartTap() {
-        isInCart.toggle()
-    }
 }
 
 // MARK: - Preview_NftCellView
 
 #Preview {
     NftCellView(
+        nftId: "1",
         name: "Archie",
         price: 1,
         rating: 3,
-        imageURL: nil,
+        imageURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png"),
         isFavorite: true,
         isInCart: true
     )
