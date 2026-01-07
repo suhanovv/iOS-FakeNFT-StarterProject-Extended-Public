@@ -65,9 +65,9 @@ extension CartView {
             #if DEBUG
             guard !shouldSkipAutoLoad else { return }
             #endif
-            
-            guard state == .initial else { return }
-            
+
+            guard state != .loading else { return }
+
             state = .loading
             do {
                 let order = try await orderService.getOrder()
